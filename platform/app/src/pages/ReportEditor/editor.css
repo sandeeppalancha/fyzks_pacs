@@ -44,6 +44,11 @@
   padding: 4px;
 }
 
-.editor-container {
+#editor-container.ql-editor {
   max-height: 80vh;
+}
+
+.ql-editor {
+  max-height: 65vh;
+  overflow-y: auto;
 }
