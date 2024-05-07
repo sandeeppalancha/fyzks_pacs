@@ -37,7 +37,7 @@ const MyViewer = ({ appProps }) => {
 function CustomApp(appProps) {
   useEffect(() => {
     console.log("inside use custom app");
-    document.title = 'Yashoda Pacs';
+    // document.title = 'Fyzks PACS';
   }, []);
 
   const items: TabsProps['items'] = [
