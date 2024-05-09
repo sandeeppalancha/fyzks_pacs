@@ -15,6 +15,7 @@ import AppHeader from './pages/header';
 import "./custom-app.css";
 import "./index.css";
 import WysigEditor from './pages/ReportEditor/wysig';
+import Login from './pages/login';
 
 const MyViewer = ({ appProps }) => {
   useEffect(() => {
@@ -44,7 +45,30 @@ function CustomApp(appProps) {
     {
       key: '1',
       label: 'Orders List',
-      children: <OrdersList />,
+      children: <>
+        <BrowserRouter>
+          <div className="app-content" style={{ background: "white", height: '100vh' }}>
+            <Routes>
+              <Route
+                path="/orders"
+                element={
+                  <>
+                    <OrdersList />
+                  </>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <>
+                    <Login />
+                  </>
+                }
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </>,
     },
     {
       key: '2',
