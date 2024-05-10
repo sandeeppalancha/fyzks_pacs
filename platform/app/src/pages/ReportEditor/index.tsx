@@ -28,6 +28,14 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
     getTemplates();
   }, []);
 
+  const refreshAfterUpdate = () => {
+    fetchPrevReports();
+  }
+
+  const handleSave = (conten, status, curReport) => {
+    onSave(content, status, curReport, refreshAfterUpdate);
+  }
+
   const fetchPrevReports = () => {
     makePostCall('/get-reports', {
       yh_no: patientDetails?.po_pin,
@@ -58,7 +66,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
 
   useEffect(() => {
     if (currentReport) {
-      setContent(`${TemplateHeader(patientDetails)}${currentReport?.pr_html}`);
+      // setContent(`${TemplateHeader(patientDetails)}${currentReport?.pr_html}`);
+      setContent(`${currentReport?.pr_html}`);
     }
   }, [currentReport]);
 
@@ -192,7 +201,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
         </Card>
       </div>
       <div className="right-section">
-        <RichTextEditor currentReport={currentReport} cancel={cancel} content={content || "<div></div>"} onSave={onSave} onChange={handleContentChange} />
+        <RichTextEditor patDetails={patientDetails} currentReport={currentReport} cancel={cancel} content={content || "<div></div>"}
+          onSave={handleSave} onChange={handleContentChange} />
       </div>
     </div>
   );

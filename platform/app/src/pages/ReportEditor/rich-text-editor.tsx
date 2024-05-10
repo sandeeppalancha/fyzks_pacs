@@ -4,8 +4,9 @@ import Quill from 'quill';
 
 import 'quill/dist/quill.snow.css';
 import { Button } from 'antd';
+import axiosInstance from '../../axios';
 
-const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport }) => {
+const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails }) => {
   const editorRef = useRef(null);
   const quillInstance = useRef(null);
 
@@ -49,11 +50,44 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport }) =>
     onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport);
   }
 
+  const printReport = () => {
+    axiosInstance.post('/print-report', {
+      report: currentReport,
+      patDetails: patDetails,
+      html: quillInstance.current.root.innerHTML,
+    })
+      .then(res => {
+        console.log("repo", res);
+
+      })
+      .catch(err => {
+        console.log("Error", err);
+
+      })
+  }
+
+  const statusOrder = ['DRAFTED', 'REVIEWED', 'SIGNEDOFF'];
+
   return (<div id='editor-container'><div ref={editorRef}></div>
     <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
-      <Button danger className='mt-3 ms-auto' type='default' color='primary' onClick={() => handleSave('draft')}>DRAFT</Button>
-      <Button className='mt-3 ms-3' type='primary' color='primary' onClick={() => handleSave('signoff')}>SIGN OFF</Button>
+      <Button className='mt-3' type='default' onClick={printReport}>PRINT REPORT</Button>
+      <Button
+        disabled={statusOrder.indexOf(currentReport?.pr_status) > 0}
+        danger className='mt-3 ms-auto' type='default'
+        color='primary' onClick={() => handleSave('DRAFTED')}
+      >DRAFT</Button>
+      <Button
+        disabled={currentReport?.pr_status !== 'DRAFTED'}
+        danger className='mt-3 ms-3' type='default' color='primary'
+        onClick={() => handleSave('REVIEWED')}
+      >REVIEWED</Button>
+      <Button
+        disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
+        className='mt-3 ms-3' type='primary' color='primary'
+        onClick={() => handleSave('SIGNEDOFF')}>
+        SIGN OFF
+      </Button>
     </div>
   </div>);
 };

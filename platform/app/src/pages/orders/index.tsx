@@ -5,18 +5,19 @@ import ReportEditor from '../ReportEditor';
 import "./orders.css";
 import FloatLabel from '../../components/FloatingLabel';
 import axiosInstance, { BASE_API } from '../../axios';
-import { makePostCall } from '../../utils/helper';
+import { getUserDetails, makePostCall } from '../../utils/helper';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [filters, setFilters] = useState({});
+  const userDetails = getUserDetails();
 
   useEffect(() => {
     getOrdersList();
   }, []);
 
-  const onSave = (newContent, status, currentReport) => {
+  const onSave = (newContent, status, currentReport, callback) => {
     console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
@@ -29,6 +30,7 @@ const OrdersList = () => {
     })
       .then(res => {
         console.log("resp", res);
+        callback && callback();
       })
       .catch(e => {
         console.log(e);
@@ -38,6 +40,7 @@ const OrdersList = () => {
 
   const getOrdersList = async () => {
     makePostCall('/orders', {
+      role: userDetails?.user_type,
     })
       .then(res => {
         console.log("resp", res);
@@ -102,6 +105,17 @@ const OrdersList = () => {
       })
   }
 
+  const statusOptions = userDetails?.user_type === 'doc' ? [
+    { label: 'REVIEWED', value: 'REVIEWED' },
+    { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
+  ] :
+    [
+      { label: 'PENDING', value: 'PENDING' },
+      { label: 'SCANNED', value: 'SCANNED' },
+      { label: 'DRAFTED', value: 'DRAFTED' },
+      { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
+    ]
+
   return (
     <div>
       <div className='filters-section'>
@@ -115,12 +129,7 @@ const OrdersList = () => {
           <Input width={300} onChange={(e) => handleFilterChange('pat_pin', e.target.value)} />
         </FloatLabel>
         <FloatLabel label="Status" value={filters['status']} className="ms-3">
-          <Select style={{ width: 300 }} options={[
-            { label: 'PENDING', value: 'PENDING' },
-            { label: 'SCANNED', value: 'SCANNED' },
-            { label: 'DRAFTED', value: 'DRAFTED' },
-            { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
-          ]} onChange={(val) => handleFilterChange('status', val)} />
+          <Select style={{ width: 300 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
         </FloatLabel>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
