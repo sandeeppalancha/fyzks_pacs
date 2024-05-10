@@ -16,14 +16,16 @@ const OrdersList = () => {
     getOrdersList();
   }, []);
 
-  const onSave = (newContent) => {
+  const onSave = (newContent, status, currentReport) => {
     console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
       order_no: reportEditorModal.data?.po_ord_no,
       acc_no: reportEditorModal.data?.po_acc_no,
-      user_id: "test_user"
+      user_id: "test_user",
+      status,
+      report_id: currentReport?.pr_id,
     })
       .then(res => {
         console.log("resp", res);
@@ -116,8 +118,8 @@ const OrdersList = () => {
           <Select style={{ width: 300 }} options={[
             { label: 'PENDING', value: 'PENDING' },
             { label: 'SCANNED', value: 'SCANNED' },
-            { label: 'REPORT DRAFTED', value: 'REPORT_DRAFTED' },
-            { label: 'REPORT SIGNEDOFF', value: 'REPORT_SIGNEDOFF' },
+            { label: 'DRAFTED', value: 'DRAFTED' },
+            { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
           ]} onChange={(val) => handleFilterChange('status', val)} />
         </FloatLabel>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>

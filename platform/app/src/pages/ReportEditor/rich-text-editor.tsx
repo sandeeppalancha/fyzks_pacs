@@ -5,7 +5,7 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { Button } from 'antd';
 
-const RichTextEditor = ({ content, onChange, onSave, cancel }) => {
+const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport }) => {
   const editorRef = useRef(null);
   const quillInstance = useRef(null);
 
@@ -45,8 +45,8 @@ const RichTextEditor = ({ content, onChange, onSave, cancel }) => {
     quillInstance.current.root.innerHTML = content;
   }, [content]);
 
-  const handleSave = () => {
-    onSave && onSave(quillInstance.current.root.innerHTML);
+  const handleSave = (status) => {
+    onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport);
   }
 
   return (<div id='editor-container'><div ref={editorRef}></div>

@@ -4,9 +4,10 @@ import { FileTextOutlined } from '@ant-design/icons';
 
 const statusColors = {
   'PENDING': 'red',
-  'REPORT_DRAFTED': 'orange',
+  'DRAFTED': 'orange',
   'REPORT_SUBMITTED': 'yellow',
-  'REPORT_SIGNEDOFF': 'green',
+  'SIGNEDOFF': 'green',
+  'REVIEWED': 'blue',
 };
 
 export const orderColumns = (openReportEditor) => ([
