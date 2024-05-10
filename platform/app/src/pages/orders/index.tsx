@@ -4,6 +4,8 @@ import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./orders.css";
 import FloatLabel from '../../components/FloatingLabel';
+import axiosInstance, { BASE_API } from '../../axios';
+import { makePostCall } from '../../utils/helper';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
@@ -16,20 +18,13 @@ const OrdersList = () => {
 
   const onSave = (newContent) => {
     console.log("onsave newContent", reportEditorModal);
-    fetch('http://localhost:4000/submit-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        html: newContent,
-        yh_no: reportEditorModal.data?.po_pin,
-        order_no: reportEditorModal.data?.po_ord_no,
-        acc_no: reportEditorModal.data?.po_acc_no,
-        user_id: "test_user"
-      })
+    makePostCall('/submit-report', {
+      html: newContent,
+      yh_no: reportEditorModal.data?.po_pin,
+      order_no: reportEditorModal.data?.po_ord_no,
+      acc_no: reportEditorModal.data?.po_acc_no,
+      user_id: "test_user"
     })
-      .then(res => res.json())
       .then(res => {
         console.log("resp", res);
       })
@@ -40,18 +35,11 @@ const OrdersList = () => {
 
 
   const getOrdersList = async () => {
-    fetch('http://localhost:4000/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-      })
+    makePostCall('/orders', {
     })
-      .then(res => res.json())
       .then(res => {
         console.log("resp", res);
-        setOrders({ data: res.data, loading: false })
+        setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
         console.log(e);
@@ -83,17 +71,10 @@ const OrdersList = () => {
       payload['status'] = filters['status'];
     }
 
-    fetch('http://localhost:4000/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ ...payload })
-    })
-      .then(res => res.json())
+    makePostCall('/orders', { payload })
       .then(res => {
         console.log("resp", res);
-        setOrders({ data: res.data, loading: false })
+        setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
         console.log(e);
@@ -109,8 +90,7 @@ const OrdersList = () => {
   }
 
   const refreshScanStatus = () => {
-    fetch('http://localhost:4000/update-status')
-      .then(res => res.json())
+    axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
         console.log("res", res);
         filterResults();

@@ -50,9 +50,10 @@ const RichTextEditor = ({ content, onChange, onSave, cancel }) => {
   }
 
   return (<div id='editor-container'><div ref={editorRef}></div>
-    <div className='d-flex space-between' >
+    <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
-      <Button danger className='mt-3' type='default' color='primary' onClick={handleSave}>Save Changes</Button>
+      <Button danger className='mt-3 ms-auto' type='default' color='primary' onClick={() => handleSave('draft')}>DRAFT</Button>
+      <Button className='mt-3 ms-3' type='primary' color='primary' onClick={() => handleSave('signoff')}>SIGN OFF</Button>
     </div>
   </div>);
 };

@@ -1,12 +1,37 @@
 import { Button, Card, Form, Input } from "antd"
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { BASE_API } from "../../axios";
+import { setAccessToken, setUserDetails } from "../../utils/helper";
 
 const Login = () => {
   const [loginForm] = Form.useForm();
 
-  const onFinish = () => {
+  useEffect(() => {
+    if (localStorage.getItem("user_details")) {
+      window.location.href = "/orders";
+    }
+  });
 
+  const onFinish = () => {
+    const { username, password } = loginForm.getFieldsValue();
+    axios.post(BASE_API + "/login", {
+      username,
+      password: password.toUpperCase(),
+    })
+      .then(res => {
+        console.log("res", res);
+        const resp_data = res?.data?.data;
+        if (resp_data) {
+          setUserDetails(resp_data.user_details);
+          setAccessToken(resp_data.access_token);
+        }
+      })
+      .catch(e => {
+        console.log("error", e);
+      })
   }
+
   return (
     <div className="login-container">
       <Card style={{ width: 600 }} className="ms-auto">

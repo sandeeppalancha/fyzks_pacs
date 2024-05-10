@@ -36,9 +36,15 @@ const MyViewer = ({ appProps }) => {
 };
 
 function CustomApp(appProps) {
+
+  const [selectedTabKey, setSelectedTabKey] = React.useState('1');
+
   useEffect(() => {
-    console.log("inside use custom app");
-    // document.title = 'Fyzks PACS';
+    const currentUrl = window.location.href;
+    console.log("inside use custom app", currentUrl);
+    if (currentUrl.includes('/viewer')) {
+      setSelectedTabKey('viewer_pacs');
+    }
   }, []);
 
   const items: TabsProps['items'] = [
@@ -49,6 +55,12 @@ function CustomApp(appProps) {
         <BrowserRouter>
           <div className="app-content" style={{ background: "white", height: '100vh' }}>
             <Routes>
+              <Route path='/' element={
+                <>
+                  <OrdersList />
+                </>
+              }
+              />
               <Route
                 path="/orders"
                 element={
@@ -71,7 +83,7 @@ function CustomApp(appProps) {
       </>,
     },
     {
-      key: '2',
+      key: 'viewer_pacs',
       label: 'PACS',
       children: <MyViewer appProps={appProps} />,
     },
@@ -111,7 +123,14 @@ function CustomApp(appProps) {
       >
         <AppHeader />
         <div className='custom-body'>
-          <Tabs style={{ background: 'white' }} items={items} />
+          <Tabs onTabClick={(activeKey) => {
+            if (selectedTabKey !== activeKey) {
+              setSelectedTabKey(activeKey);
+              if (activeKey !== 'viewer_pacs') {
+                window.location.href = '/';
+              }
+            }
+          }} activeKey={selectedTabKey} style={{ background: 'white' }} items={items} />
         </div>
         {/* <WysigEditor /> */}
       </ConfigProvider>

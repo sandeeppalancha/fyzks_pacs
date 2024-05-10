@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
-import { ConvertStringToDate } from "../../utils/helper";
+import { ConvertStringToDate, makeGetCall, makePostCall } from "../../utils/helper";
 import moment from "moment";
-import { Card, Checkbox, Radio, Select, Table } from "antd";
+import { Button, Card, Checkbox, Radio, Select, Table } from "antd";
 import { TemplateHeader } from "./constants";
 import { RightSquareOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Link } from "react-router-dom";
 
 
 const ReportEditor = ({ cancel, onSave, patientDetails }) => {
@@ -28,23 +29,16 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
   }, []);
 
   const fetchPrevReports = () => {
-    fetch('http://localhost:4000/get-reports', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        yh_no: patientDetails?.po_pin,
-        order_no: patientDetails?.po_ord_no,
-        acc_no: patientDetails?.po_acc_no,
-      })
+    makePostCall('/get-reports', {
+      yh_no: patientDetails?.po_pin,
+      order_no: patientDetails?.po_ord_no,
+      acc_no: patientDetails?.po_acc_no,
     })
-      .then(res => res.json())
       .then(res => {
         console.log("resp", res);
-        setReportsData(res?.data);
-        setCurrentReport(res?.data[0]);
-
+        const resp_data = res.data?.data || [];
+        setReportsData(resp_data);
+        setCurrentReport(resp_data[0]);
       })
       .catch(e => {
         console.log(e);
@@ -52,13 +46,10 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
   }
 
   const getTemplates = () => {
-    fetch('http://localhost:4000/get-templates', {
-      method: 'GET',
-    })
-      .then(res => res.json())
+    makeGetCall('/get-templates')
       .then(res => {
         console.log("templ", res);
-        setTemplates(res?.data);
+        setTemplates(res?.data?.data || []);
       })
       .catch(e => {
         console.log(e);
@@ -111,17 +102,10 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
 
   const handleDelete = (rec) => {
     console.log("rec", rec);
-    fetch('http://localhost:4000/delete-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        report_id: rec?.pr_id,
-        yh_no: patientDetails?.po_pin,
-      })
+    makePostCall('/delete-report', {
+      report_id: rec?.pr_id,
+      yh_no: patientDetails?.po_pin,
     })
-      .then(res => res.json())
       .then(res => {
         console.log("resp", res);
         fetchPrevReports();
@@ -155,6 +139,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
               <div className="pat-name">
                 {`${patientDetails?.po_pat_name}, ${patientDetails?.po_pin}`}
               </div>
+              {/* <Link to={}>Go to Viewer</Link> */}
+              <Button danger className="ms-auto" type="default" onClick={() => { window.open(`/viewer?StudyInstanceUIDs=${patientDetails?.po_study_uid}`, '_blank') }}> Launch Viewer</Button>
             </div>
             <div>
               {`${patientDetails?.po_pat_sex} / ${patientDetails?.po_age}`}
