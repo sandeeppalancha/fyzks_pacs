@@ -4,7 +4,7 @@ import Quill from 'quill';
 
 import 'quill/dist/quill.snow.css';
 import { Button } from 'antd';
-import axiosInstance from '../../axios';
+import { makePostCall } from '../../utils/helper';
 
 const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails }) => {
   const editorRef = useRef(null);
@@ -50,28 +50,37 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
     onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport);
   }
 
-  const printReport = () => {
-    axiosInstance.post('/print-report', {
+  const handlePrint = () => {
+    makePostCall('/print-report', {
       report: currentReport,
       patDetails: patDetails,
-      html: quillInstance.current.root.innerHTML,
+      html: quillInstance.current.root.innerHTML, //.replaceAll(' ', '&nbsp'),
+    }, {
+      responseType: "arraybuffer",
     })
       .then(res => {
         console.log("repo", res);
-
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        // setPdfBlob(pdfBlob);
+        // saveAs(pdfBlob, "generated-pdf.pdf");
+        // const pdfBlob = rawToBlob(response.data);
+        const pdf_url = URL.createObjectURL(pdfBlob);
+        // setPdfUrl(url);
+        const printWindow = window.open(pdf_url, "_blank");
+        printWindow.print();
       })
       .catch(err => {
         console.log("Error", err);
-
       })
   }
 
   const statusOrder = ['DRAFTED', 'REVIEWED', 'SIGNEDOFF'];
 
-  return (<div id='editor-container'><div ref={editorRef}></div>
+  return (<div id='editor-container'>
+    <div ref={editorRef}></div>
     <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
-      <Button className='mt-3' type='default' onClick={printReport}>PRINT REPORT</Button>
+      <Button className='mt-3' type='default' onClick={handlePrint}>PRINT REPORT</Button>
       <Button
         disabled={statusOrder.indexOf(currentReport?.pr_status) > 0}
         danger className='mt-3 ms-auto' type='default'

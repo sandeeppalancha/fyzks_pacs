@@ -31,8 +31,8 @@ export const getAccessToken = () => {
   return localStorage.getItem("access_token");
 }
 
-export const makePostCall = (url, payload) => {
-  return axiosInstance.post( BASE_API +  url, payload);
+export const makePostCall = (url, payload, headers) => {
+  return axiosInstance.post( BASE_API +  url, payload, headers);
 }
 
 export const makeGetCall = (url) => {
