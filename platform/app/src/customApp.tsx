@@ -50,7 +50,7 @@ function CustomApp(appProps) {
   const items: TabsProps['items'] = [
     {
       key: '1',
-      label: 'Orders List',
+      label: 'PACS',
       children: <>
         <BrowserRouter>
           <div className="app-content" style={{ background: "white", height: '100vh' }}>
@@ -84,7 +84,7 @@ function CustomApp(appProps) {
     },
     {
       key: 'viewer_pacs',
-      label: 'PACS',
+      label: 'VIEWER',
       children: <MyViewer appProps={appProps} />,
     },
   ];

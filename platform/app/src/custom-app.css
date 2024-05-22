@@ -3,3 +3,13 @@
   height: calc(100% - 60px);
   overflow-y: auto;
 }
+
+.ant-tabs-tab-btn {
+  font-weight: 500;
+}
+
+.ant-tabs-tab {
+  min-width: 120px;
+  text-align: center;
+  justify-content: center;
+}
