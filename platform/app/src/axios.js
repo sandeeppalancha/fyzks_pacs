@@ -1,8 +1,8 @@
 import { message } from "antd";
 import axios, { AxiosHeaders } from "axios";
 
-export const BASE_API = "http://localhost:4000";
-// export const BASE_API = "https://his-api-dev.yashodahospital.com";
+// export const BASE_API = "http://localhost:4000";
+export const BASE_API = "http://192.152.80.24:4000/";
 // export const BASE_API = "https://his-beta-api.yashodahospital.com";
 // export const BASE_API = "https://ircapi.lexyslabs.com";
 // export const BASE_API = "https://irc-api.starof.com";
