@@ -20,8 +20,24 @@ export const orderColumns = (openReportEditor) => ([
     title: "Diag Name",
   },
   {
+    dataIndex: "po_acc_no",
+    title: "Accession No",
+  },
+  {
     dataIndex: "po_ord_no",
     title: "Order No",
+  },
+  {
+    dataIndex: "po_site",
+    title: "Site",
+  },
+  {
+    dataIndex: "po_body_part",
+    title: "Body Part",
+  },
+  {
+    dataIndex: "po_assigned_to",
+    title: "Assigned To",
   },
   {
     dataIndex: "po_ref_doc",

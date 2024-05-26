@@ -116,6 +116,27 @@ const OrdersList = () => {
       { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
     ]
 
+  const bodyPartOptions = [
+    { label: 'Head', value: 'HEAD' },
+    { label: 'Brain', value: 'BRAIN' },
+    { label: 'Abdomen', value: 'ABDOMEN' },
+    { label: 'Chest', value: 'CHEST' },
+    { label: 'Leg', value: 'LEG' },
+    { label: 'Hand', value: 'HAND' },
+  ];
+
+  const siteOptions = [
+    { label: 'Somajiguda', value: 'SOMAJIGUDA' },
+    { label: 'HiTech City', value: 'HITEC CITY' },
+    { label: 'Secunderabad', value: 'SECUNDERABAD' },
+  ];
+
+  const modalityOptions = [
+    { label: 'CT', value: 'CT' },
+    { label: 'Ultra Sound', value: 'US' },
+    { label: 'MRI', value: 'MRI' },
+  ];
+
   return (
     <div>
       <div className='filters-section'>
@@ -129,7 +150,16 @@ const OrdersList = () => {
           <Input width={300} onChange={(e) => handleFilterChange('pat_pin', e.target.value)} />
         </FloatLabel>
         <FloatLabel label="Status" value={filters['status']} className="ms-3">
-          <Select style={{ width: 300 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
+          <Select style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
+        </FloatLabel>
+        <FloatLabel label="Body Part" value={filters['body_part']} className="ms-3">
+          <Select style={{ width: 200 }} options={bodyPartOptions} onChange={(val) => handleFilterChange('body_part', val)} />
+        </FloatLabel>
+        <FloatLabel label="Location" value={filters['site']} className="ms-3">
+          <Select style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
+        </FloatLabel>
+        <FloatLabel label="Modality" value={filters['modality']} className="ms-3">
+          <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
         </FloatLabel>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
