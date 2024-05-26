@@ -32,8 +32,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
     fetchPrevReports();
   }
 
-  const handleSave = (conten, status, curReport) => {
-    onSave(content, status, curReport, refreshAfterUpdate);
+  const handleSave = (newContent, status, curReport) => {
+    onSave(newContent, status, curReport, refreshAfterUpdate);
   }
 
   const fetchPrevReports = () => {
