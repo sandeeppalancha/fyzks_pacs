@@ -26,6 +26,7 @@ const Login = () => {
           setUserDetails(resp_data.user_details);
           setAccessToken(resp_data.access_token);
         }
+        window.location.href = "/orders";
       })
       .catch(e => {
         console.log("error", e);

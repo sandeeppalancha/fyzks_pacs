@@ -17,14 +17,15 @@ const OrdersList = () => {
     getOrdersList();
   }, []);
 
-  const onSave = (newContent, status, currentReport, callback) => {
+  const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
     console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
       order_no: reportEditorModal.data?.po_ord_no,
       acc_no: reportEditorModal.data?.po_acc_no,
-      user_id: "test_user",
+      user_id: getUserDetails()?.username,
+      proxy_user: proxy_user,
       status,
       report_id: currentReport?.pr_id,
     })

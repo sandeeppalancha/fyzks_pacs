@@ -47,7 +47,7 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
   }, [content]);
 
   const handleSave = (status) => {
-    onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport);
+    onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport,);
   }
 
   const handlePrint = () => {

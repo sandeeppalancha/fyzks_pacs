@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
 import { ConvertStringToDate, makeGetCall, makePostCall } from "../../utils/helper";
@@ -15,6 +15,9 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
   const [currentReport, setCurrentReport] = React.useState(null);
   const [templates, setTemplates] = React.useState([]);
   const [selectedNode, setSelectedNode] = React.useState(null);
+  const [proxyUser, setProxyUser] = React.useState(null);
+  const [moreAction, setMoreAction] = React.useState(null);
+  const [radUsers, setRadUsers] = React.useState([]);
 
   const handleContentChange = (newContent) => {
     // console.log("newContent", newContent);
@@ -26,14 +29,26 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
   useEffect(() => {
     fetchPrevReports();
     getTemplates();
+    fetchRadUsers();
   }, []);
 
   const refreshAfterUpdate = () => {
     fetchPrevReports();
   }
 
-  const handleSave = (newContent, status, curReport) => {
-    onSave(newContent, status, curReport, refreshAfterUpdate);
+  const handleSave = (newContent, status, curReport, moreInfo = {}) => {
+    onSave(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate);
+  }
+
+  const fetchRadUsers = () => {
+    makeGetCall('/get-rad-users')
+      .then(res => {
+        setRadUsers(res.data?.data || []);
+      })
+      .catch(e => {
+        console.log(e);
+        setRadUsers([]);
+      })
   }
 
   const fetchPrevReports = () => {
@@ -139,6 +154,14 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
 
   console.log("selected", templates[selectedNode]);
 
+  const radUserOptions = useMemo(() => {
+    return radUsers.map(user => ({
+      label: user.user_fullname,
+      value: user.username
+    }));
+
+  }, [radUsers]);
+
   return (
     <div className="editor-container">
       <div className="left-section">
@@ -189,8 +212,23 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
             <div><Checkbox /> Need peer opinion from</div>
             <div><Checkbox /> Requires Sub-Speciality Opinion</div>
             <div><Checkbox /> Report Co-Signing</div>
-            <div><Checkbox /> Proxy Draft</div>
-            <div><Checkbox /> Proxy Signoff</div>
+
+            <div><Checkbox onChange={(e) => {
+              setMoreAction(e.target.checked ? 'proxy-draft' : null)
+            }} /> Proxy Draft
+              {moreAction === 'proxy-draft' && (
+                <Select style={{ width: 180 }} onChange={(val) => { setProxyUser(val) }} options={radUserOptions} />
+              )}
+            </div>
+
+            <div><Checkbox onChange={(e) => {
+              setMoreAction(e.target.checked ? 'proxy-signoff' : null)
+            }} /> Proxy Signoff
+              {moreAction === 'proxy-signoff' && (
+                <Select style={{ width: 180 }} onChange={(val) => { setProxyUser(val) }} options={radUserOptions} />
+              )}
+            </div>
+
             <div>Clinically diagnosed
               <Radio.Group >
                 <Radio value={1}>A</Radio>
