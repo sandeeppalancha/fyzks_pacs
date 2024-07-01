@@ -16,6 +16,11 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
     if (!quillInstance.current) {
       quillInstance.current = new Quill(editorRef.current, {
         theme: 'snow',
+        modules: {
+          clipboard: {
+            matchVisual: false, // Disable Quill's default behavior of matching visual elements
+          },
+        }
       });
     }
 
@@ -87,12 +92,12 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
         color='primary' onClick={() => handleSave('DRAFTED')}
       >DRAFT</Button>
       <Button
-        disabled={currentReport?.pr_status !== 'DRAFTED'}
+        disabled={currentReport?.pr_status === 'SIGNEDOFF'}
         danger className='mt-3 ms-3' type='default' color='primary'
         onClick={() => handleSave('REVIEWED')}
       >REVIEWED</Button>
       <Button
-        disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
+        // disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
         className='mt-3 ms-3' type='primary' color='primary'
         onClick={() => handleSave('SIGNEDOFF')}>
         SIGN OFF

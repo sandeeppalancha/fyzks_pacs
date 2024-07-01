@@ -34,9 +34,10 @@ const DialogProvider = ({ children, service }) => {
   }, [dialogs]);
 
   const getCenterPosition = id => {
-    const root = document.querySelector('#root');
-    const centerX = root.offsetLeft + root.offsetWidth / 2;
-    const centerY = root.offsetTop + root.offsetHeight / 2;
+    // replaced custom root
+    const root = document.querySelector('#custom-root');
+    const centerX = root?.offsetLeft + root?.offsetWidth / 2;
+    const centerY = root?.offsetTop + root?.offsetHeight / 2;
     const item = document.querySelector(`#draggableItem-${id}`);
     const itemBounds = item.getBoundingClientRect();
     return {

@@ -16,6 +16,8 @@ import "./custom-app.css";
 import "./index.css";
 import WysigEditor from './pages/ReportEditor/wysig';
 import Login from './pages/login';
+import { ErrorBoundary } from "react-error-boundary";
+import MyWorklist from './pages/my-workilist';
 
 const MyViewer = ({ appProps }) => {
   useEffect(() => {
@@ -30,90 +32,101 @@ const MyViewer = ({ appProps }) => {
     }
 
   }, []);
+
   return (<div id="!pacs-app">
-    <App config={appProps.config} defaultExtensions={appProps.defaultExtensions} defaultModes={appProps.defaultModes} />
+    <ErrorBoundary fallback={<div>Something went wrong. Please refresh the browser tab</div>}>
+      <App config={appProps.config} defaultExtensions={appProps.defaultExtensions} defaultModes={appProps.defaultModes} />
+    </ErrorBoundary>
   </div>);
 };
 
 function CustomApp(appProps) {
 
-  const [selectedTabKey, setSelectedTabKey] = React.useState('1');
+  const [selectedTabKey, setSelectedTabKey] = React.useState('worklist');
+  const currentUrl = window.location.href;
 
   useEffect(() => {
-    const currentUrl = window.location.href;
     console.log("inside use custom app", currentUrl);
-    if (currentUrl.includes('/viewer')) {
-      setSelectedTabKey('viewer_pacs');
-    }
-  }, []);
+  }, [currentUrl]);
 
   const items: TabsProps['items'] = [
     {
-      key: '1',
-      label: 'PACS',
+      key: 'worklist',
+      label: 'My Worklist',
       children: <>
-        <BrowserRouter>
-          <div className="app-content" style={{ background: "white", height: '100vh' }}>
-            <Routes>
-              <Route path='/' element={
+        <MyWorklist />
+      </>,
+    },
+    {
+      key: 'orders',
+      label: 'Orders',
+      children: <OrdersList />,
+    },
+    {
+      key: 'viewer_pacs',
+      label: 'Viewer',
+      children: <MyViewer appProps={appProps} />,
+      disabled: true,
+    },
+  ];
+
+  const ViewerElement = () => {
+    return (
+      <MyViewer appProps={appProps} />
+    );
+  };
+
+  const AppView = () => {
+    return (
+      <BrowserRouter>
+        <div className="app-content" style={{ background: "white", height: '100vh' }}>
+          <Routes>
+            <Route path='/' element={
+              <>
+                <Tabs onTabClick={(activeKey) => {
+                  if (selectedTabKey !== activeKey) {
+                    setSelectedTabKey(activeKey);
+                    // if (activeKey !== 'viewer_pacs') {
+                    //   window.location.href = '/';
+                    // }
+                  }
+                }} activeKey={selectedTabKey} style={{ background: 'white' }} items={items} />
+
+              </>
+            }
+            />
+            <Route
+              path="/orders"
+              element={
                 <>
                   <OrdersList />
                 </>
               }
-              />
-              <Route
-                path="/orders"
-                element={
-                  <>
-                    <OrdersList />
-                  </>
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <>
-                    <Login />
-                  </>
-                }
-              />
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </>,
-    },
-    {
-      key: 'viewer_pacs',
-      label: 'VIEWER',
-      children: <MyViewer appProps={appProps} />,
-    },
-  ];
-
-  return (
-    <>
-      {/* <BrowserRouter>
-        <div className="app-content" style={{ background: "white", width: '100vw', height: '100vh' }}>
-          <Routes>
+            />
             <Route
-              path="/site"
+              path="/login"
               element={
                 <>
-                  <Home />
+                  <Login />
                 </>
               }
             />
-            <Route
+            {/* <Route
               path="/viewer"
               element={
                 <>
-                  <MyViewer appProps={appProps} />
+                  <MyViewer appProps={{ appProps }} />
                 </>
               }
-            />
+            /> */}
           </Routes>
         </div>
-      </BrowserRouter> */}
-      {/* <MyViewer appProps={appProps} /> */}
+      </BrowserRouter>
+    )
+  };
+
+  return (
+    <>
       <ConfigProvider
         theme={{
           token: {
@@ -123,16 +136,12 @@ function CustomApp(appProps) {
       >
         <AppHeader />
         <div className='custom-body'>
-          <Tabs onTabClick={(activeKey) => {
-            if (selectedTabKey !== activeKey) {
-              setSelectedTabKey(activeKey);
-              if (activeKey !== 'viewer_pacs') {
-                window.location.href = '/';
-              }
-            }
-          }} activeKey={selectedTabKey} style={{ background: 'white' }} items={items} />
+          {
+            currentUrl.includes('/viewer') ?
+              <ViewerElement /> :
+              <AppView />
+          }
         </div>
-        {/* <WysigEditor /> */}
       </ConfigProvider>
 
     </>
