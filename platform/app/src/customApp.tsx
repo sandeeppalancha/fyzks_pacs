@@ -134,8 +134,8 @@ function CustomApp(appProps) {
           },
         }}
       >
-        <AppHeader />
-        <div className='custom-body'>
+        {currentUrl.includes('/viewer') ? null : <AppHeader />}
+        <div className={currentUrl.includes('/viewer') ? 'viewer-body' : 'custom-body'}>
           {
             currentUrl.includes('/viewer') ?
               <ViewerElement /> :

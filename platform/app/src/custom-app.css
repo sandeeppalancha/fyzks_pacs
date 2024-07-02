@@ -4,6 +4,12 @@
   overflow-y: auto;
 }
 
+.viewer-body {
+  padding: 0 0.75rem;
+  /* height: calc(100% - 60px); */
+  overflow-y: auto;
+}
+
 .ant-tabs-tab-btn {
   font-weight: 500;
 }
