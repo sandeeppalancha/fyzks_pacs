@@ -1,6 +1,6 @@
 import { Button, Input, Modal, Select, Table, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { orderColumns } from './constants';
+import { SavedSearches, orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./orders.css";
 import FloatLabel from '../../components/FloatingLabel';
@@ -10,11 +10,15 @@ import { getUserDetails, makePostCall } from '../../utils/helper';
 const OrdersList = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
+  const [saveFiltersModal, setSaveFiltersModal] = useState({ visible: false, data: {} });
+  const [filterName, setFilterName] = useState(null);
   const [filters, setFilters] = useState({});
+  const [savedFilters, setSavedFilters] = useState([]);
   const userDetails = getUserDetails();
 
   useEffect(() => {
     getOrdersList();
+    getSavedFilters();
   }, []);
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
@@ -62,6 +66,35 @@ const OrdersList = () => {
     setReportEditorModal({ visible: true, data: record })
   }
 
+  const getSavedFilters = async () => {
+    makePostCall('/get-saved-filters', { user_id: getUserDetails()?.username })
+      .then(res => {
+        console.log("resp", res);
+        setSavedFilters(res.data?.data || []);
+      })
+      .catch(e => {
+        console.log(e);
+        setSavedFilters([]);
+      });
+  }
+
+  const submitSaveFilters = () => {
+    const payload = {
+      filters: JSON.stringify(filters),
+      uf_filter_name: filterName,
+      user_id: getUserDetails()?.username
+    };
+    console.log("Filters", payload);
+    makePostCall('/save-my-filters', payload)
+      .then(res => {
+        console.log("resp", res);
+        getSavedFilters();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
   const filterResults = () => {
     setOrders({ loading: true, data: [] });
     const payload = {};
@@ -70,7 +103,7 @@ const OrdersList = () => {
     }
 
     if (filters['pat_pin']) {
-      payload['yh_no'] = filters['pat_pin'];
+      payload['yh_no'] = filters['yh_no'];
     }
 
     if (filters['status']) {
@@ -138,13 +171,23 @@ const OrdersList = () => {
     { label: 'MRI', value: 'MRI' },
   ];
 
+  const handleFilterSelection = (selectedSavedFilter) => {
+    console.log("selectedSavedFilter", selectedSavedFilter);
+    const filterString = selectedSavedFilter.uf_filter_json;
+    const filterJson = JSON.parse(filterString);
+    console.log("filter json", filterJson);
+
+    setFilters(filterJson);
+  }
+
   return (
     <div>
+      <SavedSearches savedFilters={savedFilters || []} handleFilterSelection={handleFilterSelection} />
       <div className='filters-section'>
         {/* <Space.Compact> */}
         {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
         <FloatLabel label="Patient Name" value={filters['pat_name']}>
-          <Input width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
+          <Input value={filters['pat_name']} width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
         </FloatLabel>
 
         <FloatLabel label="YH No" value={filters['pat_pin']} className="ms-3">
@@ -163,6 +206,7 @@ const OrdersList = () => {
           <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
         </FloatLabel>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
+        <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
@@ -173,6 +217,15 @@ const OrdersList = () => {
         {reportEditorModal.visible && (
           <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
             <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
+          </Modal>
+        )}
+
+        {saveFiltersModal.visible && (
+          <Modal className='save-filter-modal' onCancel={() => { setSaveFiltersModal({ visible: false }) }}
+            okButtonProps={{ disabled: !filterName }} onOk={submitSaveFilters}
+            open={saveFiltersModal.visible}
+          >
+            <Input width={300} onChange={(e) => setFilterName(e.target.value)} />
           </Modal>
         )}
       </div>

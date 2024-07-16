@@ -1,4 +1,4 @@
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import React from "react";
 import { FileTextOutlined } from '@ant-design/icons';
 
@@ -60,3 +60,18 @@ export const orderColumns = (openReportEditor) => ([
     }
   }
 ]);
+
+
+export const SavedSearches = ({ savedFilters, handleFilterSelection }) => {
+  console.log("savedFilters", savedFilters);
+
+  return (
+    <div className="mb-2">
+      <span> Saved Filters:</span>
+      {savedFilters.map((filter, index) => (
+        <span className="ml-2"><Tag color='orange' onClick={() => handleFilterSelection(filter)} style={{ color: 'orange' }}>{filter.uf_name}</Tag></span>
+      ))
+      }
+    </div >
+  )
+}
