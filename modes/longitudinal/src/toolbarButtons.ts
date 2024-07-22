@@ -128,6 +128,16 @@ const toolbarButtons: Button[] = [
       evaluate: 'evaluate.action',
     },
   },
+  {
+    id: 'StackScroll',
+    uiType: 'ohif.radioGroup',
+    props: {
+      icon: 'tool-stack-scroll',
+      label: 'StackScroll',
+      commands: 'resetViewport',
+      evaluate: 'evaluate.action',
+    },
+  },
   // Window Level
   {
     id: 'WindowLevel',

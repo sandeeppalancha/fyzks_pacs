@@ -8,6 +8,8 @@ import { ServicesManager } from '@ohif/core';
 import { InstanceMetadata } from '@ohif/core/src/types';
 import { formatPN, formatDICOMDate, formatDICOMTime, formatNumberPrecision } from './utils';
 import { StackViewportData, VolumeViewportData } from '../../types/CornerstoneCacheService';
+import { utils } from '@ohif/core';
+const { formatDate } = utils;
 
 import './CustomizableViewportOverlay.css';
 
@@ -66,6 +68,16 @@ function CustomizableViewportOverlay({
   const [voi, setVOI] = useState({ windowCenter: null, windowWidth: null });
   const [scale, setScale] = useState(1);
   const { imageIndex } = imageSliceData;
+  const [patientInfo, setPatientInfo] = useState({
+    PatientName: '',
+    PatientID: '',
+    PatientSex: '',
+    PatientDOB: '',
+  });
+
+  const { displaySetService } = servicesManager.services;
+
+  const displaySets = displaySetService.getActiveDisplaySets();
 
   const topLeftCustomization = customizationService.getModeCustomization(
     'cornerstoneOverlayTopLeft'
@@ -223,9 +235,9 @@ function CustomizableViewportOverlay({
             <div key={`${keyPrefix}_${index}`}>
               {item?.condition
                 ? item.condition({
-                    instance: instances ? instances[item?.instanceIndex] : null,
-                    formatters: { formatDate: formatDICOMDate },
-                  })
+                  instance: instances ? instances[item?.instanceIndex] : null,
+                  formatters: { formatDate: formatDICOMDate },
+                })
                   ? _renderOverlayItem(item)
                   : null
                 : _renderOverlayItem(item)}
@@ -243,35 +255,118 @@ function CustomizableViewportOverlay({
     label: '',
     title: 'Study date',
     condition: ({ instance }) => instance && instance.StudyDate,
-    contentF: ({ instance, formatters: { formatDate } }) => formatDate(instance.StudyDate),
+    contentF: ({ instance, formatters: { formatDate, formatTime } }) => {
+      return `${formatDate(instance.StudyDate)} ${formatTime(instance.StudyTime, 'hh:mm A')}`
+    },
   };
+
+  const patientNameItem = {
+    id: 'PatientName',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Patient Name',
+    condition: ({ instance }) => instance && instance.StudyDate,
+    contentF: ({ instance }) => patientInfo?.PatientName,
+  };
+
+  const patientIDItem = {
+    id: 'PatientID',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Patient ID',
+    condition: ({ instance }) => instance && instance.PatientID,
+    contentF: ({ instance }) => patientInfo?.PatientID,
+  }
+
+  const patientSexItem = {
+    id: 'PatientSex',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Patient Sex',
+    condition: ({ instance }) => instance && instance.PatientSex,
+    contentF: ({ instance }) => patientInfo?.PatientSex,
+  }
+
+  const patientDobItem = {
+    id: 'PatientDOB',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Patient DOB',
+    condition: ({ instance }) => instance && instance.PatientDOB,
+    contentF: ({ instance }) => patientInfo?.PatientDOB,
+  }
+
+  const updatePatientInfo = () => {
+    const displaySet = displaySets[0];
+    const instance = displaySet?.instances?.[0] || displaySet?.instance;
+    if (!instance) {
+      return;
+    }
+    setPatientInfo({
+      PatientID: instance.PatientID || '',
+      PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : '',
+      PatientSex: instance.PatientSex || '',
+      PatientDOB: formatDate(instance.PatientBirthDate) || '',
+    });
+    // checkMixedPatients(instance.PatientID || '');
+  };
+
+  useEffect(() => {
+    const subscription = displaySetService.subscribe(
+      displaySetService.EVENTS.DISPLAY_SETS_ADDED,
+      () => updatePatientInfo()
+    );
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    updatePatientInfo();
+  }, [displaySets]);
+
 
   const seriesDescriptionItem = {
     id: 'SeriesDescription',
     customizationType: 'ohif.overlayItem',
     label: '',
     title: 'Series description',
-    attribute: 'SeriesDescription',
+    // attribute: 'SeriesDescription',
     condition: ({ instance }) => {
       return instance && instance.SeriesDescription;
     },
+    contentF: ({ instance }) => `${instance.Modality} | ${instance.SeriesDescription}`,
   };
 
   const topLeftItems = instances
     ? instances
-        .map((instance, index) => {
-          return [
-            {
-              ...studyDateItem,
-              instanceIndex: index,
-            },
-            {
-              ...seriesDescriptionItem,
-              instanceIndex: index,
-            },
-          ];
-        })
-        .flat()
+      .map((instance, index) => {
+        return [
+          {
+            ...studyDateItem,
+            instanceIndex: index,
+          },
+          {
+            ...seriesDescriptionItem,
+            instanceIndex: index,
+          },
+          {
+            ...patientNameItem,
+            instanceIndex: index,
+          },
+          {
+            ...patientIDItem,
+            instanceIndex: index,
+          },
+          {
+            ...patientDobItem,
+            instanceIndex: index,
+          },
+          {
+            ...patientSexItem,
+            instanceIndex: index,
+          }
+        ];
+      })
+      .flat()
     : [];
 
   return (
