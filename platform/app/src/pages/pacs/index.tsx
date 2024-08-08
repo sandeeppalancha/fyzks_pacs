@@ -2,36 +2,54 @@ import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
-import "./worklist.css";
+import "./pacs.css";
 import FloatLabel from '../../components/FloatingLabel';
 import axiosInstance, { BASE_API } from '../../axios';
 import { getUserDetails, makePostCall } from '../../utils/helper';
+import { SavedSearches } from '../orders/constants';
+
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
 
-const MyWorklist = ({ appDateRange }) => {
+const PacsList = ({ appDateRange }) => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
+  const [saveFiltersModal, setSaveFiltersModal] = useState({ visible: false, data: {} });
+  const [assignModal, setAssignModal] = useState({ visible: false, data: {} });
+  const [selectedUsersToAssign, setSelectedUsersToAssign] = useState([]);
+  const [userList, setUserList] = useState([]);
+
+  const [filterName, setFilterName] = useState(null);
   const [filters, setFilters] = useState({});
+  const [savedFilters, setSavedFilters] = useState([]);
   const userDetails = getUserDetails();
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const today = dayjs();
+  const yesterday = dayjs().subtract(1, 'days');
+
   // Set the default value to [yesterday, today]
-  const [dateRange, setDateRange] = useState([]);
+  const [dateRange, setDateRange] = useState([yesterday, today]);
+
+  const isHOD = userDetails?.user_type === 'hod';
 
   useEffect(() => {
-    getOrdersList();
+    getPacsList();
+    getSavedFilters();
+    getUsersList();
   }, []);
 
-  useEffect(() => {
-    if (appDateRange && appDateRange[0] !== null && appDateRange[1] !== null) {
-      console.log("appDateRange", appDateRange);
-      setDateRange(appDateRange)
-    } else {
-      const today = dayjs();
-      const yesterday = dayjs().subtract(1, 'days');
-      setDateRange([yesterday, today])
-    }
-  }, [appDateRange])
+  const getUsersList = () => {
+    makePostCall('/user-list', {}).then(res => {
+      console.log("usersList", res);
+      setUserList(res.data?.data || []);
+    })
+      .catch(e => {
+        console.log(e);
+        setUserList([]);
+      })
+  }
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
     console.log("onsave newContent", reportEditorModal);
@@ -55,10 +73,9 @@ const MyWorklist = ({ appDateRange }) => {
   }
 
 
-  const getOrdersList = async () => {
-    makePostCall('/my-worklist', {
+  const getPacsList = async () => {
+    makePostCall('/pacs-list', {
       role: userDetails?.user_type,
-      user_id: getUserDetails()?.username,
     })
       .then(res => {
         console.log("resp", res);
@@ -79,6 +96,35 @@ const MyWorklist = ({ appDateRange }) => {
     setReportEditorModal({ visible: true, data: record })
   }
 
+  const getSavedFilters = async () => {
+    makePostCall('/get-saved-filters', { user_id: getUserDetails()?.username })
+      .then(res => {
+        console.log("resp", res);
+        setSavedFilters(res.data?.data || []);
+      })
+      .catch(e => {
+        console.log(e);
+        setSavedFilters([]);
+      });
+  }
+
+  const submitSaveFilters = () => {
+    const payload = {
+      filters: JSON.stringify(filters),
+      uf_filter_name: filterName,
+      user_id: getUserDetails()?.username
+    };
+    console.log("Filters", payload);
+    makePostCall('/save-my-filters', payload)
+      .then(res => {
+        console.log("resp", res);
+        getSavedFilters();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
   const filterResults = () => {
     setOrders({ loading: true, data: [] });
     const payload = {};
@@ -87,7 +133,7 @@ const MyWorklist = ({ appDateRange }) => {
     }
 
     if (filters['pat_pin']) {
-      payload['yh_no'] = filters['pat_pin'];
+      payload['yh_no'] = filters['yh_no'];
     }
 
     if (filters['status']) {
@@ -160,16 +206,53 @@ const MyWorklist = ({ appDateRange }) => {
     { label: 'MRI', value: 'MRI' },
   ];
 
-  console.log("defaultDateRange", dateRange);
+  const handleFilterSelection = (selectedSavedFilter) => {
+    console.log("selectedSavedFilter", selectedSavedFilter);
+    const filterString = selectedSavedFilter.uf_filter_json;
+    const filterJson = JSON.parse(filterString);
+    console.log("filter json", filterJson);
+
+    setFilters(filterJson);
+  }
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    getCheckboxProps: (record: DataType) => ({
+      disabled: !isHOD, // Column configuration not to be checked
+    }),
+  };
+
+  const assignToUser = () => {
+    console.log("assignToUser", selectedUsersToAssign);
+    setAssignModal({ visible: false, data: {} });
+    console.log("sel row keys", selectedRowKeys);
+    // send request to assign users to the selected report
+    makePostCall('/assign-to-user', { acc_nos: selectedRowKeys, assigned_to: selectedUsersToAssign })
+      .then(res => {
+        console.log("resp", res);
+        // refresh the report data
+        filterResults();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
 
   return (
     <div>
+      <SavedSearches savedFilters={savedFilters || []} handleFilterSelection={handleFilterSelection} />
       <div className='filters-section'>
         {/* <Space.Compact> */}
         {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
         <div className='d-flex flex-wrap'>
           <FloatLabel label="Patient Name" value={filters['pat_name']}>
-            <Input width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
+            <Input value={filters['pat_name']} width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
           </FloatLabel>
 
           <FloatLabel label="YH No" value={filters['pat_pin']} className="ms-3">
@@ -194,22 +277,60 @@ const MyWorklist = ({ appDateRange }) => {
             }} />
           </FloatLabel>
         </div>
-        <Button className='ms-4' type='primary' onClick={filterResults}>Search Worklist</Button>
+        <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
+        <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
+        <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
-        <Table loading={orders.loading} columns={orderColumns(openReport)} dataSource={orders.data || []} onRow={(record, rowIndex) => {
-          return {
-          }
-        }} />
+        <Table
+          rowSelection={rowSelection}
+          loading={orders.loading}
+          columns={orderColumns(openReport)}
+          rowKey={(rec) => rec.po_acc_no}
+          dataSource={orders.data || []}
+          onRow={(record, rowIndex) => {
+            return {
+            }
+          }}
+        />
         {reportEditorModal.visible && (
           <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
             <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
           </Modal>
         )}
+
+        {saveFiltersModal.visible && (
+          <Modal className='save-filter-modal' onCancel={() => { setSaveFiltersModal({ visible: false }) }}
+            okButtonProps={{ disabled: !filterName }} onOk={submitSaveFilters}
+            open={saveFiltersModal.visible}
+          >
+            <Input width={300} onChange={(e) => setFilterName(e.target.value)} />
+          </Modal>
+        )}
+
+        {assignModal.visible && (
+          <Modal className='save-filter-modal' onCancel={() => { setAssignModal({ visible: false }) }}
+            okButtonProps={{ disabled: !selectedUsersToAssign }} onOk={assignToUser}
+            open={assignModal.visible}
+          >
+            Select User
+            <div>
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={userList?.map((user) => ({ label: user.user_fullname, value: user.username }))}
+                onChange={(val) => { setSelectedUsersToAssign(val) }}
+              />
+            </div>
+          </Modal>
+        )}
       </div>
     </div>
-  );
+  )
 }
 
-export default MyWorklist;
+export default PacsList;

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
-import { ConvertStringToDate, makeGetCall, makePostCall } from "../../utils/helper";
+import { ConvertStringToDate, getUserDetails, makeGetCall, makePostCall } from "../../utils/helper";
 import moment from "moment";
 import { Button, Card, Checkbox, Radio, Select, Table } from "antd";
 import { TemplateHeader } from "./constants";
@@ -9,7 +9,7 @@ import { RightSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 
 
-const ReportEditor = ({ cancel, onSave, patientDetails }) => {
+const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const [content, setContent] = React.useState(null);
   const [reportsData, setReportsData] = React.useState([]);
   const [currentReport, setCurrentReport] = React.useState(null);
@@ -37,7 +37,31 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
   }
 
   const handleSave = (newContent, status, curReport, moreInfo = {}) => {
-    onSave(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate);
+    if (onSave) {
+      onSave(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
+    } else {
+      saveReport(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
+    };
+  }
+
+  const saveReport = (newContent, status, currentReport, { proxy_user }, callback) => {
+    makePostCall('/submit-report', {
+      html: newContent,
+      yh_no: patientDetails?.po_pin,
+      order_no: patientDetails?.po_ord_no,
+      acc_no: patientDetails?.po_acc_no,
+      user_id: getUserDetails()?.username,
+      proxy_user: proxy_user,
+      status,
+      report_id: currentReport?.pr_id,
+    })
+      .then(res => {
+        console.log("resp", res);
+        callback && callback();
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   const fetchRadUsers = () => {
@@ -61,6 +85,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails }) => {
         console.log("resp", res);
         const resp_data = res.data?.data || [];
         setReportsData(resp_data);
+        console.log("selectd", selected_report);
+        console.log("resp_data", resp_data);
         setCurrentReport(resp_data[0]);
       })
       .catch(e => {

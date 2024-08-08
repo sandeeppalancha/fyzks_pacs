@@ -21,6 +21,15 @@ body {
 .d-flex {
   display: flex;
 }
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.me-3 {
+  margin-right: 0.75rem;
+}
+
 .space-between {
   justify-content: space-between;
 }

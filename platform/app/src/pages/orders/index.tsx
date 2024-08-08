@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Table, Space } from 'antd';
+import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { SavedSearches, orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
@@ -6,8 +6,11 @@ import "./orders.css";
 import FloatLabel from '../../components/FloatingLabel';
 import axiosInstance, { BASE_API } from '../../axios';
 import { getUserDetails, makePostCall } from '../../utils/helper';
+import dayjs from 'dayjs';
 
-const OrdersList = () => {
+const { RangePicker } = DatePicker;
+
+const OrdersList = ({ appDateRange }) => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [saveFiltersModal, setSaveFiltersModal] = useState({ visible: false, data: {} });
@@ -15,6 +18,11 @@ const OrdersList = () => {
   const [filters, setFilters] = useState({});
   const [savedFilters, setSavedFilters] = useState([]);
   const userDetails = getUserDetails();
+  const today = dayjs();
+  const yesterday = dayjs().subtract(1, 'days');
+
+  // Set the default value to [yesterday, today]
+  const [dateRange, setDateRange] = useState([yesterday, today]);
 
   useEffect(() => {
     getOrdersList();
@@ -186,25 +194,33 @@ const OrdersList = () => {
       <div className='filters-section'>
         {/* <Space.Compact> */}
         {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
-        <FloatLabel label="Patient Name" value={filters['pat_name']}>
-          <Input value={filters['pat_name']} width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
-        </FloatLabel>
+        <div className='d-flex flex-wrap'>
+          <FloatLabel label="Patient Name" value={filters['pat_name']}>
+            <Input value={filters['pat_name']} width={300} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
+          </FloatLabel>
 
-        <FloatLabel label="YH No" value={filters['pat_pin']} className="ms-3">
-          <Input width={300} onChange={(e) => handleFilterChange('pat_pin', e.target.value)} />
-        </FloatLabel>
-        <FloatLabel label="Status" value={filters['status']} className="ms-3">
-          <Select style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
-        </FloatLabel>
-        <FloatLabel label="Body Part" value={filters['body_part']} className="ms-3">
-          <Select style={{ width: 200 }} options={bodyPartOptions} onChange={(val) => handleFilterChange('body_part', val)} />
-        </FloatLabel>
-        <FloatLabel label="Location" value={filters['site']} className="ms-3">
-          <Select style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
-        </FloatLabel>
-        <FloatLabel label="Modality" value={filters['modality']} className="ms-3">
-          <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
-        </FloatLabel>
+          <FloatLabel label="YH No" value={filters['pat_pin']} className="ms-3">
+            <Input width={300} onChange={(e) => handleFilterChange('pat_pin', e.target.value)} />
+          </FloatLabel>
+          <FloatLabel label="Status" value={filters['status']} className="ms-3">
+            <Select style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
+          </FloatLabel>
+          <FloatLabel label="Body Part" value={filters['body_part']} className="ms-3">
+            <Select style={{ width: 200 }} options={bodyPartOptions} onChange={(val) => handleFilterChange('body_part', val)} />
+          </FloatLabel>
+          <FloatLabel label="Location" value={filters['site']} className="ms-3">
+            <Select style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
+          </FloatLabel>
+          <FloatLabel label="Modality" value={filters['modality']} className="ms-3">
+            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
+          </FloatLabel>
+          <FloatLabel label="Date" value={filters['assigned_to']} className="ms-3">
+            <RangePicker size="middle" value={dateRange} onChange={(val) => {
+              console.log("date picker change", val);
+              setDateRange([val[0], val[1]]);
+            }} />
+          </FloatLabel>
+        </div>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
         <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>

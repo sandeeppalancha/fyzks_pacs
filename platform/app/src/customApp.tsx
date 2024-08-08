@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Navigate,
@@ -18,19 +18,20 @@ import WysigEditor from './pages/ReportEditor/wysig';
 import Login from './pages/login';
 import { ErrorBoundary } from "react-error-boundary";
 import MyWorklist from './pages/my-workilist';
+import PacsList from './pages/pacs';
+import { getUserDetails } from './utils/helper';
+import dayjs from 'dayjs';
 
 const MyViewer = ({ appProps }) => {
+
   useEffect(() => {
     console.log("inside use viewer", appProps);
-
     const app = React.createElement(App, appProps, null);
     const pacs_app_element = document.getElementById('pacs-app');
     console.log("pcs app eellment", pacs_app_element);
-
     if (pacs_app_element) {
       ReactDOM.render(app, pacs_app_element);
     }
-
   }, []);
 
   return (<div id="!pacs-app">
@@ -42,25 +43,37 @@ const MyViewer = ({ appProps }) => {
 
 function CustomApp(appProps) {
 
-  const [selectedTabKey, setSelectedTabKey] = React.useState('worklist');
+  const userDetails = getUserDetails();
+  const isTechnician = userDetails?.user_type === 'technician';
+  const [selectedTabKey, setSelectedTabKey] = React.useState(isTechnician ? 'orders' : 'worklist');
   const currentUrl = window.location.href;
+  const [appDateRange, setAppDateRange] = useState([null, null]);
 
   useEffect(() => {
     console.log("inside use custom app", currentUrl);
   }, [currentUrl]);
 
-  const items: TabsProps['items'] = [
+
+  let items: TabsProps['items'] = isTechnician ? [
+    {
+      key: 'orders',
+      label: 'Orders',
+      children: <OrdersList appDateRange={appDateRange} />,
+    },
+  ] : [
     {
       key: 'worklist',
       label: 'My Worklist',
       children: <>
-        <MyWorklist />
+        <MyWorklist appDateRange={appDateRange} />
       </>,
     },
     {
-      key: 'orders',
-      label: 'Orders',
-      children: <OrdersList />,
+      key: 'pacs',
+      label: 'PACS',
+      children: <>
+        <PacsList appDateRange={appDateRange} />
+      </>,
     },
     {
       key: 'viewer_pacs',
@@ -76,7 +89,7 @@ function CustomApp(appProps) {
     );
   };
 
-  const AppView = () => {
+  const AppView = ({ appDateRange }) => {
     return (
       <BrowserRouter>
         <div className="app-content" style={{ background: "white", height: '100vh' }}>
@@ -125,6 +138,12 @@ function CustomApp(appProps) {
     )
   };
 
+  const handleDateChange = (val) => {
+    console.log("handleDateChange", val);
+    setAppDateRange([dayjs().add(-val, 'd'), dayjs()]);
+    // [dayjs().add(-7, 'd'), dayjs()]
+  }
+
   return (
     <>
       <ConfigProvider
@@ -134,16 +153,15 @@ function CustomApp(appProps) {
           },
         }}
       >
-        {currentUrl.includes('/viewer') ? null : <AppHeader />}
+        {currentUrl.includes('/viewer') ? null : <AppHeader handleDateChange={handleDateChange} />}
         <div className={currentUrl.includes('/viewer') ? 'viewer-body' : 'custom-body'}>
           {
             currentUrl.includes('/viewer') ?
               <ViewerElement /> :
-              <AppView />
+              <AppView appDateRange={appDateRange} />
           }
         </div>
       </ConfigProvider>
-
     </>
   );
 };

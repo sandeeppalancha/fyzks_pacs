@@ -1,4 +1,4 @@
-import { Button, Tag } from "antd";
+import { Tag, Button } from "antd";
 import React from "react";
 import { FileTextOutlined } from '@ant-design/icons';
 

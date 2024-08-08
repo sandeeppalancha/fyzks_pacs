@@ -9,7 +9,7 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem("user_details")) {
-      window.location.href = "/orders";
+      window.location.href = "/";
     }
   });
 
@@ -26,7 +26,7 @@ const Login = () => {
           setUserDetails(resp_data.user_details);
           setAccessToken(resp_data.access_token);
         }
-        window.location.href = "/orders";
+        window.location.href = "";
       })
       .catch(e => {
         console.log("error", e);
