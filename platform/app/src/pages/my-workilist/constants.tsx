@@ -1,6 +1,8 @@
 import { Button, Tag } from "antd";
 import React from "react";
+import moment from "moment";
 import { FileTextOutlined } from '@ant-design/icons';
+import { ConvertStringToDate } from "../../utils/helper";
 
 const statusColors = {
   'PENDING': 'red',
@@ -27,32 +29,63 @@ export const orderColumns = (openReportEditor) => ([
     }
   },
   {
-    dataIndex: "po_diag_desc",
-    title: "Diag Name",
+    dataIndex: "po_pin",
+    title: "Pat. ID",
   },
   {
-    dataIndex: "po_acc_no",
-    title: "Accession No",
+    dataIndex: "po_his_status",
+    title: "HIS Status",
   },
   {
-    dataIndex: "po_ord_no",
-    title: "Order No",
+    dataIndex: "po_pat_age",
+    title: "Pat. Age",
+  },
+  {
+    dataIndex: "po_pat_sex",
+    title: "Pat. Sex",
+  },
+
+  {
+    dataIndex: "po_body_part",
+    title: "Body Part",
   },
   {
     dataIndex: "po_site",
     title: "Site",
   },
   {
-    dataIndex: "po_body_part",
-    title: "Body Part",
+    dataIndex: "modality",
+    title: "Modality",
   },
   {
-    dataIndex: "po_assigned_to",
-    title: "Assigned To",
+    dataIndex: "po_ord_no",
+    title: "Order No",
+  },
+  {
+    dataIndex: "po_acc_no",
+    title: "Acc. No",
   },
   {
     dataIndex: "po_ref_doc",
     title: "Ref Doc",
+  },
+  {
+    dataIndex: "po_scan_date",
+    title: "Scan Dt.",
+    render: (val, record) => {
+      return (
+        <span>{moment(ConvertStringToDate(record?.po_study_dt, record?.po_study_tm)).format("DD-MM-YYYY HH:mm:ss")}</span>
+      )
+    }
+  },
+
+  {
+    dataIndex: "po_received_date",
+    title: "Received Dt.",
+  },
+  {
+    dataIndex: "po_assigned_to",
+    title: "Assigned To",
   },
   {
     dataIndex: "po_status",
