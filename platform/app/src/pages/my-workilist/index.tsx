@@ -25,7 +25,6 @@ const MyWorklist = ({ appDateRange }) => {
 
   useEffect(() => {
     if (appDateRange && appDateRange[0] !== null && appDateRange[1] !== null) {
-      console.log("appDateRange", appDateRange);
       setDateRange(appDateRange)
     } else {
       const today = dayjs();
@@ -35,7 +34,7 @@ const MyWorklist = ({ appDateRange }) => {
   }, [appDateRange])
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
-    console.log("onsave newContent", reportEditorModal);
+    // console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
@@ -47,7 +46,6 @@ const MyWorklist = ({ appDateRange }) => {
       report_id: currentReport?.pr_id,
     })
       .then(res => {
-        console.log("resp", res);
         callback && callback();
       })
       .catch(e => {
@@ -62,7 +60,6 @@ const MyWorklist = ({ appDateRange }) => {
       user_id: getUserDetails()?.username,
     })
       .then(res => {
-        console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -72,7 +69,6 @@ const MyWorklist = ({ appDateRange }) => {
   }
 
   const cancelReport = () => {
-    console.log("cancel report");
     setReportEditorModal({ visible: false, data: {} });
   }
 
@@ -93,7 +89,7 @@ const MyWorklist = ({ appDateRange }) => {
 
     makePostCall('/my-worklist', payload)
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -103,7 +99,7 @@ const MyWorklist = ({ appDateRange }) => {
   }
 
   const handleFilterChange = (key, value) => {
-    console.log("handleFilterChange", key, value);
+    // console.log("handleFilterChange", key, value);
     const temp_filters = { ...filters };
     temp_filters[key] = value;
     setFilters(temp_filters);
@@ -112,7 +108,7 @@ const MyWorklist = ({ appDateRange }) => {
   const refreshScanStatus = () => {
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
-        console.log("res", res);
+        // console.log("res", res);
         filterResults();
       })
       .catch(e => {
@@ -151,8 +147,6 @@ const MyWorklist = ({ appDateRange }) => {
     { label: 'Ultra Sound', value: 'US' },
     { label: 'MRI', value: 'MRI' },
   ];
-
-  console.log("defaultDateRange", dateRange);
 
   return (
     <div>
@@ -199,7 +193,6 @@ const MyWorklist = ({ appDateRange }) => {
           </FloatLabel>
           <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
             <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              console.log("date picker change", val);
               setDateRange([val[0], val[1]]);
             }} />
           </FloatLabel>

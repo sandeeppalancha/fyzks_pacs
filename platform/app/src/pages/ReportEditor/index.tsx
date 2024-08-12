@@ -24,8 +24,6 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
     setContent(newContent);
   }
 
-  console.log("patientDetails", patientDetails);
-
   useEffect(() => {
     fetchPrevReports();
     getTemplates();
@@ -56,7 +54,6 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
       report_id: currentReport?.pr_id,
     })
       .then(res => {
-        console.log("resp", res);
         callback && callback();
       })
       .catch(e => {
@@ -82,11 +79,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
       acc_no: patientDetails?.po_acc_no,
     })
       .then(res => {
-        console.log("resp", res);
         const resp_data = res.data?.data || [];
         setReportsData(resp_data);
-        console.log("selectd", selected_report);
-        console.log("resp_data", resp_data);
         setCurrentReport(resp_data[0]);
       })
       .catch(e => {
@@ -97,7 +91,6 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const getTemplates = () => {
     makeGetCall('/get-templates')
       .then(res => {
-        console.log("templ", res);
         setTemplates(res?.data?.data || []);
       })
       .catch(e => {
@@ -111,8 +104,6 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
       setContent(`${currentReport?.pr_html}`);
     }
   }, [currentReport]);
-
-  console.log("templates", templates);
 
   const reportColumns = [
     {
@@ -145,19 +136,16 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   ];
 
   const loadTemplate = (rec) => {
-    console.log("rec", rec);
     // setCurrentReport(rec);
     setCurrentReport(rec)
   }
 
   const handleDelete = (rec) => {
-    console.log("rec", rec);
     makePostCall('/delete-report', {
       report_id: rec?.pr_id,
       yh_no: patientDetails?.po_pin,
     })
       .then(res => {
-        console.log("resp", res);
         fetchPrevReports();
       })
       .catch(e => {
@@ -166,19 +154,15 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   }
 
   const handleTemplateChange = (val) => {
-    console.log('selected template', val);
     fetch(`/templates/${val}.html`)
       .then(response => response.text())
       .then(html => {
         // Do something with the HTML content
-        console.log(html);
         // setContent(html)
         setCurrentReport({ pr_html: html });
       })
       .catch(error => console.error('Error:', error));
   }
-
-  console.log("selected", templates[selectedNode]);
 
   const radUserOptions = useMemo(() => {
     return radUsers.map(user => ({
@@ -215,7 +199,6 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
               columns={reportColumns}
               dataSource={reportsData ? reportsData?.slice(0, 2) : []}
             />
-
           </div>
         </Card>
         <Card className="mb-3">

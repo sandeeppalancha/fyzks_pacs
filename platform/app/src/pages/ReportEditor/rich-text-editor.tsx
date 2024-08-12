@@ -67,7 +67,6 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
       responseType: "arraybuffer",
     })
       .then(res => {
-        console.log("repo", res);
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         // setPdfBlob(pdfBlob);
         // saveAs(pdfBlob, "generated-pdf.pdf");
