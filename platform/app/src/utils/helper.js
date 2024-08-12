@@ -38,3 +38,13 @@ export const makePostCall = (url, payload, headers) => {
 export const makeGetCall = (url) => {
   return axiosInstance.get( BASE_API +  url);
 }
+
+
+export  const hisStatusOptions = [
+  { label: 'UNCONFIRMED', value: 'UNCONFIRMED' },
+  { label: 'CONFIRMATION_IN_PROGRESS', value: 'CONFIRMATION_IN_PROGRESS' },
+  { label: 'WAIT_FOR_MANUAL_CONFIRMATION', value: 'WAIT_FOR_MANUAL_CONFIRMATION' },
+  { label: 'CONFIRMED', value: 'CONFIRMED' },
+  { label: 'DUPLICATE_ACCESSION_NO', value: 'DUPLICATE_ACCESSION_NO' },
+  { label: 'CONFIRMATION_NOT_REQUIRED', value: 'CONFIRMATION_NOT_REQUIRED' },
+]
