@@ -5,61 +5,64 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { Button } from 'antd';
 import { makePostCall } from '../../utils/helper';
+import CustomEditor from '../custom-editor';
 
 const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails }) => {
-  const editorRef = useRef(null);
-  const quillInstance = useRef(null);
+  // const editorRef = useRef(null);
+  // const quillInstance = useRef(null);
 
-  useEffect(() => {
-    console.log("content", content);
+  // useEffect(() => {
+  //   console.log("content", content);
 
-    if (!quillInstance.current) {
-      quillInstance.current = new Quill(editorRef.current, {
-        theme: 'snow',
-        modules: {
-          clipboard: {
-            matchVisual: false, // Disable Quill's default behavior of matching visual elements
-          },
-        }
-      });
-    }
+  //   if (!quillInstance.current && false) {
+  //     quillInstance.current = new Quill(editorRef.current, {
+  //       theme: 'snow',
+  //       modules: {
+  //         clipboard: {
+  //           matchVisual: false, // Disable Quill's default behavior of matching visual elements
+  //         },
+  //       }
+  //     });
+  //   }
 
-    quillInstance.current.on('text-change', (delta, oldDelta, source) => {
-      // console.log("changed", quillInstance.current.root.innerHTML);
+  //   if (quillInstance.current) {
+  //     quillInstance.current.on('text-change', (delta, oldDelta, source) => {
+  //       // console.log("changed", quillInstance.current.root.innerHTML);
 
-      // onChange && onChange(quillInstance.current.root.innerHTML);
-    });
+  //       // onChange && onChange(quillInstance.current.root.innerHTML);
+  //     });
 
-    quillInstance.current.on('text-change', () => {
-      // console.log("changed", quillInstance.current.root.innerHTML);
-      // onChange(quillInstance.current.root.innerHTML);
-    });
+  //     quillInstance.current.on('text-change', () => {
+  //       // console.log("changed", quillInstance.current.root.innerHTML);
+  //       // onChange(quillInstance.current.root.innerHTML);
+  //     });
 
-    // if (content) {
-    //   quill.root.innerHTML = content;
-    // }
+  //     // if (content) {
+  //     //   quill.root.innerHTML = content;
+  //     // }
 
-    // Convert HTML to Delta format
-    const delta = quillInstance.current.clipboard.convert(content);
+  //     // Convert HTML to Delta format
+  //     const delta = quillInstance.current.clipboard.convert(content);
 
-    console.log("delta", delta);
+  //     console.log("delta", delta);
 
 
-    // Load Delta into Quill
-    quillInstance.current.setContents(delta);
+  //     // Load Delta into Quill
+  //     quillInstance.current.setContents(delta);
 
-    quillInstance.current.root.innerHTML = content;
-  }, [content]);
+  //     quillInstance.current.root.innerHTML = content;
+  //   }
+  // }, [content]);
 
   const handleSave = (status) => {
-    onSave && onSave(quillInstance.current.root.innerHTML, status, currentReport,);
+    onSave && onSave(content, status, currentReport,);
   }
 
   const handlePrint = () => {
     makePostCall('/print-report', {
       report: currentReport,
       patDetails: patDetails,
-      html: quillInstance.current.root.innerHTML, //.replaceAll(' ', '&nbsp'),
+      html: content, //.replaceAll(' ', '&nbsp'),
     }, {
       responseType: "arraybuffer",
     })
@@ -82,7 +85,8 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
   const statusOrder = ['DRAFTED', 'REVIEWED', 'SIGNEDOFF'];
 
   return (<div id='editor-container'>
-    <div ref={editorRef}></div>
+    {/* <div ref={editorRef}></div> */}
+    <CustomEditor initialContent={content} placeholder={"placeholder..."} handleChange={onChange} />
     <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
       <Button className='mt-3' type='default' onClick={handlePrint}>PRINT REPORT</Button>

@@ -20,8 +20,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const [radUsers, setRadUsers] = React.useState([]);
 
   const handleContentChange = (newContent) => {
-    // console.log("newContent", newContent);
-    // setContent(newContent);
+    console.log("newContent", newContent);
+    setContent(newContent);
   }
 
   console.log("patientDetails", patientDetails);
@@ -38,9 +38,9 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   const handleSave = (newContent, status, curReport, moreInfo = {}) => {
     if (onSave) {
-      onSave(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
+      onSave(content, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
     } else {
-      saveReport(newContent, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
+      saveReport(content, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
     };
   }
 
