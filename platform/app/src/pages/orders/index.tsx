@@ -30,7 +30,7 @@ const OrdersList = ({ appDateRange }) => {
   }, []);
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
-    console.log("onsave newContent", reportEditorModal);
+    // console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
@@ -42,7 +42,7 @@ const OrdersList = ({ appDateRange }) => {
       report_id: currentReport?.pr_id,
     })
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         callback && callback();
       })
       .catch(e => {
@@ -56,7 +56,7 @@ const OrdersList = ({ appDateRange }) => {
       role: userDetails?.user_type,
     })
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -66,7 +66,7 @@ const OrdersList = ({ appDateRange }) => {
   }
 
   const cancelReport = () => {
-    console.log("cancel report");
+    // console.log("cancel report");
     setReportEditorModal({ visible: false, data: {} });
   }
 
@@ -77,7 +77,7 @@ const OrdersList = ({ appDateRange }) => {
   const getSavedFilters = async () => {
     makePostCall('/get-saved-filters', { user_id: getUserDetails()?.username })
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         setSavedFilters(res.data?.data || []);
       })
       .catch(e => {
@@ -92,10 +92,10 @@ const OrdersList = ({ appDateRange }) => {
       uf_filter_name: filterName,
       user_id: getUserDetails()?.username
     };
-    console.log("Filters", payload);
+    // console.log("Filters", payload);
     makePostCall('/save-my-filters', payload)
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         getSavedFilters();
       })
       .catch(e => {
@@ -120,7 +120,7 @@ const OrdersList = ({ appDateRange }) => {
 
     makePostCall('/orders', { payload })
       .then(res => {
-        console.log("resp", res);
+        // console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -130,7 +130,7 @@ const OrdersList = ({ appDateRange }) => {
   }
 
   const handleFilterChange = (key, value) => {
-    console.log("handleFilterChange", key, value);
+    // console.log("handleFilterChange", key, value);
     const temp_filters = { ...filters };
     temp_filters[key] = value;
     setFilters(temp_filters);
@@ -139,7 +139,7 @@ const OrdersList = ({ appDateRange }) => {
   const refreshScanStatus = () => {
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
-        console.log("res", res);
+        // console.log("res", res);
         filterResults();
       })
       .catch(e => {
@@ -180,10 +180,10 @@ const OrdersList = ({ appDateRange }) => {
   ];
 
   const handleFilterSelection = (selectedSavedFilter) => {
-    console.log("selectedSavedFilter", selectedSavedFilter);
+    // console.log("selectedSavedFilter", selectedSavedFilter);
     const filterString = selectedSavedFilter.uf_filter_json;
     const filterJson = JSON.parse(filterString);
-    console.log("filter json", filterJson);
+    // console.log("filter json", filterJson);
 
     setFilters(filterJson);
   }
@@ -216,7 +216,6 @@ const OrdersList = ({ appDateRange }) => {
           </FloatLabel>
           <FloatLabel label="Date" value={filters['assigned_to']} className="ms-3">
             <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              console.log("date picker change", val);
               setDateRange([val[0], val[1]]);
             }} />
           </FloatLabel>

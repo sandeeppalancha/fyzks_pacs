@@ -63,7 +63,6 @@ export const orderColumns = (openReportEditor) => ([
 
 
 export const SavedSearches = ({ savedFilters, handleFilterSelection }) => {
-  console.log("savedFilters", savedFilters);
 
   return (
     <div className="mb-2">

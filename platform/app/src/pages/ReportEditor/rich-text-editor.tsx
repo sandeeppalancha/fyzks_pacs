@@ -11,8 +11,6 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
   const quillInstance = useRef(null);
 
   useEffect(() => {
-    console.log("content", content);
-
     if (!quillInstance.current) {
       quillInstance.current = new Quill(editorRef.current, {
         theme: 'snow',
@@ -42,9 +40,6 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
     // Convert HTML to Delta format
     const delta = quillInstance.current.clipboard.convert(content);
 
-    console.log("delta", delta);
-
-
     // Load Delta into Quill
     quillInstance.current.setContents(delta);
 
@@ -64,7 +59,6 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
       responseType: "arraybuffer",
     })
       .then(res => {
-        console.log("repo", res);
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         // setPdfBlob(pdfBlob);
         // saveAs(pdfBlob, "generated-pdf.pdf");

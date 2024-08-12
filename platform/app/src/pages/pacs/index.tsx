@@ -43,7 +43,6 @@ const PacsList = ({ appDateRange }) => {
 
   const getUsersList = () => {
     makePostCall('/user-list', {}).then(res => {
-      console.log("usersList", res);
       setUserList(res.data?.data || []);
     })
       .catch(e => {
@@ -53,7 +52,6 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
-    console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
@@ -65,7 +63,6 @@ const PacsList = ({ appDateRange }) => {
       report_id: currentReport?.pr_id,
     })
       .then(res => {
-        console.log("resp", res);
         callback && callback();
       })
       .catch(e => {
@@ -79,7 +76,6 @@ const PacsList = ({ appDateRange }) => {
       role: userDetails?.user_type,
     })
       .then(res => {
-        console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -89,7 +85,6 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const cancelReport = () => {
-    console.log("cancel report");
     setReportEditorModal({ visible: false, data: {} });
   }
 
@@ -100,7 +95,6 @@ const PacsList = ({ appDateRange }) => {
   const getSavedFilters = async () => {
     makePostCall('/get-saved-filters', { user_id: getUserDetails()?.username })
       .then(res => {
-        console.log("resp", res);
         setSavedFilters(res.data?.data || []);
       })
       .catch(e => {
@@ -115,10 +109,8 @@ const PacsList = ({ appDateRange }) => {
       uf_filter_name: filterName,
       user_id: getUserDetails()?.username
     };
-    console.log("Filters", payload);
     makePostCall('/save-my-filters', payload)
       .then(res => {
-        console.log("resp", res);
         getSavedFilters();
       })
       .catch(e => {
@@ -137,7 +129,6 @@ const PacsList = ({ appDateRange }) => {
 
     makePostCall('/pacs-list', payload)
       .then(res => {
-        console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -147,7 +138,6 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const handleFilterChange = (key, value) => {
-    console.log("handleFilterChange", key, value);
     const temp_filters = { ...filters };
     temp_filters[key] = value;
     setFilters(temp_filters);
@@ -156,7 +146,6 @@ const PacsList = ({ appDateRange }) => {
   const refreshScanStatus = () => {
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
-        console.log("res", res);
         filterResults();
       })
       .catch(e => {
@@ -197,16 +186,13 @@ const PacsList = ({ appDateRange }) => {
   ];
 
   const handleFilterSelection = (selectedSavedFilter) => {
-    console.log("selectedSavedFilter", selectedSavedFilter);
     const filterString = selectedSavedFilter.uf_filter_json;
     const filterJson = JSON.parse(filterString);
-    console.log("filter json", filterJson);
 
     setFilters(filterJson);
   }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -219,13 +205,10 @@ const PacsList = ({ appDateRange }) => {
   };
 
   const assignToUser = () => {
-    console.log("assignToUser", selectedUsersToAssign);
     setAssignModal({ visible: false, data: {} });
-    console.log("sel row keys", selectedRowKeys);
     // send request to assign users to the selected report
     makePostCall('/assign-to-user', { acc_nos: selectedRowKeys, assigned_to: selectedUsersToAssign })
       .then(res => {
-        console.log("resp", res);
         // refresh the report data
         filterResults();
       })
@@ -281,7 +264,6 @@ const PacsList = ({ appDateRange }) => {
           </FloatLabel>
           <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
             <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              console.log("date picker change", val);
               setDateRange([val[0], val[1]]);
             }} />
           </FloatLabel>
