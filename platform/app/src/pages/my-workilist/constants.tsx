@@ -26,48 +26,64 @@ export const orderColumns = (openReportEditor) => ([
           {text}
         </Button>
       )
-    }
+    },
+    width: 200
+  },
+  {
+    dataIndex: "po_diag_desc",
+    title: "Study Desc.",
+    width: 200
   },
   {
     dataIndex: "po_pin",
     title: "Pat. ID",
+    width: 120
   },
   {
     dataIndex: "po_his_status",
     title: "HIS Status",
+    width: 100
   },
   {
     dataIndex: "po_pat_age",
     title: "Pat. Age",
+    width: 100
   },
   {
     dataIndex: "po_pat_sex",
     title: "Pat. Sex",
+    width: 100
   },
 
   {
     dataIndex: "po_body_part",
     title: "Body Part",
+    width: 100
   },
   {
     dataIndex: "po_site",
     title: "Site",
+    width: 150
   },
   {
     dataIndex: "modality",
     title: "Modality",
+    width: 120
   },
   {
     dataIndex: "po_ord_no",
     title: "Order No",
+    width: 100
   },
   {
     dataIndex: "po_acc_no",
     title: "Acc. No",
+    width: 120
   },
   {
     dataIndex: "po_ref_doc",
     title: "Ref Doc",
+    width: 140
   },
   {
     dataIndex: "po_scan_date",
@@ -76,16 +92,14 @@ export const orderColumns = (openReportEditor) => ([
       return (
         <span>{moment(ConvertStringToDate(record?.po_study_dt, record?.po_study_tm)).format("DD-MM-YYYY HH:mm:ss")}</span>
       )
-    }
+    },
+    width: 150
   },
 
   {
     dataIndex: "po_received_date",
     title: "Received Dt.",
-  },
-  {
-    dataIndex: "po_assigned_to",
-    title: "Assigned To",
+    width: 150
   },
   {
     dataIndex: "po_status",
@@ -101,6 +115,8 @@ export const orderColumns = (openReportEditor) => ([
           )}
         </>
       )
-    }
+    },
+    fixed: 'right',
+    width: 180
   }
 ]);

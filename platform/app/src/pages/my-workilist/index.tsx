@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./worklist.css";
@@ -16,12 +16,25 @@ const MyWorklist = ({ appDateRange }) => {
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [filters, setFilters] = useState({});
   const userDetails = getUserDetails();
+  const [userList, setUserList] = useState([]);
   // Set the default value to [yesterday, today]
   const [dateRange, setDateRange] = useState([]);
 
   useEffect(() => {
     getOrdersList();
+    getUsersList();
   }, []);
+
+  const getUsersList = () => {
+    makePostCall('/user-list', {}).then(res => {
+      setUserList(res.data?.data || []);
+    })
+      .catch(e => {
+        console.log(e);
+        setUserList([]);
+      })
+  }
+
 
   useEffect(() => {
     if (appDateRange && appDateRange[0] !== null && appDateRange[1] !== null) {
@@ -85,6 +98,7 @@ const MyWorklist = ({ appDateRange }) => {
     if (dateRange) {
       payload['from_date'] = dayjs(dateRange[0]).format('YYYYMMDD');
       payload['to_date'] = dayjs(dateRange[1]).format('YYYYMMDD');
+      payload['po_study_date'] = dateRange;
     }
 
     makePostCall('/my-worklist', payload)
@@ -148,6 +162,11 @@ const MyWorklist = ({ appDateRange }) => {
     { label: 'MRI', value: 'MRI' },
   ];
 
+  const reportedByOptions = useMemo(() => {
+    return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
+  }, [userList])
+
+
   return (
     <div>
       <div className='filters-section'>
@@ -186,14 +205,23 @@ const MyWorklist = ({ appDateRange }) => {
             <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
           </FloatLabel>
           <FloatLabel label="Reported By" value={filters['po_reported_by']} className="me-3">
-            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('po_reported_by', val)} />
-          </FloatLabel>
-          <FloatLabel label="Assigned to" value={filters['po_assigned_to']} className="me-3">
-            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('po_assigned_to', val)} />
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={reportedByOptions}
+              onChange={(val) => handleFilterChange('po_reported_by', val)}
+            />
           </FloatLabel>
           <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
             <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              setDateRange([val[0], val[1]]);
+              if (val) {
+                setDateRange([val[0], val[1]]);
+              } else {
+                setDateRange(null);
+              }
             }} />
           </FloatLabel>
         </div>
@@ -201,10 +229,20 @@ const MyWorklist = ({ appDateRange }) => {
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
-        <Table loading={orders.loading} columns={orderColumns(openReport)} dataSource={orders.data || []} onRow={(record, rowIndex) => {
-          return {
-          }
-        }} />
+        <Table
+          tableLayout='fixed'
+          style={{ width: '100%' }}
+          loading={orders.loading}
+          columns={orderColumns(openReport)}
+          dataSource={orders.data || []}
+          onRow={(record, rowIndex) => {
+            return {
+            }
+          }}
+          scroll={{
+            x: 1200
+          }}
+        />
         {reportEditorModal.visible && (
           <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
             <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />

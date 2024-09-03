@@ -1,0 +1,9 @@
+.ant-table-cell {
+  line-height: 1 !important;
+    padding: 0.25rem 0.5rem !important;
+    border-right: 1px solid #d3d3d3c2;
+}
+
+.ant-picker-range {
+  padding-left: 90px;
+}

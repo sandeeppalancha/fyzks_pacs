@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./pacs.css";
@@ -40,6 +40,10 @@ const PacsList = ({ appDateRange }) => {
     getSavedFilters();
     getUsersList();
   }, []);
+
+  useEffect(() => {
+
+  }, [dateRange])
 
   const getUsersList = () => {
     makePostCall('/user-list', {}).then(res => {
@@ -125,6 +129,7 @@ const PacsList = ({ appDateRange }) => {
     if (dateRange) {
       payload['from_date'] = dayjs(dateRange[0]).format('YYYYMMDD');
       payload['to_date'] = dayjs(dateRange[1]).format('YYYYMMDD');
+      payload['po_study_date'] = dateRange;
     }
 
     makePostCall('/pacs-list', payload)
@@ -217,6 +222,10 @@ const PacsList = ({ appDateRange }) => {
       });
   }
 
+  const reportedByOptions = useMemo(() => {
+    return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
+  }, [userList])
+
   return (
     <div>
       <SavedSearches savedFilters={savedFilters || []} handleFilterSelection={handleFilterSelection} />
@@ -228,53 +237,76 @@ const PacsList = ({ appDateRange }) => {
             <FyzksInput value={filters['pat_name']} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
           </FloatLabel>
 
-          <FloatLabel label="YH No" value={filters['pat_pin']} className="me-3">
-            <FyzksInput width={200} onChange={(e) => handleFilterChange('pat_pin', e.target.value)} />
+          <FloatLabel label="YH No" value={filters['po_pin']} className="me-3">
+            <FyzksInput width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="Acc. No" value={filters['po_acc_no']} className="me-3">
             <FyzksInput width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="Ref Doc." value={filters['po_ref_doc']} className="me-3">
-            <Select style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
+            <Select allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
           </FloatLabel>
           <FloatLabel label="Body Part / Study Desc" value={filters['po_body_part']} className="me-3">
             <FyzksInput width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="HIS Status" value={filters['po_his_status']} className="me-3">
-            <Select style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
+            <Select allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
           </FloatLabel>
 
           <FloatLabel label="Order No" value={filters['po_ord_no']} className="me-3">
             <FyzksInput width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="Status" value={filters['status']} className="me-3">
-            <Select style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
+            <Select allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
           </FloatLabel>
           <FloatLabel label="Site" value={filters['site']} className="me-3">
-            <Select style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
+            <Select allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
           </FloatLabel>
           <FloatLabel label="Modality" value={filters['modality']} className="me-3">
-            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
+            <Select allowClear style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
           </FloatLabel>
           <FloatLabel label="Reported By" value={filters['po_reported_by']} className="me-3">
-            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('po_reported_by', val)} />
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={reportedByOptions}
+              onChange={(val) => handleFilterChange('po_reported_by', val)}
+            />
           </FloatLabel>
           <FloatLabel label="Assigned to" value={filters['po_assigned_to']} className="me-3">
-            <Select style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('po_assigned_to', val)} />
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={reportedByOptions}
+              onChange={(val) => handleFilterChange('po_assigned_to', val)}
+            />
           </FloatLabel>
           <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
             <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              setDateRange([val[0], val[1]]);
+              if (val) {
+                setDateRange([val[0], val[1]]);
+              } else {
+                setDateRange(null);
+              }
             }} />
           </FloatLabel>
         </div>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
         <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
-        <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
+        {isHOD && (
+          <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
+        )}
         <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
         <Table
+          tableLayout="fixed"
           rowSelection={rowSelection}
           loading={orders.loading}
           columns={orderColumns(openReport)}
@@ -283,6 +315,10 @@ const PacsList = ({ appDateRange }) => {
           onRow={(record, rowIndex) => {
             return {
             }
+          }}
+          style={{ width: '100%' }}
+          scroll={{
+            x: 1200
           }}
         />
         {reportEditorModal.visible && (

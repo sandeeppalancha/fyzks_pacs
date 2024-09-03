@@ -9,9 +9,9 @@
   position: absolute;
   pointer-events: none;
   left: 12px;
-  top: 7px;
+  top: 6px;
   transition: 0.2s ease all;
-  color: rgb(80 77 77 / 60%);
+  color: grey;
 }
 
 .label-float {
