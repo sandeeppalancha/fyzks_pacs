@@ -1,6 +1,7 @@
 import axiosInstance, { BASE_API } from "../axios";
 
 export const ConvertStringToDate = (dateString, timeString) => {
+  if(!dateString || !timeString) return "";
   const year = dateString.substring(0, 4);
   const month = dateString.substring(4, 6) - 1; // Month is zero-based in JavaScript Date objects
   const day = dateString.substring(6, 8);
