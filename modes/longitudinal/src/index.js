@@ -100,6 +100,7 @@ function modeFactory({ modeConfiguration }) {
         'Reset',
         'StackScroll',
         'Pan',
+        'RemoveAnnotations',
         'TrackballRotate',
         'WindowLevel',
         'Capture',

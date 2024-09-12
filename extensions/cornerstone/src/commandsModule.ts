@@ -500,6 +500,20 @@ function commandsModule({
 
       viewport.render();
     },
+    removeAnnotations: () => {
+      const enabledElement = _getActiveViewportEnabledElement();
+      if (!enabledElement) {
+        return;
+      }
+      const local_measurements = measurementService.getMeasurements();
+      // measurementService.clearMeasurements();
+
+      if (local_measurements.length > 0) {
+        for (const measurement of local_measurements) {
+          measurementServiceSource.remove(measurement.uid);
+        }
+      }
+    },
     scaleViewport: ({ direction }) => {
       const enabledElement = _getActiveViewportEnabledElement();
       const scaleFactor = direction > 0 ? 0.9 : 1.1;
@@ -905,6 +919,9 @@ function commandsModule({
     },
     resetViewport: {
       commandFn: actions.resetViewport,
+    },
+    removeAnnotations: {
+      commandFn: actions.removeAnnotations,
     },
     scaleUpViewport: {
       commandFn: actions.scaleViewport,
