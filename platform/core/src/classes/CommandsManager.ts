@@ -19,7 +19,7 @@ import { Command, Commands, ComplexCommand } from '../types/Command';
  * to extend this class, please check it's source before adding new methods.
  */
 export class CommandsManager {
-  constructor({} = {}) {
+  constructor({ } = {}) {
     this.contexts = {};
   }
 
@@ -155,6 +155,10 @@ export class CommandsManager {
       options // "Time of call" info
     );
 
+    // console.log("definisiton", commandName, definition);
+
+    // console.log("commandFn", commandFn, commandParams);
+
     if (typeof commandFn !== 'function') {
       log.warn(`No commandFn was defined for command "${commandName}"`);
       return;
@@ -205,6 +209,7 @@ export class CommandsManager {
     // Execute each command in the array
     let result: unknown;
     commands.forEach(({ commandName, commandOptions, context }) => {
+      // console.log("com mang", commandName)
       if (commandName) {
         result = this.runCommand(
           commandName,

@@ -96,11 +96,26 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const onSelectionPreset = useCallback(props => {
+    // console.log("toolbar layout selecter", props)
     commandsManager.run({
       commandName: 'setHangingProtocol',
       commandOptions: { ...props },
     });
     setIsDisabled(true);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {//
+      onSelectionPreset({ protocolId: 'primaryAxial' });
+      setTimeout(() => {
+        const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
+        if (crosshairs.length > 0) {
+          const crosshairElement = crosshairs[0] as HTMLButtonElement;
+          crosshairElement.click();
+        }//+
+      }, 500)
+    }, 1200);//+
+    // setActiveProtocolIds
   }, []);
 
   return (
@@ -227,7 +242,7 @@ LayoutSelector.propTypes = {
 LayoutSelector.defaultProps = {
   columns: 4,
   rows: 3,
-  onLayoutChange: () => {},
+  onLayoutChange: () => { },
 };
 
 export default ToolbarLayoutSelectorWithServices;

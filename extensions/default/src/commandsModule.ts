@@ -136,6 +136,8 @@ const commandsModule = ({
         const state = viewportGridService.getState();
         const hpInfo = hangingProtocolService.getState();
         const stateSyncReduce = reuseCachedLayouts(state, hangingProtocolService, stateSyncService);
+        // console.log("stateSyncReduce", state);
+
         const { hangingProtocolStageIndexMap, viewportGridStore, displaySetSelectorMap } =
           stateSyncReduce;
 
@@ -151,6 +153,7 @@ const commandsModule = ({
           stageIndex = hangingProtocolStageIndexMap[hangingId]?.stageIndex;
         }
 
+        // console.log("set hanging protocol", protocolId, stageIndex)
         const useStageIdx =
           stageIndex ??
           hangingProtocolService.getStageIndex(protocolId, {
@@ -162,9 +165,8 @@ const commandsModule = ({
           hangingProtocolService.setActiveStudyUID(activeStudyUID);
         }
 
-        const storedHanging = `${hangingProtocolService.getState().activeStudyUID}:${protocolId}:${
-          useStageIdx || 0
-        }`;
+        const storedHanging = `${hangingProtocolService.getState().activeStudyUID}:${protocolId}:${useStageIdx || 0
+          }`;
 
         const restoreProtocol = !reset && viewportGridStore[storedHanging];
 
@@ -280,6 +282,9 @@ const commandsModule = ({
         return;
       }
 
+      // console.log("setViewportGridLayout", numRows, isHangingProtocolLayout);
+
+
       const completeLayout = () => {
         const state = viewportGridService.getState();
         const stateReduce = findViewportsByPosition(state, { numRows, numCols }, stateSyncService);
@@ -327,13 +332,13 @@ const commandsModule = ({
           displaySetInstanceUIDs.length > 1
             ? []
             : displaySetInstanceUIDs
-                .map(displaySetInstanceUID =>
-                  hangingProtocolService.getViewportsRequireUpdate(
-                    viewportIdToUpdate,
-                    displaySetInstanceUID
-                  )
+              .map(displaySetInstanceUID =>
+                hangingProtocolService.getViewportsRequireUpdate(
+                  viewportIdToUpdate,
+                  displaySetInstanceUID
                 )
-                .flat();
+              )
+              .flat();
 
         // findOrCreateViewport returns either one of the updatedViewportsViaHP
         // returned from the HP service OR if there is not one from the HP service then
@@ -351,9 +356,9 @@ const commandsModule = ({
 
           return viewport
             ? // Use the applicable viewport from the HP updated viewports
-              { viewportOptions, displaySetOptions, ...viewport }
+            { viewportOptions, displaySetOptions, ...viewport }
             : // Use the previous viewport for the given position
-              preOneUpViewport;
+            preOneUpViewport;
         };
 
         const layoutOptions = viewportGridService.getLayoutOptionsFromState(
