@@ -21,7 +21,7 @@ export const orderColumns = (openReportEditor) => ([
         <Button
           color="blue"
           className="ms-auto"
-          type="link" onClick={() => { window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
+          type="link" onClick={() => { openReportEditor(record); window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
         >
           {text}
         </Button>
