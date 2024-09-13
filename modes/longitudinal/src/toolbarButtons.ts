@@ -132,7 +132,7 @@ const toolbarButtons: Button[] = [
     id: 'RemoveAnnotations',
     uiType: 'ohif.radioGroup',
     props: {
-      icon: 'tool-stack-scroll',
+      icon: 'cancel',
       label: 'RemoveAnnotations',
       commands: 'removeAnnotations',
       evaluate: 'evaluate.action',
