@@ -47,7 +47,10 @@ export const orderColumns = (openReportEditor) => ([
   {
     dataIndex: "po_pat_age",
     title: "Pat. Age",
-    width: 100
+    width: 100,
+    render: (val, record) => {
+      return record.po_pat_dob ? moment(record.po_pat_dob, 'YYYYMMDD').fromNow(true) : '';
+    }
   },
   {
     dataIndex: "po_pat_sex",

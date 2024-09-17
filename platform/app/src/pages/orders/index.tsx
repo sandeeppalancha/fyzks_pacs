@@ -222,7 +222,7 @@ const OrdersList = ({ appDateRange }) => {
         </div>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
         <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
-        <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
+        <Button className='ms-3' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
         <Table loading={orders.loading} columns={orderColumns(openReport)} dataSource={orders.data || []} onRow={(record, rowIndex) => {

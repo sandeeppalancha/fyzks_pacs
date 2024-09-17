@@ -34,8 +34,7 @@ const ReportSearch = ({ openEditor }) => {
       <div className="results-div">
         {
           searchResults.map(itm => (
-            <Card key={itm.id} onClick={() => openEditor({ pat_details: itm.ord_details, selected_report: itm })}>
-
+            <Card className="mt-2" key={itm.id} onClick={() => openEditor({ pat_details: itm.ord_details, selected_report: itm })}>
               <div className="d-flex">
                 <div>{itm.patientName}</div>
                 <div>{itm.truncated}</div>

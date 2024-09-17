@@ -226,7 +226,7 @@ const MyWorklist = ({ appDateRange }) => {
           </FloatLabel>
         </div>
         <Button className='ms-4' type='primary' onClick={filterResults}>Search Worklist</Button>
-        <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
+        <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
         <Table

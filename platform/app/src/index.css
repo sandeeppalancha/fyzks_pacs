@@ -75,3 +75,17 @@ body {
 .ant-card-body {
   padding: 0.5rem !important;
 }
+
+.ant-table-content table {
+  border: 1px solid gray;
+}
+
+.header-title {
+  color: white;
+  font-weight: bold;
+}
+
+.header-desc {
+  color: gainsboro;
+  font-size: small;
+}

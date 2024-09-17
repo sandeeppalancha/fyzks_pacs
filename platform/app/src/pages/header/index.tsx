@@ -72,13 +72,15 @@ const AppHeader = ({ handleDateChange }) => {
       </div>
 
       {/* <RangePicker className="ms-auto me-2" presets={rangePresets} onChange={onRangeChange} /> */}
-      <FloatLabel label="Date Range" className="ms-auto mt-auto me-3">
-        <Select
-          style={{ width: 200 }}
-          options={rangePresets}
-          onChange={onRangeChange}
-        />
-      </FloatLabel>
+      {
+        userDetails ? <FloatLabel label="Date Range" className="ms-auto mt-auto me-3">
+          <Select
+            style={{ width: 200 }}
+            options={rangePresets}
+            onChange={onRangeChange}
+          />
+        </FloatLabel> : null
+      }
 
       <div className="hospital-name">
         <span className="user-name">{userDetails?.user_fullname}</span>
@@ -97,6 +99,7 @@ const AppHeader = ({ handleDateChange }) => {
           className="report-search-modal"
           open={reportSearchModal.visible}
           width={1000}
+          onCancel={() => { setReportSearchModal({ visible: false }) }}
         >
           <ReportSearch openEditor={openEditor} />
         </Modal>

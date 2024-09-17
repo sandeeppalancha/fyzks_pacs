@@ -105,16 +105,16 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {//
-      onSelectionPreset({ protocolId: 'primaryAxial' });
-      setTimeout(() => {
-        const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
-        if (crosshairs.length > 0) {
-          const crosshairElement = crosshairs[0] as HTMLButtonElement;
-          crosshairElement.click();
-        }//+
-      }, 500)
-    }, 1200);//+
+    // setTimeout(() => {//
+    //   onSelectionPreset({ protocolId: 'primaryAxial' });
+    //   setTimeout(() => {
+    //     const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
+    //     if (crosshairs.length > 0) {
+    //       const crosshairElement = crosshairs[0] as HTMLButtonElement;
+    //       crosshairElement.click();
+    //     }//+
+    //   }, 500)
+    // }, 1200);
     // setActiveProtocolIds
   }, []);
 

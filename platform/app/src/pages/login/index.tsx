@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { BASE_API } from "../../axios";
 import { setAccessToken, setUserDetails } from "../../utils/helper";
+import "./login.css";
 
 const Login = () => {
   const [loginForm] = Form.useForm();
@@ -35,8 +36,9 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <Card style={{ width: 600 }} className="ms-auto">
+      <Card style={{ width: 600 }} className="ms-auto login-card">
         <div>
+          <div className="login-header">Login</div>
           <Form form={loginForm} onFinish={onFinish}>
             <Form.Item
               name="username"

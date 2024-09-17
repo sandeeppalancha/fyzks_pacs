@@ -1,0 +1,15 @@
+.login-container {
+  margin-top: 5rem;
+}
+
+.login-card {
+  padding-top: 1rem !important;
+}
+
+.login-header {
+  font-size: 2rem;
+  color: tomato;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-family: sans-serif;
+}

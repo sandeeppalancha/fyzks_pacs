@@ -302,7 +302,7 @@ const PacsList = ({ appDateRange }) => {
         {isHOD && (
           <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
         )}
-        <Button className='ms-auto' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
+        <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
         <Table
