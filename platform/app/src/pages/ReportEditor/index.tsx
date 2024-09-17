@@ -185,7 +185,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
               <Button danger className="ms-auto" type="default" onClick={() => { window.open(`/viewer?StudyInstanceUIDs=${patientDetails?.po_study_uid}`, '_blank') }}> Launch Viewer</Button>
             </div>
             <div>
-              {`${patientDetails?.po_pat_sex} / ${patientDetails?.po_age}`}
+              {`${patientDetails?.po_pat_sex} / ${patientDetails?.po_pat_dob ? moment(patientDetails?.po_pat_dob).fromNow(true) : 'NA'}`}
             </div>
             <div>{`${patientDetails?.modality} / ${patientDetails?.po_ref_doc} ,
             ${moment(ConvertStringToDate(patientDetails?.po_study_dt, patientDetails?.po_study_tm)).format("DD-MM-YYYY HH:mm:ss")}`}
