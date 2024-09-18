@@ -75,6 +75,8 @@ function PanelStudyBrowser({
       // server can respond.
       try {
         qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
+        // console.log("qidoStudiesForPatient", qidoStudiesForPatient);
+
       } catch (error) {
         console.warn(error);
       }
@@ -211,7 +213,7 @@ function PanelStudyBrowser({
     const shouldCollapseStudy = expandedStudyInstanceUIDs.includes(StudyInstanceUID);
     const updatedExpandedStudyInstanceUIDs = shouldCollapseStudy
       ? // eslint-disable-next-line prettier/prettier
-        [...expandedStudyInstanceUIDs.filter(stdyUid => stdyUid !== StudyInstanceUID)]
+      [...expandedStudyInstanceUIDs.filter(stdyUid => stdyUid !== StudyInstanceUID)]
       : [...expandedStudyInstanceUIDs, StudyInstanceUID];
 
     setExpandedStudyInstanceUIDs(updatedExpandedStudyInstanceUIDs);
