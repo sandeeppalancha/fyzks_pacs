@@ -401,7 +401,7 @@ function PanelStudyBrowserTracking({
       onClickUntrack={displaySetInstanceUID => {
         onClickUntrack(displaySetInstanceUID);
       }}
-      onClickThumbnail={() => {}}
+      onClickThumbnail={() => { }}
       onDoubleClickThumbnail={onDoubleClickThumbnailHandler}
       activeDisplaySetInstanceUIDs={activeViewportDisplaySetInstanceUIDs}
     />
@@ -661,7 +661,7 @@ function _createStudyBrowserTabs(
   const tabs = [
     {
       name: 'primary',
-      label: 'Primary',
+      label: 'Current',
       studies: primaryStudies.sort((studyA, studyB) => _byDate(studyA.date, studyB.date)),
     },
     {
