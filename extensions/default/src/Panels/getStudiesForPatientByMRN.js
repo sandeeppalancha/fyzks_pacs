@@ -14,7 +14,7 @@ async function getStudiesForPatientByMRN(dataSource, qidoForStudyUID) {
 
     const studyResults = await Promise.all(promises);
 
-    console.log("studyResults studiesByMrn2", studyResults);
+    // console.log("studyResults studiesByMrn2", studyResults);
 
     // Combine and return the results
     return studyResults.flat();
