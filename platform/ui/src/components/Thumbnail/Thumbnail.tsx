@@ -23,6 +23,7 @@ const Thumbnail = ({
   isActive,
   onClick,
   onDoubleClick,
+  position,
 }): React.ReactNode => {
   // TODO: We should wrap our thumbnail to create a "DraggableThumbnail", as
   // this will still allow for "drag", even if there is no drop target for the
@@ -39,7 +40,8 @@ const Thumbnail = ({
     <div
       className={classnames(
         className,
-        'group mb-8 flex flex-1 cursor-pointer select-none flex-col px-3 outline-none'
+        position === 'bottom' ? '' : 'flex-1',
+        'group mb-8 flex flex-!1 cursor-pointer select-none flex-col px-3 outline-none'
       )}
       id={`thumbnail-${displaySetInstanceUID}`}
       data-cy={`study-browser-thumbnail`}

@@ -5,6 +5,7 @@ import Thumbnail from '../Thumbnail';
 import ThumbnailNoImage from '../ThumbnailNoImage';
 import ThumbnailTracked from '../ThumbnailTracked';
 import * as Types from '../../types';
+import classnames from 'classnames';
 
 const ThumbnailList = ({
   thumbnails,
@@ -12,11 +13,15 @@ const ThumbnailList = ({
   onThumbnailDoubleClick,
   onClickUntrack,
   activeDisplaySetInstanceUIDs = [],
+  customStyle = {},
+  position,
 }) => {
   return (
     <div
       id="ohif-thumbnail-list"
-      className="ohif-scrollbar study-min-height overflow-y-hidden bg-black py-5"
+      className={classnames("ohif-scrollbar", position = 'bottom' ? 'bottom-study-min-height' : "study-min-height", "overflow-y-hidden", "bg-black", "py-5")}
+      style={customStyle}
+
     >
       {thumbnails.map(
         ({
@@ -55,6 +60,7 @@ const ThumbnailList = ({
                   isActive={isActive}
                   onClick={() => onThumbnailClick(displaySetInstanceUID)}
                   onDoubleClick={() => onThumbnailDoubleClick(displaySetInstanceUID)}
+                  position={position}
                 />
               );
             case 'thumbnailTracked':

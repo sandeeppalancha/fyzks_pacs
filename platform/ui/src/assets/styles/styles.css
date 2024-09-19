@@ -12,6 +12,10 @@
   min-height: 450px;
 }
 
+.bottom-study-min-height {
+  min-height: 200px !important;
+}
+
 .ohif-scrollbar:hover {
   overflow-y: auto;
 }

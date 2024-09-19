@@ -89,3 +89,26 @@ body {
   color: gainsboro;
   font-size: small;
 }
+
+.bottom-study-item {
+  position: absolute;
+  top: 0
+}
+
+.prev-study-item {
+  border: 1px solid white;
+  margin-left: 0.5rem;
+  position: relative;
+  /* width: '100%'; */
+  min-width: 190px;
+}
+
+.line-height1 {
+  line-height: 1 !important;
+}
+
+.study-item-desc {
+  line-height: 1 !important;
+  height: auto !important;
+  line-height: 1rem !important;
+}
