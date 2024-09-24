@@ -30,6 +30,7 @@ function PanelStudyBrowserBottom({
   const [expandedStudyInstanceUIDs, setExpandedStudyInstanceUIDs] = useState([
     ...StudyInstanceUIDs,
   ]);
+  // const [recentStudyUIDs, setRecentStudyUIDs] = useState([]);
   const [studyDisplayList, setStudyDisplayList] = useState([]);
   const [displaySets, setDisplaySets] = useState([]);
   const [thumbnailImageSrcMap, setThumbnailImageSrcMap] = useState({});
@@ -344,44 +345,60 @@ function _getComponentType(ds) {
  * @param {object[]} displaySets
  * @returns tabs - The prop object expected by the StudyBrowser component
  */
-function _createStudyBrowserTabs(primaryStudyInstanceUIDs, studyDisplayList, displaySets) {
+function _createStudyBrowserTabs(primaryStudyInstanceUIDs, studyDisplayList, displaySets, setRecentStudyUIDs) {
   const primaryStudies = [];
   const recentStudies = [];
   const allStudies = [];
+  const recentStudyIds = [];
 
   studyDisplayList.forEach(study => {
-    const displaySetsForStudy = displaySets.filter(
-      ds => ds.StudyInstanceUID === study.studyInstanceUid
-    );
-    const tabStudy = Object.assign({}, study, {
-      displaySets: displaySetsForStudy,
-    });
+    // const displaySetsForStudy = displaySets.filter(
+    //   ds => ds.StudyInstanceUID === study.studyInstanceUid
+    // );
+    // const tabStudy = Object.assign({}, study, {
+    //   displaySets: displaySetsForStudy,
+    // });
 
     if (primaryStudyInstanceUIDs.includes(study.studyInstanceUid)) {
-      primaryStudies.push(tabStudy);
+      // primaryStudies.push(tabStudy);
+      const displaySetsForStudy = displaySets.filter(
+        ds => ds.StudyInstanceUID === study.studyInstanceUid
+      );
+      const tabStudy = Object.assign({}, study, {
+        displaySets: displaySetsForStudy,
+      });
+      recentStudies.push(tabStudy);
     } else {
       // TODO: Filter allStudies to dates within one year of current date
+      const displaySetsForStudy = displaySets.filter(
+        ds => ds.StudyInstanceUID === study.studyInstanceUid
+      );
+      const tabStudy = Object.assign({}, study, {
+        displaySets: displaySetsForStudy,
+      });
       recentStudies.push(tabStudy);
-      allStudies.push(tabStudy);
+      recentStudyIds.push(study.studyInstanceUid);
+      // allStudies.push(tabStudy);
     }
   });
 
   const tabs = [
-    {
-      name: 'primary',
-      label: 'Current',
-      studies: primaryStudies,
-    },
+    // {
+    //   name: 'primary',
+    //   label: 'Current',
+    //   studies: primaryStudies,
+    // },
     {
       name: 'recent',
       label: 'Recent',
       studies: recentStudies,
+      // studyIds: recentStudyIds,
     },
-    {
-      name: 'all',
-      label: 'All',
-      studies: allStudies,
-    },
+    // {
+    //   name: 'all',
+    //   label: 'All',
+    //   studies: allStudies,
+    // },
   ];
 
   return tabs;

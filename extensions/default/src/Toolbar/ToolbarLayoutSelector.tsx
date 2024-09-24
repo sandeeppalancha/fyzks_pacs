@@ -32,6 +32,13 @@ const defaultCommonPresets = [
       numCols: 3,
     },
   },
+  {
+    icon: 'layout-common-2x3',
+    commandOptions: {
+      numRows: 2,
+      numCols: 4,
+    },
+  },
 ];
 
 const _areSelectorsValid = (hp, displaySets, hangingProtocolService) => {
@@ -105,18 +112,44 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   useEffect(() => {
-    // setTimeout(() => {//
-    //   onSelectionPreset({ protocolId: 'primaryAxial' });
-    //   setTimeout(() => {
-    //     const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
-    //     if (crosshairs.length > 0) {
-    //       const crosshairElement = crosshairs[0] as HTMLButtonElement;
-    //       crosshairElement.click();
-    //     }//+
-    //   }, 500)
-    // }, 1200);
+    setTimeout(() => {//
+      const { displaySetService } = servicesManager.services;
+
+      const displaySets = displaySetService.getActiveDisplaySets();
+
+      const displaySet = displaySets[0];
+      const instance = displaySet?.instances?.[0] || displaySet?.instance;
+
+
+      const body_part = instance?.BodyPartExamined;
+      const modality = instance?.Modality;
+      console.log("Layout useffect", body_part);
+
+      if (modality === 'CT' && body_part.includes('HEAD')) {
+        setPrimaryAxial();
+      } else if (modality === 'CT' && body_part.includes('ABDOMEN')) {
+        setTwoByFour(instance);
+      }
+    }, 2000);
     // setActiveProtocolIds
   }, []);
+
+  const setPrimaryAxial = () => {
+    onSelectionPreset({ protocolId: 'primaryAxial' });
+    setTimeout(() => {
+      const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
+      if (crosshairs.length > 0) {
+        const crosshairElement = crosshairs[0] as HTMLButtonElement;
+        crosshairElement.click();
+      }//+
+    }, 500)
+  }
+
+  const setTwoByFour = (args) => {
+    console.log("set two bby four", args);
+
+    onSelection({ numRows: 2, numCols: 4 });
+  }
 
   return (
     <div onMouseEnter={handleMouseEnter}>

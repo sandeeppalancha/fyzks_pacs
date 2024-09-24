@@ -37,15 +37,15 @@ const StudyBrowserBottom = ({
   const { customizationService } = servicesManager?.services || {};
 
   useEffect(() => {
-    console.log("useEffect outside", tabs);
+    // console.log("useEffect outside", tabs);
 
     const recentsTab = tabs.find(tab => tab.name === 'recent');
     if (recentsTab.studies && recentsTab.studies.length > 0) {
-      console.log("bottompanel useEffect", recentsTab.studies);
+      // console.log("bottompanel useEffect", recentsTab.studies);
 
       recentsTab.studies.forEach(std => {
         if (!std.displaySets || std.displaySets.length == 0) {
-          console.log("bottompanel no displaysets");
+          // console.log("bottompanel no displaysets");
 
           createDisplaySetForStudy(std.studyInstanceUid);
           setExpandedStudyInstanceUIDs([...expandedStudyInstanceUIDs, std.studyInstanceUid]);
@@ -69,7 +69,7 @@ const StudyBrowserBottom = ({
     return tabData.studies.map(
       ({ studyInstanceUid, date, description, numInstances, modalities, displaySets }) => {
         const isExpanded = expandedStudyInstanceUIDs.includes(studyInstanceUid);
-        console.log("bottompanel displaySets", displaySets);
+        // console.log("bottompanel displaySets", displaySets);
 
         return (
           <React.Fragment key={studyInstanceUid}>
@@ -105,7 +105,7 @@ const StudyBrowserBottom = ({
     );
   };
 
-  console.log("bottompanel study browser tabs", tabs);
+  // console.log("bottompanel study browser tabs", tabs);
 
 
   {/* TODO Revisit design of LegacyButtonGroup later - for now use LegacyButton for its children.*/ }

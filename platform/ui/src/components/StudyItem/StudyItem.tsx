@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import Icon from '../Icon';
+import Tooltip from '../Tooltip';
 
 const baseClasses =
   'first:border-0 border-t border-secondary-light cursor-pointer select-none outline-none';
@@ -35,6 +36,11 @@ const StudyItem = ({
         <div className={classnames("flex", "flex-row", "items-center", "justify-between", position === 'bottom' ? 'pt-1 pb-1' : 'pt-2 pb-2')}>
           <div className={classnames(position === 'bottom' ? 'line-height1' : '', "text-base", "text-white")}>{date}</div>
           {
+            position === 'bottom' && (
+              <a onClick={(e) => { e.stopPropagation() }} className='text-white' href="/" target="_blank">[DR]</a>
+            )
+          }
+          {
             position === 'bottom' ? null : (
               <div className="flex flex-row items-center text-base text-blue-300">
                 <Icon
@@ -43,6 +49,34 @@ const StudyItem = ({
                 />
                 {numInstances}
               </div>
+            )
+          }
+          {
+            position === 'bottom' && (
+              isActive ? (
+                <Tooltip
+                  content={"Collapse"}
+                  position="bottom-left"
+                >
+                  <Icon
+                    title="Collapse"
+                    name="chevron-left"
+                    className="text-primary-light mr-2 w-6"
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  content={"Expand"}
+                  position="bottom-left"
+                >
+                  <Icon
+                    title="Expand"
+                    name="chevron-right"
+                    className="text-primary-light mr-2 w-6"
+                  />
+                </Tooltip>
+              )
+
             )
           }
         </div>
