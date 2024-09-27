@@ -52,6 +52,9 @@ function PanelStudyBrowser({
       });
     }
 
+    // console.log("5 *******");
+
+
     viewportGridService.setDisplaySetsForViewports(updatedViewports);
   };
 

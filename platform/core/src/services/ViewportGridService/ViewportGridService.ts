@@ -8,6 +8,7 @@ class ViewportGridService extends PubSubService {
     GRID_STATE_CHANGED: 'event::gridStateChanged',
     GRID_SIZE_CHANGED: 'event::gridSizeChanged',
     VIEWPORTS_READY: 'event::viewportsReady',
+    // RECENT_STUDIES: 'event::viewportsReady',
   };
 
   public static REGISTRATION = {
@@ -37,7 +38,10 @@ class ViewportGridService extends PubSubService {
     set: setImplementation,
     getNumViewportPanes: getNumViewportPanesImplementation,
     setViewportIsReady: setViewportIsReadyImplementation,
+    setRecentStudies: setRecentStudies
   }): void {
+    // console.log("setServiceImplementation");
+
     if (getStateImplementation) {
       this.serviceImplementation._getState = getStateImplementation;
     }
@@ -50,6 +54,9 @@ class ViewportGridService extends PubSubService {
     }
     if (setLayoutImplementation) {
       this.serviceImplementation._setLayout = setLayoutImplementation;
+    }
+    if (setRecentStudies) {
+      this.serviceImplementation._setRecentStudies = setRecentStudies;
     }
     if (resetImplementation) {
       this.serviceImplementation._reset = resetImplementation;
@@ -74,6 +81,8 @@ class ViewportGridService extends PubSubService {
   }
 
   public setActiveViewportId(id: string) {
+    // console.log("setActiveViewportId", id);
+
     this.serviceImplementation._setActiveViewport(id);
     this._broadcastEvent(this.EVENTS.ACTIVE_VIEWPORT_ID_CHANGED, {
       viewportId: id,
@@ -101,11 +110,15 @@ class ViewportGridService extends PubSubService {
   }
 
   public setDisplaySetsForViewport(props) {
+    // console.log("setDisplaySetsForViewport", props);
+
     // Just update a single viewport, but use the multi-viewport update for it.
     this.setDisplaySetsForViewports([props]);
   }
 
   public setDisplaySetsForViewports(props) {
+    // console.log("setDisplaySetsForViewports", props);
+
     this.serviceImplementation._setDisplaySetsForViewports(props);
     const state = this.getState();
     const viewports = [];
@@ -131,6 +144,8 @@ class ViewportGridService extends PubSubService {
    */
   public getDisplaySetsUIDsForViewport(viewportId: string) {
     const state = this.getState();
+    // console.log("getDisplaySetsUIDsForViewport", viewportId, state);
+
     const viewport = state.viewports.get(viewportId);
     return viewport?.displaySetInstanceUIDs;
   }
@@ -151,7 +166,18 @@ class ViewportGridService extends PubSubService {
     activeViewportId = undefined,
     findOrCreateViewport = undefined,
     isHangingProtocolLayout = false,
+    viewportGridService
   }) {
+    // console.log("set layout options", {
+    //   numCols,
+    //   numRows,
+    //   layoutOptions,
+    //   layoutType,
+    //   activeViewportId,
+    //   findOrCreateViewport,
+    //   isHangingProtocolLayout,
+    // });
+
     this.serviceImplementation._setLayout({
       numCols,
       numRows,
@@ -160,11 +186,18 @@ class ViewportGridService extends PubSubService {
       activeViewportId,
       findOrCreateViewport,
       isHangingProtocolLayout,
+      viewportGridService
     });
     this._broadcastEvent(this.EVENTS.LAYOUT_CHANGED, {
       numCols,
       numRows,
     });
+  }
+
+  public setRecentStudies(studies) {
+    // console.log("_setRecentStudies", studies);
+
+    this.serviceImplementation._setRecentStudies({ studies })
   }
 
   public reset() {

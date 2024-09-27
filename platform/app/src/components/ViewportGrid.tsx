@@ -55,7 +55,14 @@ function ViewerViewportGrid(props) {
      * setup of the various viewports.
      */
     const findOrCreateViewport = pos => {
+      console.log("second important part of findOrCreateViewport");
+
       const viewportId = Array.from(viewportMatchDetails.keys())[pos];
+
+      // const viewportState = viewportGridService.getState(viewportId);
+
+      // const prevStudyDisplaySetUIds = viewportState.recentStudies;
+
       const details = viewportMatchDetails.get(viewportId);
       if (!details) {
         console.log('No match details for viewport', viewportId);
@@ -198,6 +205,8 @@ function ViewerViewportGrid(props) {
             }
           }
         }
+        // console.log("7 *********");
+
         viewportGridService.setDisplaySetsForViewports(updatedViewports);
       }
     );
@@ -260,6 +269,8 @@ function ViewerViewportGrid(props) {
     const viewportPanes = [];
 
     const numViewportPanes = viewportGridService.getNumViewportPanes();
+    // console.log(" ****** getViewportPanes", viewports);
+
     for (let i = 0; i < numViewportPanes; i++) {
       const paneMetadata = Array.from(viewports.values())[i] || {};
       const {
@@ -278,6 +289,9 @@ function ViewerViewportGrid(props) {
 
       const displaySetInstanceUIDsToUse = displaySetInstanceUIDs || [];
 
+      // console.log("*** displaySetInstanceUIDsToUse", displaySetInstanceUIDsToUse);
+
+
       // This is causing the viewport components re-render when the activeViewportId changes
       const displaySets = displaySetInstanceUIDsToUse
         .map(displaySetInstanceUID => {
@@ -286,6 +300,9 @@ function ViewerViewportGrid(props) {
         .filter(displaySet => {
           return !displaySet?.unsupported;
         });
+
+      // console.log("**** displaySets: ", displaySets);
+
 
       const ViewportComponent = _getViewportComponent(
         displaySets,
@@ -360,6 +377,7 @@ function ViewerViewportGrid(props) {
       );
     }
 
+    // console.log(" ****** getViewportPanes", viewportPanes);
     return viewportPanes;
   }, [viewports, activeViewportId, viewportComponents, dataSource]);
 

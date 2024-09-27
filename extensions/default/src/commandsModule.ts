@@ -1,4 +1,4 @@
-import { ServicesManager, utils, Types } from '@ohif/core';
+import { ServicesManager, utils, Types, ViewportGridService } from '@ohif/core';
 
 import { ContextMenuController, defaultContextMenu } from './CustomizableContextMenu';
 import DicomTagBrowser from './DicomTagBrowser/DicomTagBrowser';
@@ -275,6 +275,8 @@ const commandsModule = ({
      */
     setViewportGridLayout: ({ numRows, numCols, isHangingProtocolLayout = false }) => {
       const { protocol } = hangingProtocolService.getActiveProtocol();
+      // console.log("setViewportGridLayout", protocol, numRows, numCols);
+
       const onLayoutChange = protocol.callbacks?.onLayoutChange;
       if (commandsManager.run(onLayoutChange, { numRows, numCols }) === false) {
         console.log('setViewportGridLayout running', onLayoutChange, numRows, numCols);
@@ -291,14 +293,19 @@ const commandsModule = ({
         const findOrCreateViewport = layoutFindOrCreate.bind(
           null,
           hangingProtocolService,
-          stateReduce.viewportsByPosition
+          stateReduce.viewportsByPosition,
+          // null, null, null, viewportGridService
         );
+
+        // console.log("9 *******", state, stateReduce);
+
 
         viewportGridService.setLayout({
           numRows,
           numCols,
           findOrCreateViewport,
           isHangingProtocolLayout,
+          viewportGridService
         });
         stateSyncService.store(stateReduce);
       };
@@ -562,6 +569,9 @@ const commandsModule = ({
           duration: 3000,
         });
       }
+
+      // console.log("4 **********");
+
 
       viewportGridService.setDisplaySetsForViewports(updatedViewports);
 

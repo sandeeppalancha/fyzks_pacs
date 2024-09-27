@@ -52,6 +52,12 @@ function commandsModule({
     return getActiveViewportEnabledElement(viewportGridService);
   }
 
+  function _getAllViewportIDs() {
+    const state = viewportGridService.getState();
+    const { viewports } = state;
+    return Array.from(viewports.keys());
+  }
+
   function _getActiveViewportToolGroupId() {
     const viewport = _getActiveViewportEnabledElement();
     return toolGroupService.getToolGroupForViewport(viewport.id);
@@ -280,6 +286,16 @@ function commandsModule({
       }
 
       actions.setViewportWindowLevel({ ...props, viewportId });
+    },
+    setWindowLevelForAll(props) {
+
+      const { toolGroupId } = props;
+      const viewportIds = _getAllViewportIDs();
+
+      viewportIds.forEach((itm) => {
+        actions.setViewportWindowLevel({ ...props, viewportId: itm });
+      })
+
     },
     setToolEnabled: ({ toolName, toggle, toolGroupId }) => {
       const { viewports } = viewportGridService.getState();
@@ -883,6 +899,9 @@ function commandsModule({
     },
     setWindowLevel: {
       commandFn: actions.setWindowLevel,
+    },
+    setWindowLevelForAll: {
+      commandFn: actions.setWindowLevelForAll
     },
     setToolActive: {
       commandFn: actions.setToolActive,

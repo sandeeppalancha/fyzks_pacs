@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { StudyBrowserBottom, useImageViewer, useViewportGrid } from '@ohif/ui';
 import { utils } from '@ohif/core';
@@ -55,6 +55,12 @@ function PanelStudyBrowserBottom({
 
     viewportGridService.setDisplaySetsForViewports(updatedViewports);
   };
+
+  const setRecentStudies = (studies) => {
+    // console.log("setRecentStudies", studies);
+
+    viewportGridService.setRecentStudies(studies)
+  }
 
   // ~~ studyDisplayList
   useEffect(() => {

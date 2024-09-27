@@ -27,7 +27,7 @@ const BottomPanelWithServices = (props: BottomPanelWithServicesProps) => {
   const [activeTabIndex, setActiveTabIndex] = useState(activeTabIndexProp);
   const [tabs, setTabs] = useState(tabsProp ?? panelService.getPanels(side));
 
-  console.log("bottompanel with services", tabs);
+  // console.log("bottompanel with services", tabs);
 
 
   const handleSidePanelOpen = useCallback(() => {

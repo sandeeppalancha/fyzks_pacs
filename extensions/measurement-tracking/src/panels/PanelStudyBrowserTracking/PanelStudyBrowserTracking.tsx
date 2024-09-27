@@ -64,6 +64,8 @@ function PanelStudyBrowserTracking({
       });
     }
 
+    // console.log("6**********");
+
     viewportGridService.setDisplaySetsForViewports(updatedViewports);
   };
 

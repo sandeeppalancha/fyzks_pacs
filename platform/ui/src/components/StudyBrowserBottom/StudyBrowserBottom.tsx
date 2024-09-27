@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +7,7 @@ import LegacyButtonGroup from '../LegacyButtonGroup';
 import LegacyButton from '../LegacyButton';
 import ThumbnailList from '../ThumbnailList';
 import { StringNumber } from '../../types';
+import { debounce } from '../../../../core/src/utils';
 
 const getTrackedSeries = displaySets => {
   let trackedSeries = 0;
@@ -34,7 +35,7 @@ const StudyBrowserBottom = ({
   setExpandedStudyInstanceUIDs
 }) => {
   const { t } = useTranslation('StudyBrowser');
-  const { customizationService } = servicesManager?.services || {};
+  const { customizationService, viewportGridService } = servicesManager?.services || {};
 
   useEffect(() => {
     // console.log("useEffect outside", tabs);
@@ -43,20 +44,31 @@ const StudyBrowserBottom = ({
     if (recentsTab.studies && recentsTab.studies.length > 0) {
       // console.log("bottompanel useEffect", recentsTab.studies);
 
+      const allRecentStudies = [];
       recentsTab.studies.forEach(std => {
         if (!std.displaySets || std.displaySets.length == 0) {
           // console.log("bottompanel no displaysets");
 
-          createDisplaySetForStudy(std.studyInstanceUid);
+          // createDisplaySetForStudy(std.studyInstanceUid);
           setExpandedStudyInstanceUIDs([...expandedStudyInstanceUIDs, std.studyInstanceUid]);
+        } else {
+          allRecentStudies.push(std)
         }
-      })
+      });
+
+      const { recent_studies } = viewportGridService.getState();
+      console.log("Set recent studies **&", allRecentStudies, recent_studies);
+      // if (recentsTab.studies.length !== recent_studies?.studies?.length) {
+      //   setRecentStudyDisplaysets
+      // }
+      // setRecentStudyDisplaysets(allRecentStudies)
+
     }
-  }, [tabs])
+  }, [])
 
   const getTabContent = () => {
     const tabData = tabs.find(tab => tab.name === activeTabName);
-    console.log("bottompanel study tabData", tabData);
+    // console.log("bottompanel study tabData", tabData);
 
     if (tabData.studies.length > 0) {
       // tabData.studies.push({ ...tabData.studies[0], date: '01-Sep-2024' });

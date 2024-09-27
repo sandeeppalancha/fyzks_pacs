@@ -391,7 +391,7 @@ const BottomPanel = (props) => {
     );
   };
 
-  console.log("bottomPanel props", props);
+  // console.log("bottomPanel props", props);
 
   return (
     <div

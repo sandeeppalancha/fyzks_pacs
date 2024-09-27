@@ -30,6 +30,7 @@ interface DefaultState {
   layout: Layout;
   isHangingProtocolLayout: boolean;
   viewports: Map<string, Viewport>;
+  recent_studies: any[];
 }
 
 const DEFAULT_STATE: DefaultState = {
@@ -39,6 +40,7 @@ const DEFAULT_STATE: DefaultState = {
     numCols: 0,
     layoutType: 'grid',
   },
+  recent_studies: [],
   // this flag is used to determine if the hanging protocol layout is active
   // so that we can inherit the viewport options from the previous state
   // otherwise we will not allow that. Basically the issue is that we need
@@ -135,8 +137,14 @@ const determineActiveViewportId = (state: DefaultState, newViewports: Map) => {
 export const ViewportGridContext = createContext(DEFAULT_STATE);
 
 export function ViewportGridProvider({ children, service }) {
+  // console.log("viewport 1");
+
   const viewportGridReducer = (state: DefaultState, action) => {
     switch (action.type) {
+      case 'SET_RECENT_STUDIES': {
+
+        return { ...state, ...{ recent_studies: action.payload } };
+      }
       case 'SET_ACTIVE_VIEWPORT_ID': {
         return { ...state, ...{ activeViewportId: action.payload } };
       }
@@ -150,6 +158,9 @@ export function ViewportGridProvider({ children, service }) {
       case 'SET_DISPLAYSETS_FOR_VIEWPORTS': {
         const { payload } = action;
         const viewports = new Map(state.viewports);
+
+        // console.log("**** SET_DISPLAYSETS_FOR_VIEWPORTS", payload, viewports);
+
 
         payload.forEach(updatedViewport => {
           const { viewportId, displaySetInstanceUIDs } = updatedViewport;
@@ -211,6 +222,8 @@ export function ViewportGridProvider({ children, service }) {
         return { ...state, viewports };
       }
       case 'SET_LAYOUT': {
+        console.log("**** this is the main function for changing the layout");
+
         const {
           numCols,
           numRows,
@@ -219,6 +232,7 @@ export function ViewportGridProvider({ children, service }) {
           activeViewportId,
           findOrCreateViewport,
           isHangingProtocolLayout,
+          viewportGridService
         } = action.payload;
 
         // If empty viewportOptions, we use numRow and numCols to calculate number of viewports
@@ -243,7 +257,10 @@ export function ViewportGridProvider({ children, service }) {
               continue;
             }
 
-            const viewport = findOrCreateViewport(position, positionId, options);
+            const viewport = findOrCreateViewport(position, positionId, options, viewportGridService);
+
+            // console.log("findorcreate viewport", viewport);
+
 
             if (!viewport) {
               continue;
@@ -398,8 +415,9 @@ export function ViewportGridProvider({ children, service }) {
       activeViewportId,
       findOrCreateViewport,
       isHangingProtocolLayout,
-    }) =>
-      dispatch({
+      viewportGridService
+    }) => {
+      return dispatch({
         type: 'SET_LAYOUT',
         payload: {
           layoutType,
@@ -409,8 +427,10 @@ export function ViewportGridProvider({ children, service }) {
           activeViewportId,
           findOrCreateViewport,
           isHangingProtocolLayout,
+          viewportGridService,
         },
-      }),
+      })
+    },
     [dispatch]
   );
 
@@ -419,6 +439,15 @@ export function ViewportGridProvider({ children, service }) {
       dispatch({
         type: 'RESET',
         payload: {},
+      }),
+    [dispatch]
+  );
+
+  const setRecentStudies = useCallback(
+    ({ studies }) =>
+      dispatch({
+        type: 'SET_RECENT_STUDIES',
+        payload: { studies },
       }),
     [dispatch]
   );
@@ -456,6 +485,7 @@ export function ViewportGridProvider({ children, service }) {
         getNumViewportPanes,
         setViewportIsReady,
         getGridViewportsReady,
+        setRecentStudies
       });
     }
   }, [
@@ -469,6 +499,7 @@ export function ViewportGridProvider({ children, service }) {
     getNumViewportPanes,
     setViewportIsReady,
     getGridViewportsReady,
+    setRecentStudies
   ]);
 
   // run many of the calls through the service itself since we want to publish events
@@ -478,6 +509,7 @@ export function ViewportGridProvider({ children, service }) {
     setDisplaySetsForViewport: props => service.setDisplaySetsForViewports([props]),
     setDisplaySetsForViewports: props => service.setDisplaySetsForViewports(props),
     setLayout: layout => service.setLayout(layout),
+    setRecentStudies: recentStudies => service.setRecentStudies(recentStudies),
     reset: () => service.reset(),
     set: gridLayoutState => service.setState(gridLayoutState), // run it through the service itself since we want to publish events
     getNumViewportPanes,

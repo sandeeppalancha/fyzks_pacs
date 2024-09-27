@@ -19,8 +19,14 @@ export const findOrCreateViewport = (
   viewportsByPosition,
   position: number,
   positionId: string,
-  options: Record<string, unknown>
+  options: Record<string, unknown>,
+  viewportGridService
 ) => {
+  const viewportState = viewportGridService.getState();
+
+  console.log("findOrCreateViewport viewportState", viewportState);
+
+
   const byPositionViewport = viewportsByPosition?.[positionId];
   if (byPositionViewport) {
     return { ...byPositionViewport };

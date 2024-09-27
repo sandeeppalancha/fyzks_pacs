@@ -74,6 +74,8 @@ function OHIFCornerstoneSRViewport(props) {
       );
       const displaySets = displaySetService.getDisplaySetsForSeries(SeriesInstanceUIDs[0]);
       if (displaySets.length) {
+        // console.log("1*****");
+
         viewportGridService.setDisplaySetsForViewports([
           {
             viewportId: activeViewportId,

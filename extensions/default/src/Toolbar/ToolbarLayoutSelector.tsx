@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { LayoutSelector as OHIFLayoutSelector, ToolbarButton, LayoutPreset } from '@ohif/ui';
 import { ServicesManager } from '@ohif/core';
+import { windowLevelPresets } from '../../../../platform/core/src/defaults';
 
 const defaultCommonPresets = [
   {
@@ -95,6 +96,8 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   };
 
   const onSelection = useCallback(props => {
+    // console.log("on selection layout", props);
+
     commandsManager.run({
       commandName: 'setViewportGridLayout',
       commandOptions: { ...props },
@@ -103,7 +106,7 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const onSelectionPreset = useCallback(props => {
-    // console.log("toolbar layout selecter", props)
+    // console.log("toolbar layout selecter layout", props)
     commandsManager.run({
       commandName: 'setHangingProtocol',
       commandOptions: { ...props },
@@ -135,20 +138,29 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const setPrimaryAxial = () => {
-    onSelectionPreset({ protocolId: 'primaryAxial' });
-    setTimeout(() => {
-      const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
-      if (crosshairs.length > 0) {
-        const crosshairElement = crosshairs[0] as HTMLButtonElement;
-        crosshairElement.click();
-      }//+
-    }, 500)
+    // onSelectionPreset({ protocolId: 'primaryAxial' });
+    // setTimeout(() => {
+    //   const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
+    //   if (crosshairs.length > 0) {
+    //     const crosshairElement = crosshairs[0] as HTMLButtonElement;
+    //     crosshairElement.click();
+    //   }//+
+    // }, 500)
   }
 
   const setTwoByFour = (args) => {
     console.log("set two bby four", args);
 
     onSelection({ numRows: 2, numCols: 4 });
+
+    setTimeout(() => {
+      commandsManager.run({
+        commandName: 'setWindowLevelForAll',
+        commandOptions: windowLevelPresets[1],
+        label: 'W/L Preset 1',
+        keys: ['1'],
+      })
+    }, 1000)
   }
 
   return (
