@@ -97,7 +97,22 @@ export default function getCommandsModule({
           ],
           dragZoomOnRight,
         ]);
+      } else if (toolName == 'dragTilt') {
+        microscopyService.activateInteractions([
+          [
+            'dragTilt',
+            {
+              bindings: {
+                mouseButtons: ['left'],
+              },
+            },
+          ],
+          dragPanOnMiddle,
+          dragZoomOnRight,
+        ]);
       } else {
+        // console.log("activateInteractions", toolName);
+
         microscopyService.activateInteractions([
           [
             toolName,

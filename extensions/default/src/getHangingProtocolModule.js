@@ -2,6 +2,7 @@ import hpMNGrid from './hpMNGrid';
 import hpMNCompare from './hpCompare';
 
 const defaultProtocol = {
+  // id: 'not-default',
   id: 'default',
   locked: true,
   // Don't store this hanging protocol as it applies to the currently active

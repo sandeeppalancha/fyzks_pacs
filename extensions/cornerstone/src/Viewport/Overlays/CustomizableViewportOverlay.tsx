@@ -9,6 +9,7 @@ import { InstanceMetadata } from '@ohif/core/src/types';
 import { formatPN, formatDICOMDate, formatDICOMTime, formatNumberPrecision } from './utils';
 import { StackViewportData, VolumeViewportData } from '../../types/CornerstoneCacheService';
 import { utils } from '@ohif/core';
+import moment from 'moment';
 const { formatDate } = utils;
 
 import './CustomizableViewportOverlay.css';
@@ -260,13 +261,32 @@ function CustomizableViewportOverlay({
     },
   };
 
+  const seriesNumberItem = {
+    id: 'SeriesNumber',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Series Number',
+    condition: ({ instance }) => instance && instance.SeriesNumber,
+    contentF: ({ instance }) => `${instance?.SeriesNumber}`,
+  };
+
+
   const patientNameItem = {
     id: 'PatientName',
     customizationType: 'ohif.overlayItem',
     label: '',
     title: 'Patient Name',
     condition: ({ instance }) => instance && instance.StudyDate,
-    contentF: ({ instance }) => patientInfo?.PatientName,
+    contentF: ({ instance }) => `${patientInfo?.PatientName} (${patientInfo?.PatientID})`,
+  };
+
+  const accessionItem = {
+    id: 'PatientName',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Patient Name',
+    condition: ({ instance }) => instance && instance.StudyDate,
+    contentF: ({ instance }) => `${instance?.AccessionNumber}`,
   };
 
   const patientIDItem = {
@@ -292,8 +312,8 @@ function CustomizableViewportOverlay({
     customizationType: 'ohif.overlayItem',
     label: '',
     title: 'Patient DOB',
-    condition: ({ instance }) => instance && instance.PatientDOB,
-    contentF: ({ instance }) => patientInfo?.PatientDOB,
+    condition: ({ instance }) => instance && instance.PatientBirthDate,
+    contentF: ({ instance }) => `${patientInfo?.PatientDOB} (${moment(instance.PatientBirthDate, 'YYYYMMDD').fromNow(true)})`,
   }
 
   const updatePatientInfo = () => {
@@ -302,6 +322,8 @@ function CustomizableViewportOverlay({
     if (!instance) {
       return;
     }
+    // console.log("Update pat info", instance);
+
     setPatientInfo({
       PatientID: instance.PatientID || '',
       PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : '',
@@ -336,12 +358,31 @@ function CustomizableViewportOverlay({
     contentF: ({ instance }) => `${instance.Modality} | ${instance.SeriesDescription}`,
   };
 
+  const topRightItems = instances ? instances.map((instance, index) => {
+    return [
+      {
+        ...seriesNumberItem,
+        instanceIndex: index,
+      }
+    ]
+  }) : [];
+
+  // console.log("topright items: ", getContent(topRightCustomization, [...topRightItems], 'topRightOverlayItem'));
+
   const topLeftItems = instances
     ? instances
       .map((instance, index) => {
         return [
           {
-            ...studyDateItem,
+            ...patientNameItem,
+            instanceIndex: index,
+          },
+          {
+            ...accessionItem,
+            instanceIndex: index,
+          },
+          {
+            ...patientDobItem,
             instanceIndex: index,
           },
           {
@@ -349,15 +390,7 @@ function CustomizableViewportOverlay({
             instanceIndex: index,
           },
           {
-            ...patientNameItem,
-            instanceIndex: index,
-          },
-          {
-            ...patientIDItem,
-            instanceIndex: index,
-          },
-          {
-            ...patientDobItem,
+            ...studyDateItem,
             instanceIndex: index,
           },
           {
@@ -377,7 +410,7 @@ function CustomizableViewportOverlay({
          */
         getContent(topLeftCustomization, [...topLeftItems], 'topLeftOverlayItem')
       }
-      topRight={getContent(topRightCustomization, [], 'topRightOverlayItem')}
+      topRight={getContent(topRightCustomization, [...topRightItems], 'topRightOverlayItem')}
       bottomLeft={getContent(
         bottomLeftCustomization,
         [

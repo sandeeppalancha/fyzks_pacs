@@ -5,6 +5,7 @@ import { mprAnd3DVolumeViewport } from './hps/mprAnd3DVolumeViewport';
 import { only3D } from './hps/only3D';
 import { primary3D } from './hps/primary3D';
 import { primaryAxial } from './hps/primaryAxial';
+import { ctAbdomen } from './hps/ctAbdomen';
 
 function getHangingProtocolModule() {
   return [
@@ -27,6 +28,10 @@ function getHangingProtocolModule() {
     {
       name: primaryAxial.id,
       protocol: primaryAxial,
+    },
+    {
+      name: ctAbdomen.id,
+      protocol: ctAbdomen,
     },
     {
       name: only3D.id,

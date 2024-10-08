@@ -131,9 +131,10 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
       if (modality === 'CT' && body_part.includes('HEAD')) {
         setPrimaryAxial();
       } else if (modality === 'CT' && body_part.includes('ABDOMEN')) {
-        setTwoByFour(instance);
+        // setTwoByFour(instance);
+        setCTAbdomen();
       }
-    }, 2000);
+    }, 2500);
     // setActiveProtocolIds
   }, []);
 
@@ -160,7 +161,11 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
         label: 'W/L Preset 1',
         keys: ['1'],
       })
-    }, 1000)
+    }, 1500)
+  }
+
+  const setCTAbdomen = () => {
+    // onSelectionPreset({ protocolId: 'ctAbdomen' });
   }
 
   return (

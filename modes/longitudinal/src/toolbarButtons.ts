@@ -172,6 +172,17 @@ const toolbarButtons: Button[] = [
     },
   },
   {
+    id: 'CustomDragTool',
+    uiType: 'ohif.radioGroup',
+    props: {
+      type: 'tool',
+      icon: 'tool-move',
+      label: 'CustomDragTool',
+      commands: setToolActiveToolbar,
+      evaluate: 'evaluate.cornerstoneTool',
+    },
+  },
+  {
     id: 'TrackballRotate',
     uiType: 'ohif.radioGroup',
     props: {
