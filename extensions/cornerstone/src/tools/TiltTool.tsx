@@ -35,14 +35,15 @@ class CustomDragTool extends BaseTool {
 
   debouncedDrag = debounce((evt) => {
     this._dragCallback(evt);
-  }, 50);
+  }, 100);
 
   _dragCallback(evt: EventTypes.InteractionEventType) {
     const { element, deltaPoints } = evt.detail;
     const enabledElement = getEnabledElement(element);
 
+    // console.log('Mouse Drag Detected', evt);
     const currentCamera = enabledElement.viewport.getCamera();
-    const tiltSensitivity = 0.5;
+    const tiltSensitivity = 0.4;
 
     const deltaX = deltaPoints.page[0];
     const deltaY = deltaPoints.page[1];
@@ -101,8 +102,8 @@ class CustomDragTool extends BaseTool {
     // Set the new camera position and view
     enabledElement.viewport.setCamera({
       position: newPosition,
-      focalPoint,
-      viewUp, //: [0, 0, 1],  // Optionally adjust the viewUp vector if required for orientation
+      // focalPoint,
+      // viewUp, //: [0, 0, 1],  // Optionally adjust the viewUp vector if required for orientation
       // parallelProjection: true, // Use parallel projection for medical imaging
     });
     enabledElement.viewport.render();
