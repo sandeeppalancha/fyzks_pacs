@@ -3,8 +3,6 @@ import { Types } from '@ohif/core';
 const defaultDisplaySetSelector = {
   studyMatchingRules: [
     {
-      // The priorInstance is a study counter that indicates what position this study is in
-      // and the value comes from the options parameter.
       attribute: 'studyInstanceUIDsIndex',
       from: 'options',
       required: true,
@@ -20,11 +18,16 @@ const defaultDisplaySetSelector = {
         greaterThan: { value: 0 },
       },
     },
-    // This display set will select the specified items by preference
-    // It has no affect if nothing is specified in the URL.
     {
       attribute: 'isDisplaySetFromUrl',
-      weight: 10,
+      // weight: 10,
+      constraint: {
+        equals: true,
+      },
+    },
+    {
+      attribute: 'isReconstructible',
+      weight: 1,
       constraint: {
         equals: true,
       },
@@ -35,8 +38,6 @@ const defaultDisplaySetSelector = {
 const priorDisplaySetSelector = {
   studyMatchingRules: [
     {
-      // The priorInstance is a study counter that indicates what position this study is in
-      // and the value comes from the options parameter.
       attribute: 'studyInstanceUIDsIndex',
       from: 'options',
       required: true,
@@ -52,11 +53,16 @@ const priorDisplaySetSelector = {
         greaterThan: { value: 0 },
       },
     },
-    // This display set will select the specified items by preference
-    // It has no affect if nothing is specified in the URL.
     {
       attribute: 'isDisplaySetFromUrl',
-      weight: 10,
+      // weight: 10,
+      constraint: {
+        equals: true,
+      },
+    },
+    {
+      attribute: 'isReconstructible',
+      weight: 1,
       constraint: {
         equals: true,
       },
@@ -64,6 +70,7 @@ const priorDisplaySetSelector = {
   ],
 };
 
+// Define display sets
 const currentDisplaySet = {
   id: 'defaultDisplaySetId',
 };
@@ -72,45 +79,114 @@ const priorDisplaySet = {
   id: 'priorDisplaySetId',
 };
 
+// Define foundational viewports
 const currentViewport0 = {
   viewportOptions: {
+    viewportType: 'volume',  // Assuming "mpr" type for MPR view
     toolGroupId: 'default',
     allowUnmatchedView: true,
   },
   displaySets: [currentDisplaySet],
 };
 
-const currentViewport1 = {
-  ...currentViewport0,
-  displaySets: [
-    {
-      ...currentDisplaySet,
-      matchedDisplaySetsIndex: 1,
-    },
-  ],
-};
-
 const priorViewport0 = {
-  ...currentViewport0,
+  viewportOptions: {
+    viewportType: 'volume',
+    toolGroupId: 'default',
+    allowUnmatchedView: true,
+  },
   displaySets: [priorDisplaySet],
 };
 
-const priorViewport1 = {
-  ...priorViewport0,
-  displaySets: [
-    {
-      ...priorDisplaySet,
-      matchedDisplaySetsIndex: 1,
+// Define MPR views for current study
+// const currentAxial = { ...currentViewport0, displaySets: [currentDisplaySet] };
+const currentAxial = {
+  viewportOptions: {
+    viewportId: 'mpr-axial',
+    toolGroupId: 'mpr',
+    viewportType: 'stack',
+    orientation: 'axial',
+    initialImageOptions: {
+      preset: 'middle',
     },
+    // syncGroups: [
+    //   {
+    //     type: 'voi',
+    //     id: 'mpr',
+    //     source: true,
+    //     target: true,
+    //     options: {
+    //       syncColormap: true,
+    //     },
+    //   },
+    // ],
+  },
+  displaySets: [
+    currentDisplaySet
+  ],
+}
+// const currentCoronal = { ...currentViewport0, displaySets: [currentDisplaySet] };
+const currentCoronal = {
+  viewportOptions: {
+    viewportId: 'mpr-sagittal',
+    toolGroupId: 'mpr',
+    viewportType: 'stack',
+    orientation: 'sagittal',
+    initialImageOptions: {
+      preset: 'middle',
+    },
+    syncGroups: [
+      {
+        type: 'voi',
+        id: 'mpr',
+        source: true,
+        target: true,
+        options: {
+          syncColormap: true,
+        },
+      },
+    ],
+  },
+  displaySets: [
+
+    currentDisplaySet
+
   ],
 };
 
-/**
- * This hanging protocol can be activated on the primary mode by directly
- * referencing it in a URL or by directly including it within a mode, e.g.:
- * `&hangingProtocolId=@ohif/mnGrid` added to the viewer URL
- * It is not included in the viewer mode by default.
- */
+// const currentSagittal = { ...currentViewport0, displaySets: [currentDisplaySet] };
+
+const currentSagittal = {
+  viewportOptions: {
+    viewportId: 'mpr-coronal',
+    toolGroupId: 'mpr',
+    viewportType: 'stack',
+    orientation: 'coronal',
+    initialImageOptions: {
+      preset: 'middle',
+    },
+    syncGroups: [
+      {
+        type: 'voi',
+        id: 'mpr',
+        source: true,
+        target: true,
+        options: {
+          syncColormap: true,
+        },
+      },
+    ],
+  },
+  displaySets: [
+    currentDisplaySet
+  ],
+};
+
+// Define MPR views for prior study
+const priorAxial = { ...priorViewport0, displaySets: [priorDisplaySet] };
+const priorCoronal = { ...priorViewport0, displaySets: [priorDisplaySet] };
+const priorSagittal = { ...priorViewport0, displaySets: [priorDisplaySet] };
+
 const hpMNCompare: Types.HangingProtocol.Protocol = {
   id: '@ohif/hpCompare',
   description: 'Compare two studies in various layouts',
@@ -121,8 +197,6 @@ const hpMNCompare: Types.HangingProtocol.Protocol = {
       id: 'Two Studies',
       weight: 1000,
       attribute: 'StudyInstanceUID',
-      // The 'from' attribute says where to get the 'attribute' value from.  In this case
-      // prior means the second study in the study list.
       from: 'prior',
       required: true,
       constraint: {
@@ -135,52 +209,137 @@ const hpMNCompare: Types.HangingProtocol.Protocol = {
     defaultDisplaySetId: defaultDisplaySetSelector,
     priorDisplaySetId: priorDisplaySetSelector,
   },
-  defaultViewport: {
-    viewportOptions: {
-      viewportType: 'stack',
-      toolGroupId: 'default',
-      allowUnmatchedView: true,
-    },
-    displaySets: [
-      {
-        id: 'defaultDisplaySetId',
-        matchedDisplaySetsIndex: -1,
-      },
-    ],
-  },
+  // defaultViewport: {
+  //   viewportOptions: {
+  //     viewportType: 'stack',
+  //     toolGroupId: 'default',
+  //     allowUnmatchedView: true,
+  //   },
+  //   displaySets: [
+  //     {
+  //       id: 'defaultDisplaySetId',
+  //       matchedDisplaySetsIndex: -1,
+  //     },
+  //   ],
+  // },
   stages: [
     {
-      name: '2x2',
+      name: '2x3',
       stageActivation: {
         enabled: {
-          minViewportsMatched: 4,
+          minViewportsMatched: 6,
         },
       },
       viewportStructure: {
         layoutType: 'grid',
         properties: {
           rows: 2,
-          columns: 2,
+          columns: 3,
+          layoutOptions: [
+            {
+              x: 0,
+              y: 0,
+              width: 1 / 3,
+              height: 1,
+            },
+            {
+              x: 1 / 3,
+              y: 0,
+              width: 1 / 3,
+              height: 1,
+            },
+            {
+              x: 2 / 3,
+              y: 0,
+              width: 1 / 3,
+              height: 1,
+            },
+          ],
         },
       },
-      viewports: [currentViewport0, priorViewport0, currentViewport1, priorViewport1],
-    },
-
-    {
-      name: '2x1',
-      stageActivation: {
-        enabled: {
-          minViewportsMatched: 2,
+      viewports: [
+        {
+          viewportOptions: {
+            viewportId: 'mpr-axial',
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'axial',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+                options: {
+                  syncColormap: true,
+                },
+              },
+            ],
+          },
+          displaySets: [
+            {
+              id: 'defaultDisplaySetId',
+            },
+          ],
         },
-      },
-      viewportStructure: {
-        layoutType: 'grid',
-        properties: {
-          rows: 1,
-          columns: 2,
+        {
+          viewportOptions: {
+            viewportId: 'mpr-sagittal',
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'sagittal',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+                options: {
+                  syncColormap: true,
+                },
+              },
+            ],
+          },
+          displaySets: [
+            {
+              id: 'defaultDisplaySetId',
+            },
+          ],
         },
-      },
-      viewports: [currentViewport0, priorViewport0],
+        {
+          viewportOptions: {
+            viewportId: 'mpr-coronal',
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'coronal',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+                options: {
+                  syncColormap: true,
+                },
+              },
+            ],
+          },
+          displaySets: [
+            {
+              id: 'defaultDisplaySetId',
+            },
+          ],
+        },
+      ],
     },
   ],
 };

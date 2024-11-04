@@ -96,8 +96,6 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   };
 
   const onSelection = useCallback(props => {
-    // console.log("on selection layout", props);
-
     commandsManager.run({
       commandName: 'setViewportGridLayout',
       commandOptions: { ...props },
@@ -106,7 +104,6 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const onSelectionPreset = useCallback(props => {
-    // console.log("toolbar layout selecter layout", props)
     commandsManager.run({
       commandName: 'setHangingProtocol',
       commandOptions: { ...props },
@@ -114,29 +111,29 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
     setIsDisabled(true);
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {//
-      const { displaySetService } = servicesManager.services;
+  // useEffect(() => {
+  //   setTimeout(() => {//
+  //     const { displaySetService } = servicesManager.services;
 
-      const displaySets = displaySetService.getActiveDisplaySets();
+  //     const displaySets = displaySetService.getActiveDisplaySets();
 
-      const displaySet = displaySets[0];
-      const instance = displaySet?.instances?.[0] || displaySet?.instance;
+  //     const displaySet = displaySets[0];
+  //     const instance = displaySet?.instances?.[0] || displaySet?.instance;
 
 
-      const body_part = instance?.BodyPartExamined;
-      const modality = instance?.Modality;
-      console.log("Layout useffect", body_part);
+  //     const body_part = instance?.BodyPartExamined;
+  //     const modality = instance?.Modality;
+  //     // console.log("Layout useffect", body_part);
 
-      if (modality === 'CT' && body_part.includes('HEAD')) {
-        setPrimaryAxial();
-      } else if (modality === 'CT' && body_part.includes('ABDOMEN')) {
-        // setTwoByFour(instance);
-        setCTAbdomen();
-      }
-    }, 2500);
-    // setActiveProtocolIds
-  }, []);
+  //     if (modality === 'CT' && body_part.includes('HEAD')) {
+  //       setPrimaryAxial();
+  //     } else if (modality === 'CT' && body_part.includes('ABDOMEN')) {
+  //       // setTwoByFour(instance);
+  //       setCTAbdomen();
+  //     }
+  //   }, 2500);
+  //   // setActiveProtocolIds
+  // }, []);
 
   const setPrimaryAxial = () => {
     // onSelectionPreset({ protocolId: 'primaryAxial' });
@@ -150,7 +147,7 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }
 
   const setTwoByFour = (args) => {
-    console.log("set two bby four", args);
+    // console.log("set two bby four", args);
 
     onSelection({ numRows: 2, numCols: 4 });
 
@@ -166,6 +163,14 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
 
   const setCTAbdomen = () => {
     // onSelectionPreset({ protocolId: 'ctAbdomen' });
+    setTimeout(() => {
+      commandsManager.run({
+        commandName: 'setWindowLevelForAll',
+        commandOptions: windowLevelPresets[1],
+        label: 'W/L Preset 1',
+        keys: ['1'],
+      })
+    }, 1500)
   }
 
   return (

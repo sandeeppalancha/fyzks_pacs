@@ -211,6 +211,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           madeInClient = false,
           returnPromises = false,
         } = {}) => {
+
           if (!StudyInstanceUID) {
             throw new Error('Unable to query for SeriesMetadata without StudyInstanceUID');
           }
@@ -460,7 +461,8 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           });
         });
 
-        DicomMetadataStore.addInstances(naturalizedInstances, madeInClient);
+        // *important
+        DicomMetadataStore.addInstances(naturalizedInstances, madeInClient, isPrevious);
       }
 
       function setSuccessFlag() {
