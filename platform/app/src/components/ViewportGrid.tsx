@@ -55,7 +55,6 @@ function ViewerViewportGrid(props) {
      * setup of the various viewports.
      */
     const findOrCreateViewport = pos => {
-      console.log("second important part of findOrCreateViewport");
 
       const viewportId = Array.from(viewportMatchDetails.keys())[pos];
 
@@ -205,7 +204,6 @@ function ViewerViewportGrid(props) {
             }
           }
         }
-        // console.log("7 *********");
 
         viewportGridService.setDisplaySetsForViewports(updatedViewports);
       }
@@ -269,7 +267,6 @@ function ViewerViewportGrid(props) {
     const viewportPanes = [];
 
     const numViewportPanes = viewportGridService.getNumViewportPanes();
-    // console.log(" ****** getViewportPanes", viewports);
 
     for (let i = 0; i < numViewportPanes; i++) {
       const paneMetadata = Array.from(viewports.values())[i] || {};
@@ -289,9 +286,6 @@ function ViewerViewportGrid(props) {
 
       const displaySetInstanceUIDsToUse = displaySetInstanceUIDs || [];
 
-      // console.log("*** displaySetInstanceUIDsToUse", displaySetInstanceUIDsToUse);
-
-
       // This is causing the viewport components re-render when the activeViewportId changes
       const displaySets = displaySetInstanceUIDsToUse
         .map(displaySetInstanceUID => {
@@ -300,9 +294,6 @@ function ViewerViewportGrid(props) {
         .filter(displaySet => {
           return !displaySet?.unsupported;
         });
-
-      // console.log("**** displaySets: ", displaySets);
-
 
       const ViewportComponent = _getViewportComponent(
         displaySets,
@@ -340,6 +331,7 @@ function ViewerViewportGrid(props) {
           // however, if the key is the viewportId, React will only move the component
           // and not re-render it.
           key={viewportId}
+          className={viewportId.indexOf('prior') >= 0 ? 'prior-study-viewport' : ''}
           acceptDropsFor="displayset"
           onDrop={onDropHandler.bind(null, viewportId)}
           onInteraction={onInteractionHandler}
@@ -377,7 +369,6 @@ function ViewerViewportGrid(props) {
       );
     }
 
-    // console.log(" ****** getViewportPanes", viewportPanes);
     return viewportPanes;
   }, [viewports, activeViewportId, viewportComponents, dataSource]);
 
@@ -441,7 +432,6 @@ function _getViewportComponent(displaySets, viewportComponents, uiNotificationSe
     }
   }
 
-  console.log("Can't show displaySet", SOPClassHandlerId, displaySets[0]);
   uiNotificationService.show({
     title: 'Viewport Not Supported Yet',
     message: `Cannot display SOPClassUID of ${displaySets[0].SOPClassUID} yet`,

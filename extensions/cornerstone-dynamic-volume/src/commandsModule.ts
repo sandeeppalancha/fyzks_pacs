@@ -246,9 +246,6 @@ const commandsModule = ({ commandsManager, servicesManager }) => {
           viewportsToUpdate.push(newViewport);
         }
       }
-
-      // console.log("2*******");
-
       viewportGridService.setDisplaySetsForViewports(viewportsToUpdate);
     },
     swapComputedWithDynamicDisplaySet: () => {
@@ -298,9 +295,6 @@ const commandsModule = ({ commandsManager, servicesManager }) => {
           viewportsToUpdate.push(newViewport);
         }
       }
-
-      // console.log("3********");
-
       viewportGridService.setDisplaySetsForViewports(viewportsToUpdate);
     },
     createNewLabelMapForDynamicVolume: async ({ label }) => {

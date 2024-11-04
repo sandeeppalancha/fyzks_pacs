@@ -23,7 +23,6 @@ const AppHeader = ({ handleDateChange }) => {
   }
 
   const handleReportSearch = () => {
-    console.log("handleReportSearch");
     // navigate(`/reports?startDate=${startDate}&endDate=${endDate}`);
     setReportSearchModal({ visible: true });
   }
@@ -49,19 +48,16 @@ const AppHeader = ({ handleDateChange }) => {
   ];
 
   const onRangeChange = (val) => {
-    console.log("onRangeChange", val);
     handleDateChange(val);
     // [dayjs().add(-7, 'd'), dayjs()]
   }
 
   const openEditor = ({ pat_details, selected_report }) => {
-    console.log("openEditor");
     setReportSearchModal({ visible: false });
     setReportEditorModal({ visible: true, pat_details, selected_report });
   }
 
   const cancelReport = () => {
-    console.log("cancel report");
     setReportEditorModal({ visible: false, pat_details: null, selected_report: null });
   }
 

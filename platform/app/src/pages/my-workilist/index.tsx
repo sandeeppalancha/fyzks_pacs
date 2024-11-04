@@ -47,7 +47,6 @@ const MyWorklist = ({ appDateRange }) => {
   }, [appDateRange])
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
-    // console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
@@ -103,7 +102,6 @@ const MyWorklist = ({ appDateRange }) => {
 
     makePostCall('/my-worklist', payload)
       .then(res => {
-        // console.log("resp", res);
         setOrders({ data: res.data?.data || [], loading: false })
       })
       .catch(e => {
@@ -113,7 +111,6 @@ const MyWorklist = ({ appDateRange }) => {
   }
 
   const handleFilterChange = (key, value) => {
-    // console.log("handleFilterChange", key, value);
     const temp_filters = { ...filters };
     temp_filters[key] = value;
     setFilters(temp_filters);

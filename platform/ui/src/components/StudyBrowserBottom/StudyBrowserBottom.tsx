@@ -38,17 +38,11 @@ const StudyBrowserBottom = ({
   const { customizationService, viewportGridService } = servicesManager?.services || {};
 
   useEffect(() => {
-    // console.log("useEffect outside", tabs);
-
     const recentsTab = tabs.find(tab => tab.name === 'recent');
     if (recentsTab.studies && recentsTab.studies.length > 0) {
-      // console.log("bottompanel useEffect", recentsTab.studies);
-
       const allRecentStudies = [];
       recentsTab.studies.forEach(std => {
         if (!std.displaySets || std.displaySets.length == 0) {
-          // console.log("bottompanel no displaysets");
-
           // createDisplaySetForStudy(std.studyInstanceUid);
           setExpandedStudyInstanceUIDs([...expandedStudyInstanceUIDs, std.studyInstanceUid]);
         } else {
@@ -57,7 +51,6 @@ const StudyBrowserBottom = ({
       });
 
       const { recent_studies } = viewportGridService.getState();
-      console.log("Set recent studies **&", allRecentStudies, recent_studies);
       // if (recentsTab.studies.length !== recent_studies?.studies?.length) {
       //   setRecentStudyDisplaysets
       // }
@@ -81,8 +74,6 @@ const StudyBrowserBottom = ({
     return tabData.studies.map(
       ({ studyInstanceUid, date, description, numInstances, modalities, displaySets }) => {
         const isExpanded = expandedStudyInstanceUIDs.includes(studyInstanceUid);
-        // console.log("bottompanel displaySets", displaySets);
-
         return (
           <React.Fragment key={studyInstanceUid}>
             <div className="prev-study-item" style={{}}>
@@ -94,7 +85,7 @@ const StudyBrowserBottom = ({
                 trackedSeries={getTrackedSeries(displaySets)}
                 isActive={isExpanded}
                 onClick={() => {
-                  onClickStudy(studyInstanceUid);
+                  onClickStudy(studyInstanceUid, true);
                 }}
                 data-cy="thumbnail-list"
                 position="bottom"

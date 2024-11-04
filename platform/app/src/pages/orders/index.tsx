@@ -30,7 +30,6 @@ const OrdersList = ({ appDateRange }) => {
   }, []);
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
-    // console.log("onsave newContent", reportEditorModal);
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,

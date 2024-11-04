@@ -101,7 +101,7 @@ function modeFactory({ modeConfiguration }) {
         'StackScroll',
         'Pan',
         'Tilt',
-        'CustomDragTool',
+        // 'CustomDragTool',
         'RemoveAnnotations',
         'TrackballRotate',
         'WindowLevel',

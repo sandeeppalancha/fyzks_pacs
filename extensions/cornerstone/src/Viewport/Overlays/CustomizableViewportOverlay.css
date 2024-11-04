@@ -4,8 +4,9 @@ If any text to be displayed on the overlay is too long to hold on a single
 line, it will be truncated with ellipsis in the end.
 */
 .viewport-overlay {
-  max-width: 40%;
+  max-width: 30%;
 }
+
 .viewport-overlay span {
   max-width: 100%;
   overflow: hidden;
@@ -19,7 +20,20 @@ line, it will be truncated with ellipsis in the end.
 
 .viewport-overlay.right-viewport-scrollbar {
   text-align: right;
+  max-width: 25%;
 }
+
 .viewport-overlay.right-viewport-scrollbar .flex.flex-row {
   justify-content: flex-end;
+}
+
+.overlay-item.ruler-overlay {
+  display: flex;
+  align-items: center;
+}
+
+.ruler-bar {
+  height: 2px;
+  background-color: currentColor;
+  margin-right: 5px;
 }

@@ -25,10 +25,8 @@ import dayjs from 'dayjs';
 const MyViewer = ({ appProps }) => {
 
   useEffect(() => {
-    console.log("inside use viewer", appProps);
     const app = React.createElement(App, appProps, null);
     const pacs_app_element = document.getElementById('pacs-app');
-    console.log("pcs app eellment", pacs_app_element);
     if (pacs_app_element) {
       ReactDOM.render(app, pacs_app_element);
     }
@@ -50,7 +48,6 @@ function CustomApp(appProps) {
   const [appDateRange, setAppDateRange] = useState([null, null]);
 
   useEffect(() => {
-    console.log("inside use custom app", currentUrl);
   }, [currentUrl]);
 
 
@@ -139,7 +136,6 @@ function CustomApp(appProps) {
   };
 
   const handleDateChange = (val) => {
-    console.log("handleDateChange", val);
     setAppDateRange([dayjs().add(-val, 'd'), dayjs()]);
     // [dayjs().add(-7, 'd'), dayjs()]
   }

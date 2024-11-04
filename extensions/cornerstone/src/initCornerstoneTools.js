@@ -40,7 +40,6 @@ import {
 
 import CalibrationLineTool from './tools/CalibrationLineTool';
 import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
-import CustomDragTool from './tools/TiltTool';
 
 export default function initCornerstoneTools(configuration = {}) {
   CrosshairsTool.isAnnotation = false;
@@ -49,7 +48,7 @@ export default function initCornerstoneTools(configuration = {}) {
   init(configuration);
   addTool(PanTool);
   addTool(WindowLevelTool);
-  addTool(CustomDragTool);
+  // addTool(CustomDragTool);
   addTool(StackScrollMouseWheelTool);
   addTool(StackScrollTool);
   addTool(ZoomTool);
@@ -107,7 +106,7 @@ const toolNames = {
   StackScroll: StackScrollTool.toolName,
   StackScrollMouseWheel: StackScrollMouseWheelTool.toolName,
   Zoom: ZoomTool.toolName,
-  CustomDragTool: CustomDragTool.toolName,
+  // CustomDragTool: CustomDragTool.toolName,
   VolumeRotateMouseWheel: VolumeRotateMouseWheelTool.toolName,
   MipJumpToClick: MIPJumpToClickTool.toolName,
   Length: LengthTool.toolName,

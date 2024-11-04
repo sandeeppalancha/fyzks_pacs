@@ -8,8 +8,6 @@ const CustomEditor = ({ placeholder, initialContent, handleChange }) => {
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    console.log("init content", initialContent);
-
     setContent(initialContent);
   }, [initialContent]);
 

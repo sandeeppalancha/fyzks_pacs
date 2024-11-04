@@ -55,6 +55,7 @@ function getDisplaySetInfo(instances) {
     isDynamicVolume,
     ...displaySetInfo,
     dynamicVolumeInfo,
+    // prior_study: instances[0]?.previous_study
   };
 }
 
@@ -67,6 +68,7 @@ const makeDisplaySet = instances => {
     value: isReconstructable,
     averageSpacingBetweenFrames,
     dynamicVolumeInfo,
+    // prior_study
   } = getDisplaySetInfo(instances);
 
   const volumeLoaderSchema = isDynamicVolume
@@ -97,6 +99,7 @@ const makeDisplaySet = instances => {
     averageSpacingBetweenFrames: averageSpacingBetweenFrames || null,
     isDynamicVolume,
     dynamicVolumeInfo,
+    // prior_study: prior_study || false,
   });
 
   // Sort the images in this series if needed
@@ -154,6 +157,8 @@ function getDisplaySetsFromSeries(instances) {
   if (!instances || !instances.length) {
     throw new Error('No instances were provided');
   }
+
+  // console.log("_getDisplaySetsFromSeries", 3, instances);
 
   const displaySets = [];
   const sopClassUids = getSopClassUids(instances);

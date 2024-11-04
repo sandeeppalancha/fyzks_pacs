@@ -46,6 +46,7 @@ const OverlayItemComponents = {
   'ohif.overlayItem.windowLevel': VOIOverlayItem,
   'ohif.overlayItem.zoomLevel': ZoomOverlayItem,
   'ohif.overlayItem.instanceNumber': InstanceNumberOverlayItem,
+  // 'ohif.overlayItem.ruler': RulerOverlayItem,
 };
 
 /**
@@ -69,12 +70,6 @@ function CustomizableViewportOverlay({
   const [voi, setVOI] = useState({ windowCenter: null, windowWidth: null });
   const [scale, setScale] = useState(1);
   const { imageIndex } = imageSliceData;
-  const [patientInfo, setPatientInfo] = useState({
-    PatientName: '',
-    PatientID: '',
-    PatientSex: '',
-    PatientDOB: '',
-  });
 
   const { displaySetService } = servicesManager.services;
 
@@ -92,6 +87,15 @@ function CustomizableViewportOverlay({
   const bottomRightCustomization = customizationService.getModeCustomization(
     'cornerstoneOverlayBottomRight'
   );
+
+  const rulerItem = {
+    id: 'Ruler',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Ruler',
+    condition: ({ instance }) => !!scale && !!instance,
+    contentF: ({ scale, instance }) => RulerOverlayItem({ scale, instance }), // Optional: pass scale or other ruler customization data here
+  };
 
   const instances = useMemo(() => {
     if (viewportData != null) {
@@ -267,7 +271,7 @@ function CustomizableViewportOverlay({
     label: '',
     title: 'Series Number',
     condition: ({ instance }) => instance && instance.SeriesNumber,
-    contentF: ({ instance }) => `${instance?.SeriesNumber}`,
+    contentF: ({ instance }) => `Series: #${instance?.SeriesNumber}`,
   };
 
 
@@ -276,8 +280,8 @@ function CustomizableViewportOverlay({
     customizationType: 'ohif.overlayItem',
     label: '',
     title: 'Patient Name',
-    condition: ({ instance }) => instance && instance.StudyDate,
-    contentF: ({ instance }) => `${patientInfo?.PatientName} (${patientInfo?.PatientID})`,
+    condition: ({ instance }) => instance && instance.PatientName,
+    contentF: ({ instance }) => `${formatPN(instance.PatientName.Alphabetic)} (${instance?.PatientID})`,
   };
 
   const accessionItem = {
@@ -295,7 +299,7 @@ function CustomizableViewportOverlay({
     label: '',
     title: 'Patient ID',
     condition: ({ instance }) => instance && instance.PatientID,
-    contentF: ({ instance }) => patientInfo?.PatientID,
+    contentF: ({ instance }) => instance?.PatientID,
   }
 
   const patientSexItem = {
@@ -304,7 +308,7 @@ function CustomizableViewportOverlay({
     label: '',
     title: 'Patient Sex',
     condition: ({ instance }) => instance && instance.PatientSex,
-    contentF: ({ instance }) => patientInfo?.PatientSex,
+    contentF: ({ instance }) => instance?.PatientSex,
   }
 
   const patientDobItem = {
@@ -313,37 +317,16 @@ function CustomizableViewportOverlay({
     label: '',
     title: 'Patient DOB',
     condition: ({ instance }) => instance && instance.PatientBirthDate,
-    contentF: ({ instance }) => `${patientInfo?.PatientDOB} (${moment(instance.PatientBirthDate, 'YYYYMMDD').fromNow(true)})`,
+    contentF: ({ instance }) => `${instance?.PatientSex} | ${formatDate(instance?.PatientBirthDate)} (${moment(instance.PatientBirthDate, 'YYYYMMDD').fromNow(true)})`,
   }
-
-  const updatePatientInfo = () => {
-    const displaySet = displaySets[0];
-    const instance = displaySet?.instances?.[0] || displaySet?.instance;
-    if (!instance) {
-      return;
-    }
-    // console.log("Update pat info", instance);
-
-    setPatientInfo({
-      PatientID: instance.PatientID || '',
-      PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : '',
-      PatientSex: instance.PatientSex || '',
-      PatientDOB: formatDate(instance.PatientBirthDate) || '',
-    });
-    // checkMixedPatients(instance.PatientID || '');
-  };
 
   useEffect(() => {
     const subscription = displaySetService.subscribe(
       displaySetService.EVENTS.DISPLAY_SETS_ADDED,
-      () => updatePatientInfo()
+      () => { }
     );
     return () => subscription.unsubscribe();
   }, []);
-
-  useEffect(() => {
-    updatePatientInfo();
-  }, [displaySets]);
 
 
   const seriesDescriptionItem = {
@@ -355,7 +338,7 @@ function CustomizableViewportOverlay({
     condition: ({ instance }) => {
       return instance && instance.SeriesDescription;
     },
-    contentF: ({ instance }) => `${instance.Modality} | ${instance.SeriesDescription}`,
+    contentF: ({ instance }) => `${instance.SeriesDescription}`,
   };
 
   const topRightItems = instances ? instances.map((instance, index) => {
@@ -363,11 +346,13 @@ function CustomizableViewportOverlay({
       {
         ...seriesNumberItem,
         instanceIndex: index,
-      }
+      },
+      {
+        ...seriesDescriptionItem,
+        instanceIndex: index,
+      },
     ]
-  }) : [];
-
-  // console.log("topright items: ", getContent(topRightCustomization, [...topRightItems], 'topRightOverlayItem'));
+  }).flat() : [];
 
   const topLeftItems = instances
     ? instances
@@ -385,10 +370,10 @@ function CustomizableViewportOverlay({
             ...patientDobItem,
             instanceIndex: index,
           },
-          {
-            ...seriesDescriptionItem,
-            instanceIndex: index,
-          },
+          // {
+          //   ...seriesDescriptionItem,
+          //   instanceIndex: index,
+          // },
           {
             ...studyDateItem,
             instanceIndex: index,
@@ -396,10 +381,23 @@ function CustomizableViewportOverlay({
           {
             ...patientSexItem,
             instanceIndex: index,
-          }
+          },
         ];
       })
       .flat()
+    : [];
+
+
+  const bottomLeftItems = instances
+    ? instances
+      .map((instance, index) => {
+        return [
+          {
+            ...rulerItem,
+            instanceIndex: index
+          }
+        ]
+      }).flat()
     : [];
 
   return (
@@ -413,7 +411,7 @@ function CustomizableViewportOverlay({
       topRight={getContent(topRightCustomization, [...topRightItems], 'topRightOverlayItem')}
       bottomLeft={getContent(
         bottomLeftCustomization,
-        [
+        [...bottomLeftItems, ...[
           {
             id: 'WindowLevel',
             customizationType: 'ohif.overlayItem.windowLevel',
@@ -426,7 +424,7 @@ function CustomizableViewportOverlay({
               return activeToolName === 'Zoom';
             },
           },
-        ],
+        ]],
         'bottomLeftOverlayItem'
       )}
       bottomRight={getContent(
@@ -574,6 +572,25 @@ function VOIOverlayItem({ voi, customization }: OverlayItemProps) {
   );
 }
 
+function RulerOverlayItem(props) {
+  const { scale, customization, instance } = props;
+  const { PixelSpacing } = instance || {};
+
+  const [x_spacing, y_spacing] = PixelSpacing;
+
+  if (!scale) return null;
+
+  const lengthInMM = 50; // Example length to display in millimeters
+  const lengthInPixels = lengthInMM * scale / x_spacing;
+
+  return (
+    <div className="overlay-item ruler-overlay" style={{ color: customization?.color }}>
+      <div className="ruler-bar" style={{ width: `${lengthInPixels}px` }}></div>
+      <span>{lengthInMM} mm</span>
+    </div>
+  );
+}
+
 /**
  * Zoom Level Overlay item
  */
@@ -598,7 +615,6 @@ function InstanceNumberOverlayItem({
   customization,
 }: OverlayItemProps) {
   const { imageIndex, numberOfSlices } = imageSliceData;
-
   return (
     <div
       className="overlay-item flex flex-row"
@@ -608,7 +624,7 @@ function InstanceNumberOverlayItem({
         {instanceNumber !== undefined && instanceNumber !== null ? (
           <>
             <span className="mr-1 shrink-0">I:</span>
-            <span>{`${instanceNumber} (${imageIndex + 1}/${numberOfSlices})`}</span>
+            <span>{`${instanceNumber || ''} (${imageIndex + 1}/${numberOfSlices})`}</span>
           </>
         ) : (
           `${imageIndex + 1}/${numberOfSlices}`

@@ -137,8 +137,6 @@ const determineActiveViewportId = (state: DefaultState, newViewports: Map) => {
 export const ViewportGridContext = createContext(DEFAULT_STATE);
 
 export function ViewportGridProvider({ children, service }) {
-  // console.log("viewport 1");
-
   const viewportGridReducer = (state: DefaultState, action) => {
     switch (action.type) {
       case 'SET_RECENT_STUDIES': {
@@ -158,8 +156,6 @@ export function ViewportGridProvider({ children, service }) {
       case 'SET_DISPLAYSETS_FOR_VIEWPORTS': {
         const { payload } = action;
         const viewports = new Map(state.viewports);
-
-        // console.log("**** SET_DISPLAYSETS_FOR_VIEWPORTS", payload, viewports);
 
 
         payload.forEach(updatedViewport => {
@@ -222,8 +218,6 @@ export function ViewportGridProvider({ children, service }) {
         return { ...state, viewports };
       }
       case 'SET_LAYOUT': {
-        console.log("**** this is the main function for changing the layout");
-
         const {
           numCols,
           numRows,
@@ -258,8 +252,6 @@ export function ViewportGridProvider({ children, service }) {
             }
 
             const viewport = findOrCreateViewport(position, positionId, options, viewportGridService);
-
-            // console.log("findorcreate viewport", viewport);
 
 
             if (!viewport) {

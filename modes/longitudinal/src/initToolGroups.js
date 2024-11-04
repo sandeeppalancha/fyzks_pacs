@@ -21,12 +21,8 @@ function initDefaultToolGroup(
         toolName: toolNames.Pan,
         bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
       },
-      {
-        toolName: toolNames.CustomDragTool,
-        bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
-      },
       // {
-      //   toolName: toolNames.Tilt,
+      //   toolName: toolNames.CustomDragTool,
       //   bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
       // },
       {
@@ -63,7 +59,7 @@ function initDefaultToolGroup(
       },
       { toolName: toolNames.Bidirectional },
       { toolName: toolNames.DragProbe },
-      { toolName: toolNames.CustomDragTool },
+      // { toolName: toolNames.CustomDragTool },
       { toolName: toolNames.Probe },
       { toolName: toolNames.EllipticalROI },
       { toolName: toolNames.CircleROI },
@@ -176,10 +172,10 @@ function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, m
         toolName: toolNames.Pan,
         bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
       },
-      {
-        toolName: toolNames.CustomDragTool,
-        bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
-      },
+      // {
+      //   toolName: toolNames.CustomDragTool,
+      //   bindings: [{ mouseButton: Enums.MouseBindings.Auxiliary }],
+      // },
       {
         toolName: toolNames.Zoom,
         bindings: [{ mouseButton: Enums.MouseBindings.Secondary }],
@@ -214,7 +210,7 @@ function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, m
       },
       { toolName: toolNames.Bidirectional },
       { toolName: toolNames.DragProbe },
-      { toolName: toolNames.CustomDragTool },
+      // { toolName: toolNames.CustomDragTool },
       { toolName: toolNames.Probe },
       { toolName: toolNames.EllipticalROI },
       { toolName: toolNames.CircleROI },

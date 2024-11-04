@@ -57,8 +57,6 @@ function PanelStudyBrowserBottom({
   };
 
   const setRecentStudies = (studies) => {
-    // console.log("setRecentStudies", studies);
-
     viewportGridService.setRecentStudies(studies)
   }
 
@@ -82,7 +80,6 @@ function PanelStudyBrowserBottom({
       // server can respond.
       try {
         qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
-        // console.log("qidoStudiesForPatient", qidoStudiesForPatient);
 
       } catch (error) {
         console.warn(error);
@@ -373,7 +370,7 @@ function _createStudyBrowserTabs(primaryStudyInstanceUIDs, studyDisplayList, dis
       const tabStudy = Object.assign({}, study, {
         displaySets: displaySetsForStudy,
       });
-      recentStudies.push(tabStudy);
+      // recentStudies.push(tabStudy);
     } else {
       // TODO: Filter allStudies to dates within one year of current date
       const displaySetsForStudy = displaySets.filter(

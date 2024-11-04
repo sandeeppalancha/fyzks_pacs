@@ -1,6 +1,6 @@
 export const ctAbdomen = {
   // id: 'default',
-  id: 'ctAbdomen',
+  id: 'ctComparision',
   locked: true,
   name: 'CT Abdomen',
   icon: 'layout-advanced-axial-primary',
@@ -12,7 +12,17 @@ export const ctAbdomen = {
   protocolMatchingRules: [],
   imageLoadStrategy: 'interleaveCenter',
   displaySetSelectors: {
-    mprDisplaySet: {
+    priormprDisplaySetCT: {
+      studyMatchingRules: [
+        {
+          attribute: 'studyInstanceUIDsIndex',
+          from: 'options',
+          required: true,
+          constraint: {
+            equals: { value: 1 },
+          },
+        },
+      ],
       seriesMatchingRules: [
         {
           weight: 1,
@@ -23,6 +33,40 @@ export const ctAbdomen = {
             },
           },
           required: true,
+        },
+        // {
+        //   weight: 1,
+        //   attribute: 'prior_study',
+        //   constraint: {
+        //     equals: {
+        //       value: true,
+        //     },
+        //   },
+        //   required: false,
+        // },
+      ],
+    },
+    mprDisplaySetCT: {
+      studyMatchingRules: [
+        {
+          attribute: 'studyInstanceUIDsIndex',
+          from: 'options',
+          required: true,
+          constraint: {
+            equals: { value: 0 },
+          },
+        },
+      ],
+      seriesMatchingRules: [
+        {
+          weight: 1,
+          attribute: 'isReconstructable',
+          constraint: {
+            equals: {
+              value: true,
+            },
+          },
+          required: false,
         },
       ],
     },
@@ -35,7 +79,7 @@ export const ctAbdomen = {
         layoutType: 'grid',
         properties: {
           rows: 2,
-          columns: 4,
+          columns: 3,
           // layoutOptions: [
           //   {
           //     x: 0,
@@ -82,7 +126,7 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'mprDisplaySetCT',
             },
           ],
         },
@@ -110,7 +154,7 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'mprDisplaySetCT',
             },
           ],
         },
@@ -138,37 +182,37 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'mprDisplaySetCT',
             },
           ],
         },
-        {
-          viewportOptions: {
-            toolGroupId: 'mpr',
-            viewportId: 'current-empty',
-            // viewportType: 'volume',
-            // orientation: 'coronal',
-            initialImageOptions: {
-              preset: 'middle',
-            },
-            // syncGroups: [
-            //   {
-            //     type: 'voi',
-            //     id: 'mpr',
-            //     source: true,
-            //     target: true,
-            //     options: {
-            //       syncColormap: true,
-            //     },
-            //   },
-            // ],
-          },
-          displaySets: [
-            // {
-            //   id: 'mprDisplaySet',
-            // },
-          ],
-        },
+        // {
+        //   viewportOptions: {
+        //     toolGroupId: 'mpr',
+        //     viewportId: 'current-empty',
+        //     // viewportType: 'volume',
+        //     // orientation: 'coronal',
+        //     initialImageOptions: {
+        //       preset: 'middle',
+        //     },
+        //     syncGroups: [
+        //       {
+        //         type: 'voi',
+        //         id: 'mpr',
+        //         source: true,
+        //         target: true,
+        //         options: {
+        //           syncColormap: true,
+        //         },
+        //       },
+        //     ],
+        //   },
+        //   displaySets: [
+        //     // {
+        //     //   id: 'priormprDisplaySetCT',
+        //     // },
+        //   ],
+        // },
         {
           comparisionStudy: true,
           viewportOptions: {
@@ -194,7 +238,7 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'priormprDisplaySetCT',
             },
           ],
         },
@@ -223,7 +267,7 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'priormprDisplaySetCT',
             },
           ],
         },
@@ -253,7 +297,7 @@ export const ctAbdomen = {
           },
           displaySets: [
             {
-              id: 'mprDisplaySet',
+              id: 'priormprDisplaySetCT',
             },
           ],
         },
@@ -279,11 +323,11 @@ export const ctAbdomen = {
             //   },
             // ],
           },
-          displaySets: [
-            // {
-            //   id: 'mprDisplaySet',
-            // },
-          ],
+          // displaySets: [
+          // {
+          //   id: 'mprDisplaySetCT',
+          // },
+          // ],
         },
       ],
     },

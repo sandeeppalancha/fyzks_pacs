@@ -370,6 +370,7 @@ export default class DisplaySetService extends PubSubService {
           });
         });
 
+        // important 1
         this._addDisplaySetsToCache(displaySets);
         this._addActiveDisplaySets(displaySets);
 

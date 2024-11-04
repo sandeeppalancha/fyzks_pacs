@@ -52,9 +52,6 @@ function PanelStudyBrowser({
       });
     }
 
-    // console.log("5 *******");
-
-
     viewportGridService.setDisplaySetsForViewports(updatedViewports);
   };
 
@@ -78,8 +75,6 @@ function PanelStudyBrowser({
       // server can respond.
       try {
         qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
-        // console.log("qidoStudiesForPatient", qidoStudiesForPatient);
-
       } catch (error) {
         console.warn(error);
       }
