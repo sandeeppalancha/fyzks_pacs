@@ -462,7 +462,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
         });
 
         // *important
-        DicomMetadataStore.addInstances(naturalizedInstances, madeInClient, isPrevious);
+        DicomMetadataStore.addInstances(naturalizedInstances, madeInClient);
       }
 
       function setSuccessFlag() {
