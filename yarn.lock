@@ -3249,7 +3249,7 @@
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
 
-"@ohif/app@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\app":
+"@ohif/app@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\app":
   version "3.8.0-beta.81"
   resolved "file:platform/app"
   dependencies:
@@ -3300,7 +3300,7 @@
     react-router "^6.8.1"
     react-router-dom "^6.8.1"
 
-"@ohif/cli@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\cli":
+"@ohif/cli@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\cli":
   version "3.8.0-beta.81"
   resolved "file:platform/cli"
   dependencies:
@@ -3320,7 +3320,7 @@
     util "^0.12.4"
     yarn-programmatic "^0.1.2"
 
-"@ohif/core@3.8.0-beta.81", "@ohif/core@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\core":
+"@ohif/core@3.8.0-beta.81", "@ohif/core@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\core":
   version "3.8.0-beta.81"
   resolved "file:platform/core"
   dependencies:
@@ -3336,14 +3336,14 @@
     query-string "^6.14.0"
     validate.js "^0.12.0"
 
-"@ohif/extension-cornerstone-dicom-rt@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-rt@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\cornerstone-dicom-rt":
+"@ohif/extension-cornerstone-dicom-rt@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-rt@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\cornerstone-dicom-rt":
   version "3.8.0-beta.81"
   resolved "file:extensions/cornerstone-dicom-rt"
   dependencies:
     "@babel/runtime" "^7.20.13"
     react-color "^2.19.3"
 
-"@ohif/extension-cornerstone-dicom-seg@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-seg@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\cornerstone-dicom-seg":
+"@ohif/extension-cornerstone-dicom-seg@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-seg@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\cornerstone-dicom-seg":
   version "3.8.0-beta.81"
   resolved "file:extensions/cornerstone-dicom-seg"
   dependencies:
@@ -3353,7 +3353,7 @@
     "@kitware/vtk.js" "30.3.3"
     react-color "^2.19.3"
 
-"@ohif/extension-cornerstone-dicom-sr@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-sr@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\cornerstone-dicom-sr":
+"@ohif/extension-cornerstone-dicom-sr@3.8.0-beta.81", "@ohif/extension-cornerstone-dicom-sr@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\cornerstone-dicom-sr":
   version "3.8.0-beta.81"
   resolved "file:extensions/cornerstone-dicom-sr"
   dependencies:
@@ -3363,7 +3363,7 @@
     "@cornerstonejs/tools" "^1.70.6"
     classnames "^2.3.2"
 
-"@ohif/extension-cornerstone-dynamic-volume@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\cornerstone-dynamic-volume":
+"@ohif/extension-cornerstone-dynamic-volume@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\cornerstone-dynamic-volume":
   version "3.8.0-beta.81"
   resolved "file:extensions/cornerstone-dynamic-volume"
   dependencies:
@@ -3373,7 +3373,7 @@
     "@cornerstonejs/tools" "^1.70.6"
     classnames "^2.3.2"
 
-"@ohif/extension-cornerstone@3.8.0-beta.81", "@ohif/extension-cornerstone@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\cornerstone":
+"@ohif/extension-cornerstone@3.8.0-beta.81", "@ohif/extension-cornerstone@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\cornerstone":
   version "3.8.0-beta.81"
   resolved "file:extensions/cornerstone"
   dependencies:
@@ -3390,14 +3390,14 @@
     shader-loader "^1.3.1"
     worker-loader "^3.0.8"
 
-"@ohif/extension-default@3.8.0-beta.81", "@ohif/extension-default@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\default":
+"@ohif/extension-default@3.8.0-beta.81", "@ohif/extension-default@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\default":
   version "3.8.0-beta.81"
   resolved "file:extensions/default"
   dependencies:
     "@babel/runtime" "^7.20.13"
     "@cornerstonejs/calculate-suv" "^1.1.0"
 
-"@ohif/extension-dicom-microscopy@3.8.0-beta.81", "@ohif/extension-dicom-microscopy@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\dicom-microscopy":
+"@ohif/extension-dicom-microscopy@3.8.0-beta.81", "@ohif/extension-dicom-microscopy@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\dicom-microscopy":
   version "3.8.0-beta.81"
   resolved "file:extensions/dicom-microscopy"
   dependencies:
@@ -3409,21 +3409,21 @@
     dicom-microscopy-viewer "^0.44.0"
     dicomicc "^0.1"
 
-"@ohif/extension-dicom-pdf@3.8.0-beta.81", "@ohif/extension-dicom-pdf@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\dicom-pdf":
+"@ohif/extension-dicom-pdf@3.8.0-beta.81", "@ohif/extension-dicom-pdf@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\dicom-pdf":
   version "3.8.0-beta.81"
   resolved "file:extensions/dicom-pdf"
   dependencies:
     "@babel/runtime" "^7.20.13"
     classnames "^2.3.2"
 
-"@ohif/extension-dicom-video@3.8.0-beta.81", "@ohif/extension-dicom-video@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\dicom-video":
+"@ohif/extension-dicom-video@3.8.0-beta.81", "@ohif/extension-dicom-video@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\dicom-video":
   version "3.8.0-beta.81"
   resolved "file:extensions/dicom-video"
   dependencies:
     "@babel/runtime" "^7.20.13"
     classnames "^2.3.2"
 
-"@ohif/extension-measurement-tracking@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\measurement-tracking":
+"@ohif/extension-measurement-tracking@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\measurement-tracking":
   version "3.8.0-beta.81"
   resolved "file:extensions/measurement-tracking"
   dependencies:
@@ -3432,21 +3432,21 @@
     "@xstate/react" "^3.2.2"
     xstate "^4.10.0"
 
-"@ohif/extension-test@3.8.0-beta.81", "@ohif/extension-test@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\test-extension":
+"@ohif/extension-test@3.8.0-beta.81", "@ohif/extension-test@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\test-extension":
   version "3.8.0-beta.81"
   resolved "file:extensions/test-extension"
   dependencies:
     "@babel/runtime" "^7.20.13"
     classnames "^2.3.2"
 
-"@ohif/extension-tmtv@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\extensions\\tmtv":
+"@ohif/extension-tmtv@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\extensions\\tmtv":
   version "3.8.0-beta.81"
   resolved "file:extensions/tmtv"
   dependencies:
     "@babel/runtime" "^7.20.13"
     classnames "^2.3.2"
 
-"@ohif/i18n@3.8.0-beta.81", "@ohif/i18n@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\i18n":
+"@ohif/i18n@3.8.0-beta.81", "@ohif/i18n@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\i18n":
   version "3.8.0-beta.81"
   resolved "file:platform/i18n"
   dependencies:
@@ -3455,55 +3455,55 @@
     locize-editor "^2.0.0"
     locize-lastused "^1.1.0"
 
-"@ohif/mode-basic-dev-mode@3.8.0-beta.81", "@ohif/mode-basic-dev-mode@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\basic-dev-mode":
+"@ohif/mode-basic-dev-mode@3.8.0-beta.81", "@ohif/mode-basic-dev-mode@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\basic-dev-mode":
   version "3.8.0-beta.81"
   resolved "file:modes/basic-dev-mode"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/mode-longitudinal@3.8.0-beta.81", "@ohif/mode-longitudinal@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\longitudinal":
+"@ohif/mode-longitudinal@3.8.0-beta.81", "@ohif/mode-longitudinal@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\longitudinal":
   version "3.8.0-beta.81"
   resolved "file:modes/longitudinal"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/mode-microscopy@3.8.0-beta.81", "@ohif/mode-microscopy@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\microscopy":
+"@ohif/mode-microscopy@3.8.0-beta.81", "@ohif/mode-microscopy@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\microscopy":
   version "3.8.0-beta.81"
   resolved "file:modes/microscopy"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/mode-preclinical-4d@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\preclinical-4d":
+"@ohif/mode-preclinical-4d@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\preclinical-4d":
   version "3.8.0-beta.81"
   resolved "file:modes/preclinical-4d"
   dependencies:
     "@babel/runtime" "^7.20.13"
 
-"@ohif/mode-segmentation@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\segmentation":
+"@ohif/mode-segmentation@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\segmentation":
   version "3.8.0-beta.81"
   resolved "file:modes/segmentation"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/mode-test@3.8.0-beta.81", "@ohif/mode-test@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\basic-test-mode":
+"@ohif/mode-test@3.8.0-beta.81", "@ohif/mode-test@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\basic-test-mode":
   version "3.8.0-beta.81"
   resolved "file:modes/basic-test-mode"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/mode-tmtv@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\modes\\tmtv":
+"@ohif/mode-tmtv@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\modes\\tmtv":
   version "3.8.0-beta.81"
   resolved "file:modes/tmtv"
   dependencies:
     "@babel/runtime" "^7.20.13"
     i18next "^17.0.3"
 
-"@ohif/ui@3.8.0-beta.81", "@ohif/ui@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\ui":
+"@ohif/ui@3.8.0-beta.81", "@ohif/ui@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\ui":
   version "3.8.0-beta.81"
   resolved "file:platform/ui"
   dependencies:
@@ -3536,7 +3536,7 @@
     swiper "^8.4.2"
     webpack "^5.81.0"
 
-"@oozcitak/dom@1.15.10":
+"@oozcitak/dom@^1.15.10", "@oozcitak/dom@1.15.10":
   version "1.15.10"
   resolved "https://registry.npmjs.org/@oozcitak/dom/-/dom-1.15.10.tgz"
   integrity sha512-0JT29/LaxVgRcGKvHmSrUTEvZ8BXvZhGl2LASRUgHqDTC1M5g1pLmVv56IYNyt3bG2CUjDkc67wnyZC14pbQrQ==
@@ -3599,6 +3599,11 @@
   dependencies:
     "@oozcitak/infra" "1.0.8"
     "@oozcitak/util" "8.3.8"
+
+"@oozcitak/util@^8.3.9":
+  version "8.3.9"
+  resolved "https://registry.npmjs.org/@oozcitak/util/-/util-8.3.9.tgz"
+  integrity sha512-jYI+ZleMvau5Kqg/BFV3OC4wYeKSr8BPtUlV02zoqw1iZJ1AQ72f5njS9vOEbDTWkZ7AFrva9MWxLK5USHuUtw==
 
 "@oozcitak/util@1.0.1":
   version "1.0.1"
@@ -5624,7 +5629,15 @@
     "@types/react" "*"
     "@types/react-router" "*"
 
-"@types/react-router@*", "@types/react-router@^5.1.0":
+"@types/react-router@*":
+  version "5.1.20"
+  resolved "https://registry.npmjs.org/@types/react-router/-/react-router-5.1.20.tgz"
+  integrity sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==
+  dependencies:
+    "@types/history" "^4.7.11"
+    "@types/react" "*"
+
+"@types/react-router@^5.1.0":
   version "5.1.20"
   resolved "https://registry.npmjs.org/@types/react-router/-/react-router-5.1.20.tgz"
   integrity sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==
@@ -6588,12 +6601,7 @@ are-we-there-yet@^3.0.0:
     delegates "^1.0.0"
     readable-stream "^3.6.0"
 
-arg@^5.0.0:
-  version "5.0.2"
-  resolved "https://registry.npmjs.org/arg/-/arg-5.0.2.tgz"
-  integrity sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==
-
-arg@^5.0.2, arg@5.0.2:
+arg@^5.0.0, arg@^5.0.2, arg@5.0.2:
   version "5.0.2"
   resolved "https://registry.npmjs.org/arg/-/arg-5.0.2.tgz"
   integrity sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==
@@ -7686,10 +7694,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001587, caniuse-lite@^1.0.30001599:
-  version "1.0.30001608"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001608.tgz"
-  integrity sha512-cjUJTQkk9fQlJR2s4HMuPMvTiRggl0rAVMtthQuyOlDWuqHXqN8azLq+pi8B2TjwKJ32diHjUqRIKeFX4z1FoA==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001587, caniuse-lite@^1.0.30001599, caniuse-lite@^1.0.30001680:
+  version "1.0.30001680"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001680.tgz"
+  integrity sha512-rPQy70G6AGUMnbwS1z6Xg+RkHYPAi18ihs47GH0jcxIG7wArmPgY3XbS2sRdBbxJljp3thdT8BIqv9ccCypiPA==
 
 case-sensitive-paths-webpack-plugin@^2.4.0:
   version "2.4.0"
@@ -8193,7 +8201,12 @@ comma-separated-tokens@^1.0.0:
   resolved "https://registry.npmjs.org/comma-separated-tokens/-/comma-separated-tokens-1.0.8.tgz"
   integrity sha512-GHuDRO12Sypu2cV70d1dkA2EUmXHgntrzbpvOB+Qy+49ypNfGgFQIC2fhhXbnyrJRynDCAARsT7Ou0M6hirpfw==
 
-commander@^2.20.0, commander@^5.1.0, commander@^6.2.1, commander@^7.2.0, commander@^8.3.0:
+commander@^2.20.0:
+  version "2.20.3"
+  resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
+  integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
+
+commander@^5.1.0, commander@^6.2.1, commander@^7.2.0, commander@^8.3.0:
   version "8.3.0"
   resolved "https://registry.npmjs.org/commander/-/commander-8.3.0.tgz"
   integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
@@ -9830,7 +9843,16 @@ domutils@^1.7.0:
     dom-serializer "0"
     domelementtype "1"
 
-domutils@^2.5.2, domutils@^2.8.0:
+domutils@^2.5.2:
+  version "2.8.0"
+  resolved "https://registry.npmjs.org/domutils/-/domutils-2.8.0.tgz"
+  integrity sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==
+  dependencies:
+    dom-serializer "^1.0.1"
+    domelementtype "^2.2.0"
+    domhandler "^4.2.0"
+
+domutils@^2.8.0:
   version "2.8.0"
   resolved "https://registry.npmjs.org/domutils/-/domutils-2.8.0.tgz"
   integrity sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==
@@ -11941,7 +11963,14 @@ gl-matrix@^3.1.0, gl-matrix@^3.4.3, gl-matrix@3.4.3:
   resolved "https://registry.npmjs.org/gl-matrix/-/gl-matrix-3.4.3.tgz"
   integrity sha512-wcCp8vu8FT22BnvKVPjXa/ICBWRq/zjFfdofZy1WSpQZpphblv12/bOQLBC1rMM7SGOFS9ltVmKOHil5+Ml7gA==
 
-glob-parent@^5.1.2, glob-parent@^6.0.1, glob-parent@^6.0.2, glob-parent@~5.1.2:
+glob-parent@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz"
+  integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
+  dependencies:
+    is-glob "^4.0.1"
+
+glob-parent@^6.0.1, glob-parent@^6.0.2:
   version "6.0.2"
   resolved "https://registry.npmjs.org/glob-parent/-/glob-parent-6.0.2.tgz"
   integrity sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==
@@ -12511,7 +12540,20 @@ html-escaper@^2.0.0, html-escaper@^2.0.2:
   resolved "https://registry.npmjs.org/html-escaper/-/html-escaper-2.0.2.tgz"
   integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
-html-minifier-terser@^6.0.2, html-minifier-terser@^6.1.0:
+html-minifier-terser@^6.0.2:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz"
+  integrity sha512-YXxSlJBZTP7RS3tWnQw74ooKa6L9b9i9QYXY21eUEvhZ3u9XLfv6OnFsQq6RxkhHygsaUMvYsZRV5rU/OVNZxw==
+  dependencies:
+    camel-case "^4.1.2"
+    clean-css "^5.2.2"
+    commander "^8.3.0"
+    he "^1.2.0"
+    param-case "^3.0.4"
+    relateurl "^0.2.7"
+    terser "^5.10.0"
+
+html-minifier-terser@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz"
   integrity sha512-YXxSlJBZTP7RS3tWnQw74ooKa6L9b9i9QYXY21eUEvhZ3u9XLfv6OnFsQq6RxkhHygsaUMvYsZRV5rU/OVNZxw==
@@ -14230,7 +14272,7 @@ joi@^17.6.0, joi@^17.7.0:
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
-js-yaml@^3.10.0, js-yaml@^3.13.0, js-yaml@^3.13.1:
+js-yaml@^3.10.0, js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@3.14.1:
   version "3.14.1"
   resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
   integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
@@ -15245,7 +15287,21 @@ make-dir@^2.0.0, make-dir@^2.1.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-make-dir@^3.0.0, make-dir@^3.0.2, make-dir@^3.1.0:
+make-dir@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz"
+  integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
+  dependencies:
+    semver "^6.0.0"
+
+make-dir@^3.0.2:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz"
+  integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
+  dependencies:
+    semver "^6.0.0"
+
+make-dir@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz"
   integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
@@ -16857,7 +16913,7 @@ ohash@^1.1.3:
   resolved "https://registry.npmjs.org/ohash/-/ohash-1.1.3.tgz"
   integrity sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==
 
-"ohif-docs@file:C:\\Users\\staro\\Documents\\projects\\starof\\yashoda\\LATEST PACS\\ohif-viewer\\platform\\docs":
+"ohif-docs@file:C:\\Users\\spend\\OneDrive\\Documents\\Work\\pacs-fe\\platform\\docs":
   version "3.8.0-beta.81"
   resolved "file:platform/docs"
   dependencies:
@@ -17245,12 +17301,7 @@ param-case@^3.0.4:
     dot-case "^3.0.4"
     tslib "^2.0.3"
 
-parchment@^1.1.2:
-  version "1.1.4"
-  resolved "https://registry.npmjs.org/parchment/-/parchment-1.1.4.tgz"
-  integrity sha512-J5FBQt/pM2inLzg4hEWmzQx/8h8D0CiDxaG3vyp9rKrQRSDgBlhjdP5jQGgosEajXPSQouXGHOmVdgo7QmJuOg==
-
-parchment@^1.1.4:
+parchment@^1.1.2, parchment@^1.1.4:
   version "1.1.4"
   resolved "https://registry.npmjs.org/parchment/-/parchment-1.1.4.tgz"
   integrity sha512-J5FBQt/pM2inLzg4hEWmzQx/8h8D0CiDxaG3vyp9rKrQRSDgBlhjdP5jQGgosEajXPSQouXGHOmVdgo7QmJuOg==
@@ -20382,7 +20433,12 @@ safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.2, safe-buffer@>=5.1.0,
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
-safe-buffer@~5.1.0, safe-buffer@~5.1.1, safe-buffer@5.1.2:
+safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+  version "5.1.2"
+  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
+  integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
+
+safe-buffer@5.1.2:
   version "5.1.2"
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
@@ -22691,12 +22747,7 @@ use-composed-ref@^1.3.0:
   resolved "https://registry.npmjs.org/use-composed-ref/-/use-composed-ref-1.3.0.tgz"
   integrity sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ==
 
-use-isomorphic-layout-effect@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz"
-  integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
-
-use-isomorphic-layout-effect@^1.1.2:
+use-isomorphic-layout-effect@^1.1.1, use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz"
   integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
@@ -23197,7 +23248,12 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.3:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack-sources@^3.2.2, webpack-sources@^3.2.3:
+webpack-sources@^3.2.2:
+  version "3.2.3"
+  resolved "https://registry.npmjs.org/webpack-sources/-/webpack-sources-3.2.3.tgz"
+  integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
+
+webpack-sources@^3.2.3:
   version "3.2.3"
   resolved "https://registry.npmjs.org/webpack-sources/-/webpack-sources-3.2.3.tgz"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
@@ -23782,6 +23838,16 @@ xml@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/xml/-/xml-1.0.1.tgz"
   integrity sha512-huCv9IH9Tcf95zuYCsQraZtWnJvBtLVE0QHMOs8bWyZAFZNDcYjsPq1nEx8jKA9y+Beo9v+7OBPRisQTjinQMw==
+
+xmlbuilder2@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/xmlbuilder2/-/xmlbuilder2-3.1.1.tgz"
+  integrity sha512-WCSfbfZnQDdLQLiMdGUQpMxxckeQ4oZNMNhLVkcekTu7xhD4tuUDyAPoY8CwXvBYE6LwBHd6QW2WZXlOWr1vCw==
+  dependencies:
+    "@oozcitak/dom" "1.15.10"
+    "@oozcitak/infra" "1.0.8"
+    "@oozcitak/util" "8.3.8"
+    js-yaml "3.14.1"
 
 xmlbuilder2@2.1.2:
   version "2.1.2"
