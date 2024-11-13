@@ -236,7 +236,8 @@ const OHIFCornerstoneViewport = React.memo(props => {
         series_id: currentSeries,
         stat_type: 'volume_loading',
         user_id: getUserDetails()?.username,
-        time_taken: timeToLoad
+        time_taken: timeToLoad,
+        total_instances: window.volumeLoadInfo[currentStudy][currentSeries]?.total
       }).then((res) => {
         console.log("saved time resp", res);
 
@@ -262,7 +263,8 @@ const OHIFCornerstoneViewport = React.memo(props => {
         series_id: currentSeries,
         stat_type: 'series_loading',
         user_id: getUserDetails()?.username,
-        time_taken: timeToLoad
+        time_taken: timeToLoad,
+        total_instances: window.seriesLoadInfo[currentStudy][currentSeries]['total']
       }).then((res) => {
         console.log("saved time resp", res);
       }).catch(e => {

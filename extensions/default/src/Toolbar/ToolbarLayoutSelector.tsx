@@ -104,12 +104,15 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const onSelectionPreset = useCallback(props => {
-    // console.log("onSelectionPreset", props, displaySets);
-    const { currentStudy, currentSeries } = window;
+    const { hangingProtocolService, viewportGridService, displaySetService } =
+      servicesManager.services;
 
+    const { currentStudy, currentSeries } = window;
+    const displaySets = displaySetService.getDisplaySetsForSeries(currentSeries);
     if (window.volumeLoadInfo && window.volumeLoadInfo[currentStudy]) {
       window.volumeLoadInfo[currentStudy][currentSeries] = {
-        startTime: Date.now()
+        startTime: Date.now(),
+        total: (displaySets[0]?.instances || []).length
       }
     } else {
       window.volumeLoadInfo[currentStudy] = {
