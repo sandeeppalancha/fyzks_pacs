@@ -28,6 +28,7 @@ import { useAppConfig } from '@state';
 
 import { LutPresentation, PositionPresentation } from '../types/Presentation';
 import { debounce } from 'lodash';
+import { getUserDetails, makePostCall } from '../../../../platform/app/src/utils/helper';
 
 const STACK = 'stack';
 
@@ -230,6 +231,18 @@ const OHIFCornerstoneViewport = React.memo(props => {
         message: `${timeToLoad} milliseconds`,
         type: 'info',
       });
+      makePostCall("/save-loading-time", {
+        study_id: currentStudy,
+        series_id: currentSeries,
+        stat_type: 'volume_loading',
+        user_id: getUserDetails()?.username,
+        time_taken: timeToLoad
+      }).then((res) => {
+        console.log("saved time resp", res);
+
+      }).catch(e => {
+        console.log("Error", e);
+      })
     }
   }, 20);
 
@@ -244,6 +257,17 @@ const OHIFCornerstoneViewport = React.memo(props => {
         message: `${timeToLoad} milliseconds`,
         type: 'info',
       });
+      makePostCall("/save-loading-time", {
+        study_id: currentStudy,
+        series_id: currentSeries,
+        stat_type: 'series_loading',
+        user_id: getUserDetails()?.username,
+        time_taken: timeToLoad
+      }).then((res) => {
+        console.log("saved time resp", res);
+      }).catch(e => {
+        console.log("Error", e);
+      })
     }
   }, 20);
 
