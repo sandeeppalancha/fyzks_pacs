@@ -104,6 +104,21 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   }, []);
 
   const onSelectionPreset = useCallback(props => {
+    // console.log("onSelectionPreset", props, displaySets);
+    const { currentStudy, currentSeries } = window;
+
+    if (window.volumeLoadInfo && window.volumeLoadInfo[currentStudy]) {
+      window.volumeLoadInfo[currentStudy][currentSeries] = {
+        startTime: Date.now()
+      }
+    } else {
+      window.volumeLoadInfo[currentStudy] = {
+        [currentSeries]: {
+          startTime: Date.now()
+        }
+      }
+    }
+
     commandsManager.run({
       commandName: 'setHangingProtocol',
       commandOptions: { ...props },
@@ -134,32 +149,6 @@ function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, .
   //   }, 2500);
   //   // setActiveProtocolIds
   // }, []);
-
-  const setPrimaryAxial = () => {
-    // onSelectionPreset({ protocolId: 'primaryAxial' });
-    // setTimeout(() => {
-    //   const crosshairs = document.querySelectorAll('[data-cy="Crosshairs"]');
-    //   if (crosshairs.length > 0) {
-    //     const crosshairElement = crosshairs[0] as HTMLButtonElement;
-    //     crosshairElement.click();
-    //   }//+
-    // }, 500)
-  }
-
-  const setTwoByFour = (args) => {
-    // console.log("set two bby four", args);
-
-    onSelection({ numRows: 2, numCols: 4 });
-
-    setTimeout(() => {
-      commandsManager.run({
-        commandName: 'setWindowLevelForAll',
-        commandOptions: windowLevelPresets[1],
-        label: 'W/L Preset 1',
-        keys: ['1'],
-      })
-    }, 1500)
-  }
 
   const setCTAbdomen = () => {
     // onSelectionPreset({ protocolId: 'ctAbdomen' });

@@ -144,13 +144,13 @@ function ViewerLayout({
                 />
               </ErrorBoundary>
             </div>
-            {/* <BottomPanelWithServices
+            <BottomPanelWithServices
               side="left"
               activeTabIndex={leftPanelClosedState ? null : 0}
               servicesManager={servicesManager}
               commandsManager={commandsManager}
               extensionManager={extensionManager}
-            /> */}
+            />
           </div>
           {hasRightPanels ? (
             <ErrorBoundary context="Right Panel">

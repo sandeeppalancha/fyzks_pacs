@@ -45,6 +45,9 @@ loadDynamicConfig(window.config).then(config_json => {
 
   const customApp = React.createElement(CustomApp, appProps, null);
 
+  window.volumeLoadInfo = {};
+  window.seriesLoadInfo = {};
+
   // const root = document.getElementById('root');
   /** Render */
   ReactDOM.render(customApp, document.getElementById('custom-root'));

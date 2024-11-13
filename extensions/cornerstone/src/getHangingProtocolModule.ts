@@ -29,10 +29,10 @@ function getHangingProtocolModule() {
       name: primaryAxial.id,
       protocol: primaryAxial,
     },
-    // {
-    //   name: ctAbdomen.id,
-    //   protocol: ctAbdomen,
-    // },
+    {
+      name: ctAbdomen.id,
+      protocol: ctAbdomen,
+    },
     {
       name: only3D.id,
       protocol: only3D,

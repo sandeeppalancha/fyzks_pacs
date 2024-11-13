@@ -37,6 +37,20 @@ class CornerstoneCacheService {
     dataSource: unknown,
     initialImageIndex?: number
   ): Promise<StackViewportData | VolumeViewportData> {
+
+    // console.log("create first", displaySets[0]);
+
+    const { StudyInstanceUID, SeriesInstanceUID, instances } = (displaySets[0] || {});
+    window.currentStudy = StudyInstanceUID;
+    window.currentSeries = SeriesInstanceUID;
+
+    //sandeep to track time taken to load entire series
+    window.seriesLoadInfo[StudyInstanceUID] = {};
+    window.seriesLoadInfo[StudyInstanceUID][SeriesInstanceUID] = {
+      startTime: Date.now(),
+      total: instances.length
+    }
+
     let viewportType = viewportOptions.viewportType as string;
 
     // Todo: Since Cornerstone 3D currently doesn't support segmentation

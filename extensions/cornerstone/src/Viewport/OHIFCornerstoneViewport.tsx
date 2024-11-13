@@ -27,6 +27,7 @@ import { getWindowLevelActionMenu } from '../components/WindowLevelActionMenu/ge
 import { useAppConfig } from '@state';
 
 import { LutPresentation, PositionPresentation } from '../types/Presentation';
+import { debounce } from 'lodash';
 
 const STACK = 'stack';
 
@@ -147,6 +148,7 @@ const OHIFCornerstoneViewport = React.memo(props => {
     toolbarService,
     toolGroupService,
     syncGroupService,
+    uiNotificationService,
     cornerstoneViewportService,
     cornerstoneCacheService,
     viewportGridService,
@@ -217,11 +219,64 @@ const OHIFCornerstoneViewport = React.memo(props => {
     [viewportId, onElementEnabled, toolGroupService]
   );
 
+  const debouncedSaveVolumeLoad = debounce(evt => {
+    const { currentStudy, currentSeries } = window;
+    if (!window.volumeLoadInfo[currentStudy][currentSeries].endTime) {
+      const endTime = Date.now();
+      window.volumeLoadInfo[currentStudy][currentSeries].endTime = endTime;
+      const timeToLoad = endTime - window.volumeLoadInfo[currentStudy][currentSeries].startTime;
+      uiNotificationService.show({
+        title: "Time taken to load volume completion",
+        message: `${timeToLoad} milliseconds`,
+        type: 'info',
+      });
+    }
+  }, 20);
+
+  const debouncedSeriesLoad = debounce(evt => {
+    const { currentStudy, currentSeries } = window;
+    if (!window.seriesLoadInfo[currentStudy][currentSeries].endTime) {
+      const endTime = Date.now();
+      window.seriesLoadInfo[currentStudy][currentSeries].endTime = endTime;
+      const timeToLoad = endTime - window.seriesLoadInfo[currentStudy][currentSeries].startTime;
+      uiNotificationService.show({
+        title: "Time taken to load the series",
+        message: `${timeToLoad} milliseconds`,
+        type: 'info',
+      });
+    }
+  }, 20);
+
   // disable the element upon unmounting
   useEffect(() => {
     cornerstoneViewportService.enableViewport(viewportId, elementRef.current);
 
     eventTarget.addEventListener(Enums.Events.ELEMENT_ENABLED, elementEnabledHandler);
+
+    eventTarget.addEventListener(Enums.Events.IMAGE_VOLUME_LOADING_COMPLETED, (evt) => {
+      // console.log("volume loading completed", evt);
+      debouncedSaveVolumeLoad(evt);
+    });
+
+    // eventTarget.addEventListener(Enums.Events.STACK_VIEWPORT_NEW_STACK, (evt) => {
+    //   console.log("new STACK_VIEWPORT_NEW_STACK viewport", evt);
+    // });
+
+    // eventTarget.addEventListener(Enums.Events.VOLUME_LOADED, (evt) => {
+    //   console.log("volume loaded", evt);
+    // });
+
+    eventTarget.addEventListener(Enums.Events.IMAGE_LOADED, (evt) => {
+      const { currentStudy, currentSeries } = window;
+      if (window.seriesLoadInfo[currentStudy][currentSeries].finished) {
+        window.seriesLoadInfo[currentStudy][currentSeries].finished += 1;
+      } else {
+        window.seriesLoadInfo[currentStudy][currentSeries].finished = 1;
+      }
+      if (window.seriesLoadInfo[currentStudy][currentSeries].finished >= window.seriesLoadInfo[currentStudy][currentSeries].total - 1) {
+        debouncedSeriesLoad(evt)
+      }
+    });
 
     setImageScrollBarHeight();
 
@@ -245,6 +300,8 @@ const OHIFCornerstoneViewport = React.memo(props => {
       cornerstoneViewportService.disableElement(viewportId);
 
       eventTarget.removeEventListener(Enums.Events.ELEMENT_ENABLED, elementEnabledHandler);
+      eventTarget.removeEventListener(Enums.Events.IMAGE_VOLUME_LOADING_COMPLETED, () => { });
+      eventTarget.removeEventListener(Enums.Events.IMAGE_LOADED, () => { });
     };
   }, []);
 
