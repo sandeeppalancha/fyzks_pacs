@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./worklist.css";
@@ -8,6 +8,7 @@ import axiosInstance, { BASE_API } from '../../axios';
 import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
 import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
+import { debounce } from 'lodash';
 
 const { RangePicker } = DatePicker;
 
@@ -19,6 +20,7 @@ const MyWorklist = ({ appDateRange }) => {
   const [userList, setUserList] = useState([]);
   // Set the default value to [yesterday, today]
   const [dateRange, setDateRange] = useState([]);
+  const [refreshDisabled, setRefreshDisabled] = useState(false)
 
   useEffect(() => {
     getOrdersList();
@@ -117,6 +119,10 @@ const MyWorklist = ({ appDateRange }) => {
   }
 
   const refreshScanStatus = () => {
+    setRefreshDisabled(true); // Disable the button
+    setTimeout(() => {
+      setRefreshDisabled(false); // Re-enable the button after 5 seconds
+    }, 20000);
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
         // console.log("res", res);
@@ -126,6 +132,14 @@ const MyWorklist = ({ appDateRange }) => {
         console.log(e);
       })
   }
+
+  const debouncedRefresh = useCallback(
+    debounce(() => {
+      console.log('Debounced value:');
+      refreshScanStatus();
+    }, 200),
+    []
+  );
 
   const statusOptions = userDetails?.user_type === 'doc' ? [
     { label: 'REVIEWED', value: 'REVIEWED' },
@@ -223,7 +237,7 @@ const MyWorklist = ({ appDateRange }) => {
           </FloatLabel>
         </div>
         <Button className='ms-4' type='primary' onClick={filterResults}>Search Worklist</Button>
-        <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button>
+        <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button>
       </div>
       <div className='orders-list'>
         <Table
