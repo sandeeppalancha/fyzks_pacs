@@ -75,6 +75,7 @@
     "quill": "^2.0.0",
     "react-draft-wysiwyg": "^1.15.0",
     "react-error-boundary": "^4.0.13",
+    "react-pdf": "^8.0.2",
     "react-quill": "^2.0.0",
     "redux": "^5.0.1",
     "xmlbuilder2": "^3.1.1"

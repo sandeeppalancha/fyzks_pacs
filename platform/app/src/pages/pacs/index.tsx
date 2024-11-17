@@ -1,16 +1,20 @@
-import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
+import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./pacs.css";
 import FloatLabel from '../../components/FloatingLabel';
-import axiosInstance, { BASE_API } from '../../axios';
-import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
+import axiosInstance, { BASE_API, BASE_URL } from '../../axios';
+import { getAccessToken, getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
 import { SavedSearches } from '../orders/constants';
 
 import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
 import { debounce } from 'lodash';
+import TabPane from 'antd/es/tabs/TabPane';
+import TextArea from 'antd/es/input/TextArea';
+import { Document, Page, pdfjs } from "react-pdf";
+
 
 const { RangePicker } = DatePicker;
 
@@ -21,6 +25,9 @@ const PacsList = ({ appDateRange }) => {
   const [assignModal, setAssignModal] = useState({ visible: false, data: {} });
   const [selectedUsersToAssign, setSelectedUsersToAssign] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [addFileModal, setAddFileModal] = useState({ visible: false, notes: null, modalType: 'upload', file: null, fileType: null });
+  const [viewNotesModal, setViewNotesModal] = useState({ visible: false, details: null });
+  const [selectedNote, setSelectedNote] = useState({});
 
   const [filterName, setFilterName] = useState(null);
   const [filters, setFilters] = useState({});
@@ -173,6 +180,8 @@ const PacsList = ({ appDateRange }) => {
     []
   );
 
+  pdfjs.GlobalWorkerOptions.workerSrc = '/pdf-worker-min.js';
+
   const statusOptions = userDetails?.user_type === 'doc' ? [
     { label: 'REVIEWED', value: 'REVIEWED' },
     { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
@@ -236,6 +245,63 @@ const PacsList = ({ appDateRange }) => {
         console.log(e);
       });
   }
+
+  const addFile = (rec) => {
+    setAddFileModal({ visible: true, data: rec, modalType: 'upload' });
+  }
+
+  const uploadRisNotes = async () => {
+    const { data, modalType, fileType, notes, file, isNotes } = addFileModal;
+
+    const { po_acc_no, po_ord_no, po_pin } = data;
+    const formData = new FormData();
+
+
+    formData.append('acc_no', po_acc_no);
+    formData.append('ord_no', po_ord_no);
+    formData.append('pin', po_pin);
+
+    let headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+    if (isNotes) {
+      formData.append('type', 'notes');
+      formData.append('notes', notes);
+    } else {
+      formData.append('file_type', fileType);
+      formData.append('file', file);
+    }
+
+    const url = isNotes ? '/upload-notes' : '/upload-file';
+
+    try {
+      makePostCall(url, formData, {
+        headers,
+      }).then((res) => {
+        console.log("response", res);
+        setAddFileModal(null);
+      }).catch((error) => {
+        message.error('Failed to upload file');
+      })
+    } catch (error) {
+      message.error('Failed to upload file');
+    }
+  };
+
+  const viewNotes = (rec) => {
+    console.log("view notes", rec);
+    const firstNote = rec.ris_notes[0] || {};
+    setSelectedNote(firstNote)
+    setViewNotesModal({ visible: true, details: rec })
+  }
+
+  const handleNoteSelection = (note, record) => {
+    setSelectedNote(note);
+  }
+
+  const customHeaders = {
+    Authorization: `Bearer ${getAccessToken()}`, // Add your token here
+  };
 
   const reportedByOptions = useMemo(() => {
     return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
@@ -324,7 +390,7 @@ const PacsList = ({ appDateRange }) => {
           tableLayout="fixed"
           rowSelection={rowSelection}
           loading={orders.loading}
-          columns={orderColumns(openReport)}
+          columns={orderColumns(openReport, userDetails?.user_type, addFile, viewNotes)}
           rowKey={(rec) => rec.po_acc_no}
           dataSource={orders.data || []}
           onRow={(record, rowIndex) => {
@@ -370,8 +436,130 @@ const PacsList = ({ appDateRange }) => {
             </div>
           </Modal>
         )}
+
+        {
+          addFileModal && addFileModal?.visible && (
+            <Modal
+              open={addFileModal?.visible}
+              onOk={() => { uploadRisNotes() }}
+              onCancel={() => { setAddFileModal({}) }}
+              okButtonProps={{
+                disabled: (addFileModal?.modalType === 'upload' && !addFileModal?.file) || (addFileModal?.modalType === 'notes' && !addFileModal?.notes),
+              }}
+            >
+              <Tabs
+                activeKey={addFileModal.modalType}
+                onTabClick={(activeKey) => {
+                  if (addFileModal.modalType !== activeKey) {
+                    setAddFileModal({ ...addFileModal, modalType: activeKey, isNotes: activeKey === 'notes' });
+                  }
+                }}
+              >
+                <TabPane key='notes' tab="Notes">
+                  <span>Enter Notes / Remarks</span>
+                  <TextArea onChange={(e) => {
+                    setAddFileModal({ ...addFileModal, notes: e.target.value })
+                  }} />
+                </TabPane>
+                <TabPane key='upload' tab="Upload">
+                  <Select
+                    placeholder="File Type"
+                    options={[
+                      { label: 'Prescription', value: 'prescription' },
+                      { label: 'Consent', value: 'consent' },
+                    ]}
+                    style={{ width: 200 }}
+                    onSelect={(val) => { setAddFileModal({ ...addFileModal, fileType: val }) }}
+                  />
+                  <Upload customRequest={({ file }) => { setAddFileModal({ ...addFileModal, file }) }} accept="application/pdf" multiple={false} disabled={!addFileModal.fileType} >
+                    <Button disabled={!addFileModal?.fileType}>Select File</Button>
+                  </Upload>
+                </TabPane>
+              </Tabs>
+            </Modal>
+          )}
+
+        {
+          viewNotesModal && viewNotesModal.visible && (
+            <Modal
+              open={viewNotesModal.visible}
+              onCancel={() => { setViewNotesModal(null) }}
+              onOk={() => { setViewNotesModal(null) }}
+              style={{ width: '100%', height: '100%' }}
+              width={'90%'}
+            >
+              <div className='notes-header'>RIS NOTES</div>
+              <div >
+                <div>
+                  <Row>
+                    <Col span={8}>
+                      <span className='notes-label'>Name: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_pat_name}</span>
+                    </Col>
+                    <Col span={8}>
+                      <span className='notes-label'>PIN: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_pin}</span>
+                    </Col>
+                    <Col span={8}>
+                      <span className='notes-label'>Age: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_pat_dob}</span>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      <span className='notes-label'>Order No: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_ord_no}</span>
+                    </Col>
+                    <Col span={8}>
+                      <span className='notes-label'>Accession No: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_pin}</span>
+                    </Col>
+                    <Col span={8}>
+                      <span className='notes-label'>Ref Doc: </span>
+                      <span className='notes-value'>{viewNotesModal?.details?.po_ref_doc}</span>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+              <Row className='mt-3'>
+                <Col span={8}>
+                  <div className='notes-list'>
+                    {viewNotesModal?.details?.ris_notes?.map(note => (
+                      <div
+                        className={`notes-list-item ${note.rn_id === selectedNote?.rn_id ? 'selected' : ''}`}
+                        onClick={() => { handleNoteSelection(note, viewNotesModal?.details) }}
+                      >
+                        {`${note.rn_upload_type?.toUpperCase()} ${note.rn_file_name ? ' | ' + note.rn_file_name : ''}`}
+                      </div>
+                    ))}
+                  </div>
+                </Col>
+                <Col span={16}>
+                  <div className='notes-detail' style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                    {
+                      selectedNote?.rn_upload_type === 'notes' ? (
+                        <div>
+                          {selectedNote?.rn_notes}
+                        </div>
+                      ) : (
+                        selectedNote?.rn_upload_path && (<Document
+                          // file={{ url: `http://localhost:4000/uploads/400583092/557780/401080713/prescription/OldHIS3.pdf`, httpHeaders: customHeaders }}
+                          file={{ url: `${BASE_API}/uploads/${selectedNote?.rn_upload_path}`, httpHeaders: customHeaders }}
+                          // file={`${BASE_API}/uploads/${selectedNote?.rn_upload_path}`}
+                          onLoadError={(error) => console.error('Failed to load PDF', error)}
+                        >
+                          <Page pageNumber={1} />
+                        </Document>)
+                      )
+                    }
+                  </div>
+                </Col>
+              </Row>
+            </Modal>
+          )
+        }
       </div>
-    </div>
+    </div >
   )
 }
 
