@@ -38,6 +38,14 @@ const AppHeader = ({ handleDateChange }) => {
     },
   ];
 
+  const isAdmin = getUserDetails()?.user_type === 'admin';
+  if (isAdmin) {
+    items.push({
+      key: "3",
+      label: <a href="settings">Settings</a>,
+    })
+  }
+
   const userDetails = getUserDetails();
 
   const rangePresets = [

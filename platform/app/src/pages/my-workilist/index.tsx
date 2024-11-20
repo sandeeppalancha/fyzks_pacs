@@ -9,6 +9,7 @@ import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/help
 import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
 import { debounce } from 'lodash';
+import ViewNotes from '../ManageNodes/ViewNotes';
 
 const { RangePicker } = DatePicker;
 
@@ -20,7 +21,10 @@ const MyWorklist = ({ appDateRange }) => {
   const [userList, setUserList] = useState([]);
   // Set the default value to [yesterday, today]
   const [dateRange, setDateRange] = useState([]);
-  const [refreshDisabled, setRefreshDisabled] = useState(false)
+  const [refreshDisabled, setRefreshDisabled] = useState(false);
+
+  const [viewNotesModal, setViewNotesModal] = useState({ visible: false, details: null });
+  const [selectedNote, setSelectedNote] = useState({});
 
   useEffect(() => {
     getOrdersList();
@@ -175,8 +179,18 @@ const MyWorklist = ({ appDateRange }) => {
 
   const reportedByOptions = useMemo(() => {
     return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
-  }, [userList])
+  }, [userList]);
 
+  const viewNotes = (rec) => {
+    console.log("view notes", rec);
+    const firstNote = rec.ris_notes[0] || {};
+    setSelectedNote(firstNote)
+    setViewNotesModal({ visible: true, details: rec })
+  }
+
+  const handleNoteSelection = (note, record) => {
+    setSelectedNote(note);
+  }
 
   return (
     <div>
@@ -244,7 +258,7 @@ const MyWorklist = ({ appDateRange }) => {
           tableLayout='fixed'
           style={{ width: '100%' }}
           loading={orders.loading}
-          columns={orderColumns(openReport)}
+          columns={orderColumns({ openReportEditor: openReport, viewNotes })}
           dataSource={orders.data || []}
           onRow={(record, rowIndex) => {
             return {
@@ -259,6 +273,20 @@ const MyWorklist = ({ appDateRange }) => {
             <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
           </Modal>
         )}
+
+        {
+          viewNotesModal && viewNotesModal.visible && (
+            <Modal
+              open={viewNotesModal.visible}
+              onCancel={() => { setViewNotesModal(null) }}
+              onOk={() => { setViewNotesModal(null) }}
+              style={{ width: '100%', height: '100%' }}
+              width={'90%'}
+            >
+              <ViewNotes handleNoteSelection={handleNoteSelection} selectedNote={selectedNote} viewNotesModal={viewNotesModal} />
+            </Modal>
+          )
+        }
       </div>
     </div>
   );

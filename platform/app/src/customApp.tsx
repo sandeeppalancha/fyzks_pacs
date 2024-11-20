@@ -21,6 +21,7 @@ import MyWorklist from './pages/my-workilist';
 import PacsList from './pages/pacs';
 import { getUserDetails } from './utils/helper';
 import dayjs from 'dayjs';
+import Settings from './pages/settings';
 
 const MyViewer = ({ appProps }) => {
 
@@ -118,6 +119,14 @@ function CustomApp(appProps) {
               element={
                 <>
                   <Login />
+                </>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <>
+                  <Settings />
                 </>
               }
             />

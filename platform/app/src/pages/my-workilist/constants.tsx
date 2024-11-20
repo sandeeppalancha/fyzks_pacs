@@ -1,7 +1,7 @@
 import { Button, Tag } from "antd";
 import React from "react";
 import moment from "moment";
-import { FileTextOutlined } from '@ant-design/icons';
+import { FileOutlined, FileTextOutlined } from '@ant-design/icons';
 import { ConvertStringToDate } from "../../utils/helper";
 
 const statusColors = {
@@ -12,7 +12,7 @@ const statusColors = {
   'REVIEWED': 'blue',
 };
 
-export const orderColumns = (openReportEditor) => ([
+export const orderColumns = ({ openReportEditor, viewNotes }) => ([
   {
     dataIndex: "po_pat_name",
     title: "Patient Name",
@@ -28,6 +28,17 @@ export const orderColumns = (openReportEditor) => ([
       )
     },
     width: 200
+  },
+  {
+    title: '',
+    render: (_, rec) => {
+      return (
+        <Button disabled={!rec.ris_notes?.length > 0} style={{ padding: '0 0.5rem' }} onClick={() => viewNotes(rec)}>
+          <FileOutlined />
+        </Button>
+      )
+    },
+    width: 50,
   },
   {
     dataIndex: "po_diag_desc",
