@@ -1,6 +1,6 @@
 import { Tag, Button, Upload, Tooltip } from "antd";
 import React from "react";
-import { FileOutlined, FileTextOutlined, UploadOutlined } from '@ant-design/icons';
+import { FileOutlined, FileTextOutlined, PrinterOutlined, UploadOutlined } from '@ant-design/icons';
 import { ConvertStringToDate, getUserDetails } from "../../utils/helper";
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ const statusColors = {
   'REVIEWED': 'blue',
 };
 
-export const orderColumns = (openReportEditor, role, addFile, viewNotes) => {
+export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, printReport }) => {
   const userDetails = getUserDetails();
 
   return ([
@@ -49,7 +49,7 @@ export const orderColumns = (openReportEditor, role, addFile, viewNotes) => {
           <Button
             color="blue"
             className="ms-auto"
-            type="link" onClick={() => { openReportEditor(record); window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
+            type="link" onClick={() => { openReportEditor(record) }}
           >
             {text}
           </Button>
@@ -144,6 +144,11 @@ export const orderColumns = (openReportEditor, role, addFile, viewNotes) => {
       render: (text, record) => {
         return (
           <>
+            {record.po_status === 'SIGNEDOFF' && (
+              <span className="pointer md-icon" onClick={() => printReport(record)}>
+                <PrinterOutlined />
+              </span>
+            )}
             <Tag color={statusColors[text]}>{text.replaceAll('_', ' ')}</Tag>
             {record.po_status !== 'PENDING' && (
               <span className="pointer md-icon" onClick={() => openReportEditor(record)}>
@@ -153,7 +158,7 @@ export const orderColumns = (openReportEditor, role, addFile, viewNotes) => {
           </>
         )
       },
-      width: 120
+      width: 150
     }
   ].filter(itm => !itm.hidden))
 };

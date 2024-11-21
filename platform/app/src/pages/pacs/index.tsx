@@ -101,8 +101,13 @@ const PacsList = ({ appDateRange }) => {
     setReportEditorModal({ visible: false, data: {} });
   }
 
-  const openReport = (record) => {
-    setReportEditorModal({ visible: true, data: record })
+  const openReport = async (record) => {
+    if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
+      setReportEditorModal({ visible: true, data: record });
+      window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank')
+    } else {
+      message.error(`Study is taken by ${record.po_reported_by}`)
+    }
   }
 
   const getSavedFilters = async () => {
@@ -210,6 +215,7 @@ const PacsList = ({ appDateRange }) => {
     { label: 'CT', value: 'CT' },
     { label: 'Ultra Sound', value: 'US' },
     { label: 'MRI', value: 'MRI' },
+    { label: 'DX', value: 'DX' },
   ];
 
   const handleFilterSelection = (selectedSavedFilter) => {
@@ -285,6 +291,28 @@ const PacsList = ({ appDateRange }) => {
       message.error('Failed to upload file');
     }
   };
+
+  const printReport = (rec) => {
+    console.log("print report", rec);
+    const { po_acc_no, po_ord_no, po_pin } = rec;
+    makePostCall('/print-acc-report', {
+      acc_no: po_acc_no,
+      pin: po_pin,
+      ord_no: po_ord_no, //.replaceAll(' ', '&nbsp'),
+    }, {
+      responseType: "arraybuffer",
+    })
+      .then(res => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        const pdf_url = URL.createObjectURL(pdfBlob);
+        // setPdfUrl(url);
+        const printWindow = window.open(pdf_url, "_blank");
+        printWindow.print();
+      })
+      .catch(err => {
+        console.log("Error", err);
+      })
+  }
 
   const viewNotes = (rec) => {
     console.log("view notes", rec);
@@ -384,7 +412,7 @@ const PacsList = ({ appDateRange }) => {
           tableLayout="fixed"
           rowSelection={rowSelection}
           loading={orders.loading}
-          columns={orderColumns(openReport, userDetails?.user_type, addFile, viewNotes)}
+          columns={orderColumns({ openReportEditor: openReport, role: userDetails?.user_type, addFile, viewNotes, printReport })}
           rowKey={(rec) => rec.po_acc_no}
           dataSource={orders.data || []}
           onRow={(record, rowIndex) => {

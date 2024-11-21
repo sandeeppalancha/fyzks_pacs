@@ -68,9 +68,6 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
     })
       .then(res => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-        // setPdfBlob(pdfBlob);
-        // saveAs(pdfBlob, "generated-pdf.pdf");
-        // const pdfBlob = rawToBlob(response.data);
         const pdf_url = URL.createObjectURL(pdfBlob);
         // setPdfUrl(url);
         const printWindow = window.open(pdf_url, "_blank");
