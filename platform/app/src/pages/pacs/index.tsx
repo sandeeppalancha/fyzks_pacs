@@ -362,15 +362,16 @@ const PacsList = ({ appDateRange }) => {
           <FloatLabel label="Status" value={filters['status']} className="me-3">
             <Select allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
           </FloatLabel>
-          <FloatLabel label="Site" value={filters['site']} className="me-3">
-            <Select allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
+          <FloatLabel label="Site" value={filters['po_site']} className="me-3">
+            <Select value={filters['po_site']} allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
           </FloatLabel>
           <FloatLabel label="Modality" value={filters['modality']} className="me-3">
-            <Select allowClear style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
+            <Select allowClear value={filters['modality']} style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
           </FloatLabel>
           <FloatLabel label="Reported By" value={filters['po_reported_by']} className="me-3">
             <Select
               showSearch
+              value={filters['po_reported_by']}
               style={{ width: 200 }}
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
