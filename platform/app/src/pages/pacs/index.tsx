@@ -122,6 +122,7 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const submitSaveFilters = () => {
+    setSaveFiltersModal({ saveLoading: true })
     const payload = {
       filters: JSON.stringify(filters),
       uf_filter_name: filterName,
@@ -130,9 +131,11 @@ const PacsList = ({ appDateRange }) => {
     makePostCall('/save-my-filters', payload)
       .then(res => {
         getSavedFilters();
+        setSaveFiltersModal({ visible: false })
       })
       .catch(e => {
         console.log(e);
+        message.error(e);
       });
   }
 
@@ -433,7 +436,7 @@ const PacsList = ({ appDateRange }) => {
 
         {saveFiltersModal.visible && (
           <Modal className='save-filter-modal' onCancel={() => { setSaveFiltersModal({ visible: false }) }}
-            okButtonProps={{ disabled: !filterName }} onOk={submitSaveFilters}
+            okButtonProps={{ disabled: !filterName || saveFiltersModal.saveLoading }} onOk={submitSaveFilters}
             open={saveFiltersModal.visible}
           >
             <Input width={300} onChange={(e) => setFilterName(e.target.value)} />
