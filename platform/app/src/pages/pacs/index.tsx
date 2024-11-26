@@ -103,7 +103,7 @@ const PacsList = ({ appDateRange }) => {
 
   const openReport = async (record) => {
     if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
-      setReportEditorModal({ visible: true, data: record });
+      // setReportEditorModal({ visible: true, data: record });
       window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank')
     } else {
       message.error(`Study is taken by ${record.po_reported_by}`)
@@ -169,7 +169,7 @@ const PacsList = ({ appDateRange }) => {
     setRefreshDisabled(true); // Disable the button
     setTimeout(() => {
       setRefreshDisabled(false); // Re-enable the button after 5 seconds
-    }, 20000);
+    }, 2);
 
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
@@ -184,7 +184,7 @@ const PacsList = ({ appDateRange }) => {
     debounce(() => {
       console.log('Debounced value:');
       refreshScanStatus();
-    }, 200),
+    }, 2),
     []
   );
 
