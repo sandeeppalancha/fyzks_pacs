@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { utils } from '@ohif/core';
 import { StudyBrowser, useImageViewer, useViewportGrid, Dialog, ButtonEnums } from '@ohif/ui';
 import { useTrackedMeasurements } from '../../getContextModule';
+import { debounce } from 'lodash';
 
 const { formatDate } = utils;
 
@@ -77,52 +78,66 @@ function PanelStudyBrowserTracking({
   // ~~ studyDisplayList
   useEffect(() => {
     // Fetch all studies for the patient in each primary study
-    async function fetchStudiesForPatient(StudyInstanceUID) {
-      // current study qido
-      const qidoForStudyUID = await dataSource.query.studies.search({
-        studyInstanceUid: StudyInstanceUID,
-      });
-
-      if (!qidoForStudyUID?.length) {
-        navigate('/notfoundstudy', '_self');
-        throw new Error('Invalid study URL');
-      }
-
-      let qidoStudiesForPatient = qidoForStudyUID;
-
-      // try to fetch the prior studies based on the patientID if the
-      // server can respond.
-      try {
-        qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
-      } catch (error) {
-        console.warn(error);
-      }
-
-      const mappedStudies = _mapDataSourceStudies(qidoStudiesForPatient);
-      const actuallyMappedStudies = mappedStudies.map(qidoStudy => {
-        return {
-          studyInstanceUid: qidoStudy.StudyInstanceUID,
-          date: formatDate(qidoStudy.StudyDate) || t('NoStudyDate'),
-          description: qidoStudy.StudyDescription,
-          modalities: qidoStudy.ModalitiesInStudy,
-          numInstances: qidoStudy.NumInstances,
-        };
-      });
-
-      setStudyDisplayList(prevArray => {
-        const ret = [...prevArray];
-        for (const study of actuallyMappedStudies) {
-          if (!prevArray.find(it => it.studyInstanceUid === study.studyInstanceUid)) {
-            ret.push(study);
-          }
-        }
-        return ret;
-      });
-    }
-
-    StudyInstanceUIDs.forEach(sid => fetchStudiesForPatient(sid));
+    debouncedFetcher();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [StudyInstanceUIDs, getStudiesForPatientByMRN]);
+
+  async function fetchStudiesForPatient(StudyInstanceUID) {
+    if (window.studyFetchTriggered) {
+      if (window.studyFetchTriggered.includes(StudyInstanceUID)) {
+        return
+      } else {
+        window.studyFetchTriggered.push(StudyInstanceUID)
+      }
+    } else {
+      window.studyFetchTriggered = [StudyInstanceUID]
+    }
+    // current study qido
+    const qidoForStudyUID = await dataSource.query.studies.search({
+      studyInstanceUid: StudyInstanceUID,
+    });
+
+    if (!qidoForStudyUID?.length) {
+      navigate('/notfoundstudy', '_self');
+      throw new Error('Invalid study URL');
+    }
+
+    let qidoStudiesForPatient = qidoForStudyUID;
+
+    // try to fetch the prior studies based on the patientID if the
+    // server can respond.
+    try {
+      qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
+    } catch (error) {
+      console.warn(error);
+    }
+
+    const mappedStudies = _mapDataSourceStudies(qidoStudiesForPatient);
+    const actuallyMappedStudies = mappedStudies.map(qidoStudy => {
+      return {
+        studyInstanceUid: qidoStudy.StudyInstanceUID,
+        date: formatDate(qidoStudy.StudyDate) || t('NoStudyDate'),
+        description: qidoStudy.StudyDescription,
+        modalities: qidoStudy.ModalitiesInStudy,
+        numInstances: qidoStudy.NumInstances,
+      };
+    });
+
+    setStudyDisplayList(prevArray => {
+      const ret = [...prevArray];
+      for (const study of actuallyMappedStudies) {
+        if (!prevArray.find(it => it.studyInstanceUid === study.studyInstanceUid)) {
+          ret.push(study);
+        }
+      }
+      return ret;
+    });
+  }
+
+  const debouncedFetcher = debounce(() => {
+    console.log("BEFORE FETCH FIND STUDY", StudyInstanceUIDs);
+    StudyInstanceUIDs.forEach(sid => fetchStudiesForPatient(sid));
+  }, 200);
 
   // ~~ Initial Thumbnails
   useEffect(() => {

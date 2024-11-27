@@ -22,6 +22,11 @@ function ViewerLayout({
 }): React.FunctionComponent {
   const [appConfig] = useAppConfig();
 
+  useEffect(() => {
+    console.log("VIEWER LAYOUT ON INIT");
+    window.studyFetchTriggered = [];
+  }, [])
+
   const { panelService, hangingProtocolService } = servicesManager.services;
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(appConfig.showLoadingIndicator);
 
@@ -135,7 +140,7 @@ function ViewerLayout({
           ) : null}
           {/* TOOLBAR + GRID */}
           <div className="flex h-full flex-1 flex-col">
-            <div style={{ height: 'calc(100% - 200px)', width: '100%' }} className="relative flex h-!full flex!-1 items-center justify-center overflow-hidden bg-black">
+            <div style={{ height: 'calc(100% - 0px)', width: '100%' }} className="relative flex h-!full flex!-1 items-center justify-center overflow-hidden bg-black">
               <ErrorBoundary context="Grid">
                 <ViewportGridComp
                   servicesManager={servicesManager}
@@ -144,13 +149,13 @@ function ViewerLayout({
                 />
               </ErrorBoundary>
             </div>
-            <BottomPanelWithServices
+            {/* <BottomPanelWithServices
               side="left"
               activeTabIndex={leftPanelClosedState ? null : 0}
               servicesManager={servicesManager}
               commandsManager={commandsManager}
               extensionManager={extensionManager}
-            />
+            /> */}
           </div>
           {hasRightPanels ? (
             <ErrorBoundary context="Right Panel">
