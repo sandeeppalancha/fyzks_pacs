@@ -253,6 +253,7 @@ export function ViewportGridProvider({ children, service }) {
 
             const viewport = findOrCreateViewport(position, positionId, options, viewportGridService);
 
+            console.log("SET_LAYOUT", viewport);
 
             if (!viewport) {
               continue;
