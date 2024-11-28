@@ -576,6 +576,7 @@ function RulerOverlayItem(props) {
   const { scale, customization, instance } = props;
   const { PixelSpacing } = instance || {};
 
+  if (!PixelSpacing) { return }
   const [x_spacing, y_spacing] = PixelSpacing;
 
   if (!scale) return null;
