@@ -409,7 +409,7 @@ const PacsList = ({ appDateRange }) => {
         {isHOD && (
           <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
         )}
-        <Button disabled={refreshDisabled} className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button>
+        {/* <Button disabled={refreshDisabled} className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button> */}
       </div>
       <div className='orders-list'>
         <Table
