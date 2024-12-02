@@ -1,0 +1,41 @@
+.add-user-container {}
+
+.ant-form-item-label {
+  width: 200px;
+}
+
+.ant-input-outlined,
+.ant-select-selector,
+.ant-radio-inner,
+.ant-checkbox-inner {
+  border-color: #aca5a5 !important;
+}
+
+.ant-select-arrow {
+  color: #aca5a5 !important;
+}
+
+.ant-form-item .ant-form-item-label>label {
+  font-weight: 500;
+}
+
+.ant-card-head-title {
+  font-size: 1.75rem;
+  color: #ef8200;
+  text-align: center;
+  font-weight: 600;
+}
+
+.ant-radio-wrapper,
+.ant-checkbox-wrapper {
+  display: flex;
+  margin: 0.4rem 0;
+}
+
+.ant-checkbox-wrapper {
+  width: 100%;
+}
+
+.password {
+  text-security: disc;
+}
