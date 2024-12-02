@@ -1,0 +1,53 @@
+.ant-table-cell {
+  line-height: 1 !important;
+  padding: 0.25rem 0.5rem !important;
+  border-right: 1px solid #d3d3d3c2;
+}
+
+.ant-picker-range {
+  padding-left: 90px;
+}
+
+.notes-list {
+  padding: 0.25rem;
+  border: 1px solid gray;
+  height: 300px
+}
+
+.notes-list-item {
+  border: 1px solid lightgray;
+  margin-bottom: 0.25rem;
+  background-color: rgb(219 162 56 / 46%);
+  color: black;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.825rem;
+}
+
+.notes-list-item.selected {
+  color: #ffffff !important;
+  border: none;
+  background: rgb(219 162 56);
+}
+
+.notes-detail {
+  margin-left: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid gray;
+}
+
+.notes-label {}
+
+.notes-value {
+  color: var(--text-color-primary);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.notes-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.ant-modal-body {
+  height: 75vh;
+}

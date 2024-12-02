@@ -22,6 +22,7 @@ import PacsList from './pages/pacs';
 import { getUserDetails } from './utils/helper';
 import dayjs from 'dayjs';
 import Settings from './pages/settings';
+import DispatchList from './pages/Dispatch';
 
 const MyViewer = ({ appProps }) => {
 
@@ -44,41 +45,59 @@ function CustomApp(appProps) {
 
   const userDetails = getUserDetails();
   const isTechnician = userDetails?.user_type === 'technician';
-  const [selectedTabKey, setSelectedTabKey] = React.useState(isTechnician ? 'orders' : 'worklist');
+  const userType = userDetails?.user_type;
+  const [selectedTabKey, setSelectedTabKey] = React.useState(isTechnician ? 'orders' : userType === 'dispatch' ? 'dispatch' : 'worklist');
   const currentUrl = window.location.href;
   const [appDateRange, setAppDateRange] = useState([null, null]);
+
 
   useEffect(() => {
   }, [currentUrl]);
 
+  const ordersPage = {
+    key: 'orders',
+    label: 'Orders',
+    children: <OrdersList appDateRange={appDateRange} />,
+  };
 
-  let items: TabsProps['items'] = isTechnician ? [
-    {
-      key: 'orders',
-      label: 'Orders',
-      children: <OrdersList appDateRange={appDateRange} />,
-    },
+  const workListTab = {
+    key: 'worklist',
+    label: 'My Worklist',
+    children: <>
+      <MyWorklist appDateRange={appDateRange} />
+    </>,
+  };
+
+  const pacsTab = {
+    key: 'pacs',
+    label: 'PACS',
+    children: <>
+      <PacsList appDateRange={appDateRange} />
+    </>,
+  };
+
+  const dispatchTab = {
+    key: 'dispatch',
+    label: 'Dispatch',
+    children: <>
+      <DispatchList appDateRange={appDateRange} />
+    </>,
+  };
+
+  const viewerTab = {
+    key: 'viewer_pacs',
+    label: 'Viewer',
+    children: <MyViewer appProps={appProps} />,
+    disabled: true,
+  };
+
+  let items: TabsProps['items'] = userType === 'technician' ? [
+    ordersPage
+  ] : userType === 'dispatch' ? [
+    dispatchTab
   ] : [
-    {
-      key: 'worklist',
-      label: 'My Worklist',
-      children: <>
-        <MyWorklist appDateRange={appDateRange} />
-      </>,
-    },
-    {
-      key: 'pacs',
-      label: 'PACS',
-      children: <>
-        <PacsList appDateRange={appDateRange} />
-      </>,
-    },
-    {
-      key: 'viewer_pacs',
-      label: 'Viewer',
-      children: <MyViewer appProps={appProps} />,
-      disabled: true,
-    },
+    workListTab,
+    pacsTab,
   ];
 
   const ViewerElement = () => {
