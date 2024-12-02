@@ -246,12 +246,12 @@ const AddUser = () => {
             <Form.Item
               label="Permissions"
               name="permissions"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select!",
-                },
-              ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: "Please select!",
+            //   },
+            // ]}
             >
               <Checkbox.Group >
                 {
