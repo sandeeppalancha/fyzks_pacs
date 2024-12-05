@@ -131,6 +131,14 @@ module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
             },
           ],
         },
+        {
+          test: /\.scss$/, // Match .scss files
+          use: [
+            'style-loader', // Inject styles into the DOM
+            'css-loader',   // Turn CSS into JS modules
+            'sass-loader',  // Compile SCSS to CSS
+          ],
+        },
       ], //.concat(vtkRules),
     },
     resolve: {

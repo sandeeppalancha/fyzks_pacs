@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_API } from "../../axios";
 import { getUserDetails, makePostCall, setAccessToken, setUserDetails } from "../../utils/helper";
-import "./add-user.css";
+import "./add-user.scss";
 import { useForm } from "antd/es/form/Form";
 
 const AddUser = () => {
