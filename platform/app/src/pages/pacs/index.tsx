@@ -66,7 +66,7 @@ const PacsList = ({ appDateRange }) => {
       })
   }
 
-  const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
+  const onSave = (newContent, status, currentReport, { proxy_user, correlated, diagnosed }, callback) => {
     makePostCall('/submit-report', {
       html: newContent,
       yh_no: reportEditorModal.data?.po_pin,
@@ -76,6 +76,8 @@ const PacsList = ({ appDateRange }) => {
       proxy_user: proxy_user,
       status,
       report_id: currentReport?.pr_id,
+      correlated: correlated,
+      diagnosed: diagnosed,
     })
       .then(res => {
         callback && callback();

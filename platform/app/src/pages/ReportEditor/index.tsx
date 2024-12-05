@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
 import { ConvertStringToDate, getUserDetails, makeGetCall, makePostCall } from "../../utils/helper";
 import moment from "moment";
-import { Button, Card, Checkbox, Radio, Select, Table } from "antd";
+import { Button, Card, Checkbox, message, Radio, Select, Table } from "antd";
 import { TemplateHeader } from "./constants";
 import { RightSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
@@ -18,6 +18,10 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const [proxyUser, setProxyUser] = React.useState(null);
   const [moreAction, setMoreAction] = React.useState(null);
   const [radUsers, setRadUsers] = React.useState([]);
+  const userType = getUserDetails().user_type;
+  const [correlated, setCorrelated] = useState(null);
+  const [diagnosed, setDiagnosed] = useState(null);
+  const [submitTriggered, setSubmitTrigged] = useState(false);
 
   const handleContentChange = (newContent) => {
     console.log("newContent", newContent);
@@ -30,13 +34,20 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
     fetchRadUsers();
   }, []);
 
+  useEffect(() => {
+    if (patientDetails) {
+      setCorrelated(patientDetails?.po_correlated);
+      setCorrelated(patientDetails?.po_diagnosed);
+    }
+  }, [patientDetails]);
+
   const refreshAfterUpdate = () => {
     fetchPrevReports();
   }
 
   const handleSave = (newContent, status, curReport, moreInfo = {}) => {
     if (onSave) {
-      onSave(content, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
+      onSave(content, status, curReport, { ...moreInfo, proxy_user: proxyUser, correlated, diagnosed }, refreshAfterUpdate)
     } else {
       saveReport(content, status, curReport, { ...moreInfo, proxy_user: proxyUser }, refreshAfterUpdate)
     };
@@ -52,6 +63,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
       proxy_user: proxy_user,
       status,
       report_id: currentReport?.pr_id,
+      // correlated: correlated,
+      // diagnosed: diagnosed,
     })
       .then(res => {
         callback && callback();
@@ -172,6 +185,37 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   }, [radUsers]);
 
+  const handleSaveForm = (status) => {
+    setSubmitTrigged(true);
+    if (!correlated || !diagnosed) {
+      message.error("Please select the Correlated & Diagnosed options");
+      return;
+    }
+    handleSave(content, status, currentReport,);
+  }
+
+  const handlePrint = () => {
+    makePostCall('/print-report', {
+      report: currentReport,
+      patDetails: patientDetails,
+      html: content, //.replaceAll(' ', '&nbsp'),
+    }, {
+      responseType: "arraybuffer",
+    })
+      .then(res => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        const pdf_url = URL.createObjectURL(pdfBlob);
+        // setPdfUrl(url);
+        const printWindow = window.open(pdf_url, "_blank");
+        printWindow.print();
+      })
+      .catch(err => {
+        console.log("Error", err);
+      })
+  }
+
+  const statusOrder = ['DRAFTED', 'REVIEWED', 'SIGNEDOFF'];
+
   return (
     <div className="editor-container">
       <div className="left-section">
@@ -239,11 +283,41 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
             </div>
 
             <div>Clinically diagnosed
-              <Radio.Group >
-                <Radio value={1}>A</Radio>
-                <Radio value={2}>B</Radio>
+              <Radio.Group className={submitTriggered ? (!!diagnosed ? '' : 'error') : ''} onChange={(e) => { setDiagnosed(e.target.value) }}>
+                <Radio value={'diagnosed'}>Yes</Radio>
+                <Radio value={'notdiagnosed'}>No</Radio>
               </Radio.Group>
+              {submitTriggered && !diagnosed && <div style={{ color: 'red', marginBottom: '8px' }}>This field is required</div>}
             </div>
+            <div>Clinically correlated
+              <Radio.Group className={submitTriggered ? (!!correlated ? '' : 'error') : ''} onChange={(e) => { setCorrelated(e.target.value) }}>
+                <Radio value={'correlated'}>Yes</Radio>
+                <Radio value={'notcorrelated'}>No</Radio>
+              </Radio.Group>
+              {submitTriggered && !correlated && <div style={{ color: 'red', marginBottom: '8px' }}>This field is required</div>}
+            </div>
+          </div>
+          <div className='d-flex' >
+            <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
+            <Button className='mt-3' type='default' onClick={handlePrint}>PRINT REPORT</Button>
+            <Button
+              disabled={statusOrder.indexOf(currentReport?.pr_status) > 0}
+              danger className='mt-3 ms-auto' type='default'
+              color='primary' onClick={() => handleSaveForm('DRAFTED')}
+            >DRAFT</Button>
+            <Button
+              disabled={currentReport?.pr_status === 'SIGNEDOFF'}
+              danger className='mt-3 ms-3' type='default' color='primary'
+              onClick={() => handleSaveForm('REVIEWED')}
+            >REVIEWED</Button>
+            <Button
+              // disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
+              className='mt-3 ms-3' type='primary' color='primary'
+              onClick={() => handleSaveForm('SIGNEDOFF')}
+              disabled={['hod', 'radiologist'].indexOf(userType) < 0}
+            >
+              SIGN OFF
+            </Button>
           </div>
         </Card>
       </div>

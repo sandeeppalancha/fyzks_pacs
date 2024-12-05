@@ -4,55 +4,13 @@ import Quill from 'quill';
 
 import 'quill/dist/quill.snow.css';
 import { Button } from 'antd';
-import { makePostCall } from '../../utils/helper';
+import { getUserDetails, makePostCall } from '../../utils/helper';
 import CustomEditor from '../custom-editor';
 
 const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails }) => {
-  // const editorRef = useRef(null);
-  // const quillInstance = useRef(null);
 
-  // useEffect(() => {
-  //   console.log("content", content);
-
-  //   if (!quillInstance.current && false) {
-  //     quillInstance.current = new Quill(editorRef.current, {
-  //       theme: 'snow',
-  //       modules: {
-  //         clipboard: {
-  //           matchVisual: false, // Disable Quill's default behavior of matching visual elements
-  //         },
-  //       }
-  //     });
-  //   }
-
-  //   if (quillInstance.current) {
-  //     quillInstance.current.on('text-change', (delta, oldDelta, source) => {
-  //       // console.log("changed", quillInstance.current.root.innerHTML);
-
-  //       // onChange && onChange(quillInstance.current.root.innerHTML);
-  //     });
-
-  //     quillInstance.current.on('text-change', () => {
-  //       // console.log("changed", quillInstance.current.root.innerHTML);
-  //       // onChange(quillInstance.current.root.innerHTML);
-  //     });
-
-  //     // if (content) {
-  //     //   quill.root.innerHTML = content;
-  //     // }
-
-  //     // Convert HTML to Delta format
-  //     const delta = quillInstance.current.clipboard.convert(content);
-
-  //     console.log("delta", delta);
-
-
-  //     // Load Delta into Quill
-  //     quillInstance.current.setContents(delta);
-
-  //     quillInstance.current.root.innerHTML = content;
-  //   }
-  // }, [content]);
+  const userDetails = getUserDetails();
+  const userType = userDetails?.user_type;
 
   const handleSave = (status) => {
     onSave && onSave(content, status, currentReport,);
@@ -83,7 +41,7 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
   return (<div id='editor-container'>
     {/* <div ref={editorRef}></div> */}
     <CustomEditor initialContent={content} placeholder={"placeholder..."} handleChange={onChange} />
-    <div className='d-flex' >
+    {/* <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
       <Button className='mt-3' type='default' onClick={handlePrint}>PRINT REPORT</Button>
       <Button
@@ -99,10 +57,12 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
       <Button
         // disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
         className='mt-3 ms-3' type='primary' color='primary'
-        onClick={() => handleSave('SIGNEDOFF')}>
+        onClick={() => handleSave('SIGNEDOFF')}
+        disabled={['hod', 'radiologist'].indexOf(userType) < 0}
+      >
         SIGN OFF
       </Button>
-    </div>
+    </div> */}
   </div>);
 };
 
