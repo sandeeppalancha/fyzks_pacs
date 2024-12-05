@@ -51,3 +51,12 @@
 .ant-modal-body {
   height: 75vh;
 }
+
+.viewer-modal .ant-modal-content .ant-modal-body {
+  overflow-y: auto;
+}
+
+.viewer-modal .react-pdf__Page__canvas {
+  width: 800px !important;
+  height: 1100px !important;
+}

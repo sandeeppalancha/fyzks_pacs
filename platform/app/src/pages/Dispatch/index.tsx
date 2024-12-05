@@ -163,13 +163,14 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
     })
       .then(async (res) => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-        console.log("pdfBlob", pdfBlob);
 
         const pdf_url = URL.createObjectURL(pdfBlob);
-        setPrintLoading(false);
 
-        if (isConsultant && false) {
-          setViewReportModal({ visible: true, pdfData: pdf_url, pdfBlob: pdfBlob })
+        setPrintLoading(false);
+        const buffer = await pdfBlob.arrayBuffer()
+
+        if (isConsultant) {
+          setViewReportModal({ visible: true, pdfData: buffer, pdfBlob: pdfBlob, pdf_url })
         } else {
           // setPdfUrl(url);
           const printWindow = window.open(pdf_url, "_blank");
@@ -259,8 +260,10 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
           <Modal
             open={viewreportModal.visible}
             onCancel={() => { setViewReportModal({ visible: false, pdfData: null }) }}
+            width={900}
+            className='viewer-modal'
           >
-            <ReportViewer pdfData={viewreportModal?.pdfData} pdfBlob={viewreportModal?.pdfBlob} />
+            <ReportViewer pdfData={viewreportModal?.pdfData} pdfBlob={viewreportModal?.pdfBlob} pdf_url={viewreportModal?.pdf_url} />
           </Modal>
         )
       }
