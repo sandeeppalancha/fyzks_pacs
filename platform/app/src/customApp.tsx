@@ -46,7 +46,17 @@ function CustomApp(appProps) {
   const userDetails = getUserDetails();
   const isTechnician = userDetails?.user_type === 'technician';
   const userType = userDetails?.user_type;
-  const [selectedTabKey, setSelectedTabKey] = React.useState(isTechnician ? 'orders' : userType === 'dispatch' ? 'dispatch' : 'worklist');
+
+  const activeTabKeysMap = {
+    dispatch: 'dispatch',
+    technician: 'orders',
+    radiologist: 'pacs',
+    typist: 'pacs',
+    admin: 'orders',
+    consultant: 'consultant'
+  }
+
+  const [selectedTabKey, setSelectedTabKey] = React.useState(activeTabKeysMap[userType]);
   const currentUrl = window.location.href;
   const [appDateRange, setAppDateRange] = useState([null, null]);
 
@@ -84,6 +94,15 @@ function CustomApp(appProps) {
     </>,
   };
 
+  const consultantTab = {
+    key: 'consultant',
+    label: 'Consultant',
+    children: <>
+      <DispatchList appDateRange={appDateRange} />
+    </>,
+  };
+
+
   const viewerTab = {
     key: 'viewer_pacs',
     label: 'Viewer',
@@ -100,10 +119,68 @@ function CustomApp(appProps) {
     pacsTab,
   ];
 
+  switch (userType) {
+    case 'technician':
+      items = [ordersPage, pacsTab]
+      break;
+    case 'admin':
+      items = [ordersPage]
+      break;
+    case 'dipatch':
+      items = [dispatchTab]
+      break;
+    case 'radiologist':
+      items = [
+        workListTab, pacsTab
+      ]
+      break;
+    case 'typist':
+      items = [
+        workListTab, pacsTab
+      ]
+      break;
+    case 'consultant':
+      items = [
+        consultantTab
+      ]
+      break;
+    default:
+      break;
+  }
+
   const ViewerElement = () => {
     return (
       <MyViewer appProps={appProps} />
     );
+  };
+
+  const RestrictedAccess = () => {
+    return (
+      <div>
+        <div className="restricted-access">
+          Restricted Page or Page Not Found
+        </div>
+        <div className="restrict-desc">
+          The url you are trying to access is either restricted or does not
+          exist.
+        </div>
+      </div>
+    );
+  };
+
+  const PrivateRoute = ({ children, accessType }) => {
+    // let location = useLocation();
+    const token = sessionStorage.getItem("access_token");
+    const userDetails = getUserDetails();
+    const userType = userDetails.user_type;
+    if (accessType) {
+      if (userType === accessType) {
+        return children;
+      } else {
+        return <RestrictedAccess />
+      }
+    }
+    return children;
   };
 
   const AppView = ({ appDateRange }) => {
@@ -126,14 +203,6 @@ function CustomApp(appProps) {
             }
             />
             <Route
-              path="/orders"
-              element={
-                <>
-                  <OrdersList />
-                </>
-              }
-            />
-            <Route
               path="/login"
               element={
                 <>
@@ -144,9 +213,11 @@ function CustomApp(appProps) {
             <Route
               path="/settings"
               element={
-                <>
-                  <Settings />
-                </>
+                <PrivateRoute accessType={'admin'}>
+                  <>
+                    <Settings />
+                  </>
+                </PrivateRoute>
               }
             />
             {/* <Route

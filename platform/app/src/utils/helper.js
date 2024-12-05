@@ -1,7 +1,7 @@
 import axiosInstance, { BASE_API } from "../axios";
 
 export const ConvertStringToDate = (dateString, timeString) => {
-  if(!dateString || !timeString) return "";
+  if (!dateString || !timeString) return "";
   const year = dateString.substring(0, 4);
   const month = dateString.substring(4, 6) - 1; // Month is zero-based in JavaScript Date objects
   const day = dateString.substring(6, 8);
@@ -33,15 +33,15 @@ export const getAccessToken = () => {
 }
 
 export const makePostCall = (url, payload, headers) => {
-  return axiosInstance.post( BASE_API +  url, payload, headers);
+  return axiosInstance.post(BASE_API + url, payload, headers);
 }
 
 export const makeGetCall = (url) => {
-  return axiosInstance.get( BASE_API +  url);
+  return axiosInstance.get(BASE_API + url);
 }
 
 
-export  const hisStatusOptions = [
+export const hisStatusOptions = [
   { label: 'UNCONFIRMED', value: 'UNCONFIRMED' },
   { label: 'CONFIRMATION_IN_PROGRESS', value: 'CONFIRMATION_IN_PROGRESS' },
   { label: 'WAIT_FOR_MANUAL_CONFIRMATION', value: 'WAIT_FOR_MANUAL_CONFIRMATION' },
@@ -49,3 +49,31 @@ export  const hisStatusOptions = [
   { label: 'DUPLICATE_ACCESSION_NO', value: 'DUPLICATE_ACCESSION_NO' },
   { label: 'CONFIRMATION_NOT_REQUIRED', value: 'CONFIRMATION_NOT_REQUIRED' },
 ]
+
+
+export const hasReportingPermission = (userDetails) => {
+  const userType = userDetails?.user_type;
+  if (userType === 'radiologist' || userType === 'typist' || userType === 'hod') {
+    // additionally check explicitly if the user has the particular permission
+    return true;
+  }
+  return false;
+}
+
+export const hasStudyViewingPermission = (userDetails) => {
+  const userType = userDetails?.user_type;
+  if (userType === 'radiologist' || userType === 'hod' || userType === 'technician') {
+    // additionally check explicitly if the user has the particular permission
+    return true;
+  }
+  return false;
+}
+
+export const hasUploadNotesPermission = (userDetails) => {
+  const userType = userDetails?.user_type;
+  if (userType === 'technician') {
+    // additionally check explicitly if the user has the particular permission
+    return true;
+  }
+  return false;
+}

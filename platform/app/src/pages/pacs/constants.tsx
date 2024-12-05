@@ -1,6 +1,6 @@
 import { Tag, Button, Upload, Tooltip } from "antd";
 import React from "react";
-import { FileOutlined, FileTextOutlined, PrinterOutlined, UploadOutlined } from '@ant-design/icons';
+import { EyeOutlined, FileOutlined, FileTextOutlined, PrinterOutlined, UploadOutlined } from '@ant-design/icons';
 import { ConvertStringToDate, getUserDetails } from "../../utils/helper";
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ const statusColors = {
   'REVIEWED': 'blue',
 };
 
-export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, printReport }) => {
+export const orderColumns = ({ openViewer, openReportEditor, role, addFile, viewNotes, printReport }) => {
   const userDetails = getUserDetails();
 
   return ([
@@ -34,9 +34,11 @@ export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, print
       title: '',
       render: (_, rec) => {
         return (
-          <Button disabled={!rec.ris_notes?.length > 0} style={{ padding: '0 0.5rem' }} onClick={() => viewNotes(rec)}>
-            <FileOutlined />
-          </Button>
+          <Tooltip title={rec.ris_notes?.length > 0 ? 'View Notes' : 'No Notes available'}>
+            <Button disabled={!rec.ris_notes?.length > 0} style={{ padding: '0 0.5rem' }} onClick={() => viewNotes(rec)}>
+              <FileOutlined />
+            </Button>
+          </Tooltip>
         )
       },
       width: 50,
@@ -48,9 +50,12 @@ export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, print
         return (
           <Button
             color="blue"
-            className="ms-auto"
-            type="link" onClick={() => { openReportEditor(record) }}
+            className="ms-auto d-flex align-items-center"
+            type="link" onClick={() => { openReportEditor(record); openViewer(record) }}
           >
+            <Tooltip title="Open Only Viewer">
+              <EyeOutlined color="orange" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openViewer(record); }} />
+            </Tooltip>
             {text}
           </Button>
         )

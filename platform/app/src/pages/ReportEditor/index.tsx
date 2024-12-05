@@ -89,7 +89,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   }
 
   const getTemplates = () => {
-    makeGetCall('/get-templates')
+    makeGetCall(`/get-templates?modality=${patientDetails?.modality}`)
       .then(res => {
         setTemplates(res?.data?.data || []);
       })

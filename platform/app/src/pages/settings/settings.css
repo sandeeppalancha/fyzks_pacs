@@ -8,4 +8,13 @@
 .side-menu {
   border-right: 1px solid gray;
   background-color: #e2d2aa63;
+  padding: 0.5rem 0;
+}
+
+.side-menu .toggle-btn {
+  margin-left: calc(100% - 3rem);
+}
+
+.content-area {
+  padding-left: 1rem;
 }

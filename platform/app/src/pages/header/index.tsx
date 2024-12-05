@@ -72,7 +72,7 @@ const AppHeader = ({ handleDateChange }) => {
   return (
     <div className="header-container">
       <div className="logo">
-        <img src={myImage} alt="Header" />
+        <img src={myImage} alt="Header" onClick={() => { window.location.href = "/" }} />
       </div>
 
       {/* <RangePicker className="ms-auto me-2" presets={rangePresets} onChange={onRangeChange} /> */}

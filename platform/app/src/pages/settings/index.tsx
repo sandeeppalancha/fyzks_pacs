@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Menu } from "antd"
+import { Button, Card, Form, Input, Menu, Tooltip } from "antd"
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { BASE_API } from "../../axios";
@@ -11,6 +11,7 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import AddUser from "../AddUser";
+import UserList from "../UserList";
 
 const Settings = () => {
 
@@ -32,7 +33,7 @@ const Settings = () => {
   const menuToPage = {
     // nodes_list: <NodeList />,
     add_node: <AddNewNode />,
-    // users_list: <UsersList />,
+    users_list: <UserList />,
     add_user: <AddUser />
   };
 
@@ -41,9 +42,11 @@ const Settings = () => {
     <div className="settings-container h-100">
       <div className="d-flex h-100">
         <div className="side-menu">
-          <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </Button>
+          <Tooltip title={collapsed ? 'Expand' : 'Collapse'}>
+            <Button type="primary" className="toggle-btn" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
+              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </Button>
+          </Tooltip>
           <Menu
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
@@ -54,7 +57,8 @@ const Settings = () => {
             onClick={onNavChange}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 content-area">
+          {/* <div className="page-title text-center">SETTINGS</div> */}
           {menuToPage[selectedMenu]}
         </div>
       </div>

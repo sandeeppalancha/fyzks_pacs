@@ -5,7 +5,7 @@ import ReportEditor from '../ReportEditor';
 import "./pacs.css";
 import FloatLabel from '../../components/FloatingLabel';
 import axiosInstance, { BASE_API, BASE_URL } from '../../axios';
-import { getAccessToken, getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
+import { getAccessToken, getUserDetails, hasReportingPermission, hasStudyViewingPermission, hisStatusOptions, makePostCall } from '../../utils/helper';
 import { SavedSearches } from '../orders/constants';
 
 import dayjs from 'dayjs';
@@ -43,6 +43,8 @@ const PacsList = ({ appDateRange }) => {
   const [dateRange, setDateRange] = useState([yesterday, today]);
 
   const isHOD = userDetails?.user_type === 'hod';
+
+  const userType = userDetails?.user_type;
 
   useEffect(() => {
     getPacsList();
@@ -101,13 +103,31 @@ const PacsList = ({ appDateRange }) => {
     setReportEditorModal({ visible: false, data: {} });
   }
 
-  const openReport = async (record) => {
-    if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
-      // setReportEditorModal({ visible: true, data: record });
+  const openViewer = (record) => {
+    if (hasStudyViewingPermission(userDetails)) {
       window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank')
     } else {
-      message.error(`Study is taken by ${record.po_reported_by}`)
+      message.info("You do not habe the permission to view the study images")
     }
+  }
+
+  const openReport = async (record) => {
+
+    if (hasReportingPermission(userDetails)) {
+      if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
+        setReportEditorModal({ visible: true, data: record });
+      } else {
+        message.error(`Study is taken by ${record.po_reported_by}`)
+      }
+    } else {
+      message.info("You do not have the permission to do reporting")
+    }
+    // if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
+    //   setReportEditorModal({ visible: true, data: record });
+    //   window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank')
+    // } else {
+    //   message.error(`Study is taken by ${record.po_reported_by}`)
+    // }
   }
 
   const getSavedFilters = async () => {
@@ -344,29 +364,29 @@ const PacsList = ({ appDateRange }) => {
           </FloatLabel>
 
           <FloatLabel label="YH No" value={filters['po_pin']} className="me-3">
-            <FyzksInput width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
+            <FyzksInput value={filters['po_pin']} width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="Acc. No" value={filters['po_acc_no']} className="me-3">
-            <FyzksInput width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
+            <FyzksInput value={filters['po_acc_no']} width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="Ref Doc." value={filters['po_ref_doc']} className="me-3">
-            <Select allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
+            <Select value={filters['po_ref_doc']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
           </FloatLabel>
           <FloatLabel label="Body Part / Study Desc" value={filters['po_body_part']} className="me-3">
-            <FyzksInput width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
+            <FyzksInput value={filters['po_body_part']} width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
           </FloatLabel>
           <FloatLabel label="HIS Status" value={filters['po_his_status']} className="me-3">
-            <Select allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
+            <Select value={filters['po_his_status']} allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
           </FloatLabel>
 
           <FloatLabel label="Order No" value={filters['po_ord_no']} className="me-3">
-            <FyzksInput width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
+            <FyzksInput value={filters['po_ord_no']} width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
           </FloatLabel>
-          <FloatLabel label="Status" value={filters['status']} className="me-3">
-            <Select allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('status', val)} />
+          <FloatLabel label="Status" value={filters['po_status']} className="me-3">
+            <Select value={filters['po_status']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_status', val)} />
           </FloatLabel>
           <FloatLabel label="Site" value={filters['po_site']} className="me-3">
-            <Select value={filters['po_site']} allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('site', val)} />
+            <Select value={filters['po_site']} allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('po_site', val)} />
           </FloatLabel>
           <FloatLabel label="Modality" value={filters['modality']} className="me-3">
             <Select allowClear value={filters['modality']} style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
@@ -386,6 +406,7 @@ const PacsList = ({ appDateRange }) => {
           <FloatLabel label="Assigned to" value={filters['po_assigned_to']} className="me-3">
             <Select
               showSearch
+              value={filters['po_assigned_to']}
               style={{ width: 200 }}
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -416,7 +437,7 @@ const PacsList = ({ appDateRange }) => {
           tableLayout="fixed"
           rowSelection={rowSelection}
           loading={orders.loading}
-          columns={orderColumns({ openReportEditor: openReport, role: userDetails?.user_type, addFile, viewNotes, printReport })}
+          columns={orderColumns({ openViewer: openViewer, openReportEditor: openReport, role: userDetails?.user_type, addFile, viewNotes, printReport })}
           rowKey={(rec) => rec.po_acc_no}
           dataSource={orders.data || []}
           onRow={(record, rowIndex) => {
