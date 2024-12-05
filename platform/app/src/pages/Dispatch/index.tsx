@@ -8,17 +8,19 @@ import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/help
 import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
 import { debounce } from 'lodash';
+import ReportViewer from '../ReportViewer';
 
 
 const { RangePicker } = DatePicker;
 
-const DispatchList = ({ appDateRange }) => {
+const DispatchList = ({ appDateRange, isConsultant }) => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [filters, setFilters] = useState({});
   // const [savedFilters, setSavedFilters] = useState([]);
   const userDetails = getUserDetails();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [refreshDisabled, setRefreshDisabled] = useState(false)
+  const [refreshDisabled, setRefreshDisabled] = useState(false);
+  const [viewreportModal, setViewReportModal] = useState({ visible: false, pdfData: null });
 
   const today = dayjs();
   const yesterday = dayjs().subtract(1, 'days');
@@ -53,6 +55,9 @@ const DispatchList = ({ appDateRange }) => {
     // } else {
     //   message.error(`Study is taken by ${record.po_reported_by}`)
     // }
+    if (isConsultant) {
+      window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank');
+    }
     printReport(record)
   }
 
@@ -146,7 +151,7 @@ const DispatchList = ({ appDateRange }) => {
     onChange: onSelectChange,
   };
 
-  const printReport = (rec) => {
+  const printReport = async (rec) => {
     const { po_acc_no, po_ord_no, po_pin } = rec;
     setPrintLoading(true);
     makePostCall('/print-acc-report', {
@@ -156,13 +161,20 @@ const DispatchList = ({ appDateRange }) => {
     }, {
       responseType: "arraybuffer",
     })
-      .then(res => {
+      .then(async (res) => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        console.log("pdfBlob", pdfBlob);
+
         const pdf_url = URL.createObjectURL(pdfBlob);
-        // setPdfUrl(url);
-        const printWindow = window.open(pdf_url, "_blank");
-        printWindow.print();
         setPrintLoading(false);
+
+        if (isConsultant && false) {
+          setViewReportModal({ visible: true, pdfData: pdf_url, pdfBlob: pdfBlob })
+        } else {
+          // setPdfUrl(url);
+          const printWindow = window.open(pdf_url, "_blank");
+          printWindow.print();
+        }
       })
       .catch(err => {
         console.log("Error", err);
@@ -242,6 +254,16 @@ const DispatchList = ({ appDateRange }) => {
           />
         </div>
       </div >
+      {
+        viewreportModal && viewreportModal?.visible && (
+          <Modal
+            open={viewreportModal.visible}
+            onCancel={() => { setViewReportModal({ visible: false, pdfData: null }) }}
+          >
+            <ReportViewer pdfData={viewreportModal?.pdfData} pdfBlob={viewreportModal?.pdfBlob} />
+          </Modal>
+        )
+      }
     </Spin>
   )
 }

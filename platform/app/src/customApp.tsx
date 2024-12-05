@@ -98,7 +98,7 @@ function CustomApp(appProps) {
     key: 'consultant',
     label: 'Consultant',
     children: <>
-      <DispatchList appDateRange={appDateRange} />
+      <DispatchList isConsultant={true} appDateRange={appDateRange} />
     </>,
   };
 
