@@ -37,7 +37,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   useEffect(() => {
     if (patientDetails) {
       setCorrelated(patientDetails?.po_correlated);
-      setCorrelated(patientDetails?.po_diagnosed);
+      setDiagnosed(patientDetails?.po_diagnosed);
     }
   }, [patientDetails]);
 
@@ -283,14 +283,14 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
             </div>
 
             <div>Clinically diagnosed
-              <Radio.Group className={submitTriggered ? (!!diagnosed ? '' : 'error') : ''} onChange={(e) => { setDiagnosed(e.target.value) }}>
+              <Radio.Group value={diagnosed} className={submitTriggered ? (!!diagnosed ? '' : 'error') : ''} onChange={(e) => { setDiagnosed(e.target.value) }}>
                 <Radio value={'diagnosed'}>Yes</Radio>
                 <Radio value={'notdiagnosed'}>No</Radio>
               </Radio.Group>
               {submitTriggered && !diagnosed && <div style={{ color: 'red', marginBottom: '8px' }}>This field is required</div>}
             </div>
             <div>Clinically correlated
-              <Radio.Group className={submitTriggered ? (!!correlated ? '' : 'error') : ''} onChange={(e) => { setCorrelated(e.target.value) }}>
+              <Radio.Group value={correlated} className={submitTriggered ? (!!correlated ? '' : 'error') : ''} onChange={(e) => { setCorrelated(e.target.value) }}>
                 <Radio value={'correlated'}>Yes</Radio>
                 <Radio value={'notcorrelated'}>No</Radio>
               </Radio.Group>
@@ -303,17 +303,17 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
             <Button
               disabled={statusOrder.indexOf(currentReport?.pr_status) > 0}
               danger className='mt-3 ms-auto' type='default'
-              color='primary' onClick={() => handleSaveForm('DRAFTED')}
+              color='primary' onClick={() => handleSaveForm('draft')}
             >DRAFT</Button>
             <Button
               disabled={currentReport?.pr_status === 'SIGNEDOFF'}
               danger className='mt-3 ms-3' type='default' color='primary'
-              onClick={() => handleSaveForm('REVIEWED')}
+              onClick={() => handleSaveForm('reviewed')}
             >REVIEWED</Button>
             <Button
               // disabled={statusOrder.indexOf(currentReport?.pr_status) < 1}
               className='mt-3 ms-3' type='primary' color='primary'
-              onClick={() => handleSaveForm('SIGNEDOFF')}
+              onClick={() => handleSaveForm('signoff')}
               disabled={['hod', 'radiologist'].indexOf(userType) < 0}
             >
               SIGN OFF

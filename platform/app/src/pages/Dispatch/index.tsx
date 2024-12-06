@@ -158,6 +158,8 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
       acc_no: po_acc_no,
       pin: po_pin,
       ord_no: po_ord_no, //.replaceAll(' ', '&nbsp'),
+      user_id: userDetails?.username,
+      fromDispatch: !isConsultant || userDetails?.user_type === 'dispatch'
     }, {
       responseType: "arraybuffer",
     })
