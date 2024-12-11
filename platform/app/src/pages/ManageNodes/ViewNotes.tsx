@@ -2,20 +2,48 @@ import { Col, Row } from "antd"
 import { BASE_API } from "../../axios"
 import { Document, Page, pdfjs } from "react-pdf";
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getAccessToken } from "../../utils/helper";
+import { getAccessToken, getUserDetails, makePostCall } from "../../utils/helper";
+import './view-notes.scss'
 
 const ViewNotes = ({ viewNotesModal, handleNoteSelection, selectedNote }) => {
   pdfjs.GlobalWorkerOptions.workerSrc = '/pdf-worker-min.js';
+
+  const [prevNotes, setPrevNotes] = useState([]);
 
   const customHeaders = {
     Authorization: `Bearer ${getAccessToken()}`, // Add your token here
   };
 
+  const user_id = getUserDetails()?.username;
+
+  useEffect(() => {
+    fetchPrevNotes();
+  }, []);
+
+  const fetchPrevNotes = () => {
+    const { po_pin, po_acc_no, po_ord_no } = viewNotesModal?.details;
+    const payload = {
+      user_id,
+      pin: po_pin,
+      acc_no: po_acc_no,
+      ord_no: po_ord_no
+    }
+    makePostCall("/pat-prev-notes", payload)
+      .then(res => {
+        console.log("Res", res);
+        setPrevNotes(res.data?.data || []);
+      })
+      .catch(e => {
+        console.log("Error", e);
+        setPrevNotes([]);
+      })
+  }
+
   return (
-    <div>
+    <div className="view-notes-container">
       <div className='notes-header'>RIS NOTES</div>
       <div >
-        <div>
+        <div style={{ width: '1000px' }}>
           <Row>
             <Col span={8}>
               <span className='notes-label'>Name: </span>
@@ -49,12 +77,19 @@ const ViewNotes = ({ viewNotesModal, handleNoteSelection, selectedNote }) => {
       <Row className='mt-3'>
         <Col span={8}>
           <div className='notes-list'>
-            {viewNotesModal?.details?.ris_notes?.map(note => (
-              <div
-                className={`notes-list-item ${note.rn_id === selectedNote?.rn_id ? 'selected' : ''}`}
-                onClick={() => { handleNoteSelection(note, viewNotesModal?.details) }}
-              >
-                {`${note.rn_upload_type?.toUpperCase()} ${note.rn_file_name ? ' | ' + note.rn_file_name : ''}`}
+            {prevNotes?.map(dateNote => (
+              <div>
+                <div className="notes-date">
+                  {dateNote.creationdate}
+                </div>
+                {dateNote?.rows?.map(note => (
+                  <div
+                    className={`notes-list-item ${note.rn_id === selectedNote?.rn_id ? 'selected' : ''}`}
+                    onClick={() => { handleNoteSelection(note, viewNotesModal?.details) }}
+                  >
+                    {`${note.rn_upload_type?.toUpperCase()} ${note.rn_file_name ? ' | ' + note.rn_file_name : ''} | ${note.rn_acc_no}`}
+                  </div>
+                ))}
               </div>
             ))}
           </div>

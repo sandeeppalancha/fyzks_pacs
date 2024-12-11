@@ -35,6 +35,9 @@ const PacsList = ({ appDateRange }) => {
   const userDetails = getUserDetails();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [refreshDisabled, setRefreshDisabled] = useState(false)
+  const [current, setCurrent] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(10);
+
 
   const today = dayjs();
   const yesterday = dayjs().subtract(1, 'days');
@@ -350,6 +353,137 @@ const PacsList = ({ appDateRange }) => {
     setSelectedNote(note);
   }
 
+  const toggleReporting = (rec, idx) => {
+    console.log("toggleReporting", idx, rec);
+    const { po_ord_no, po_acc_no, po_block_reporting } = rec;
+    const shouldBlock = po_block_reporting !== 'Y';
+    const currentIndx = (current - 1) * pageSize + idx;
+    // toggle-reporting
+    const payload = {
+      user_id: getUserDetails()?.username,
+      ord_no: po_ord_no,
+      acc_no: po_acc_no,
+      shouldBlock,
+    };
+    makePostCall('/toggle-reporting', payload)
+      .then(res => {
+        message.success("Updated successfully");
+        const prevOrders = orders?.data || [];
+        prevOrders[currentIndx].po_block_reporting = shouldBlock ? 'Y' : 'N';
+        setOrders({ data: prevOrders, loading: false })
+      })
+      .catch(e => {
+        console.log("Error while blockig report", e);
+        message.error(e.message)
+      })
+  }
+
+  const toggleFeatures = (rec, idx, feature) => {
+    const { po_ord_no, po_acc_no, po_his_status, po_block_reporting, po_emergency } = rec;
+    const shouldConfirm = po_his_status !== 'CONFIRMED';
+    const shouldBlock = po_block_reporting !== 'Y';
+    const markEmergency = po_emergency !== 'Y';
+
+    const currentIndx = (current - 1) * pageSize + idx;
+
+
+    // toggle-reporting
+    const payload = {
+      user_id: getUserDetails()?.username,
+      ord_no: po_ord_no,
+      acc_no: po_acc_no,
+      // shouldConfirm,
+    };
+
+    let url = '';
+    let objProperty = '';
+    let objValue = '';
+
+    switch (feature) {
+      case 'emergency':
+        payload.markEmergency = markEmergency;
+        url = '/toggle-emergency';
+        objProperty = 'po_emergency';
+        objValue = markEmergency ? "Y" : 'N';
+        break;
+      case 'confirmation':
+        payload.shouldConfirm = shouldConfirm;
+        url = '/toggle-confirmation';
+        objProperty = 'po_his_status';
+        objValue = shouldConfirm ? "CONFIRMED" : 'UNCONFIRMED';
+        break;
+      case 'reporting':
+        payload.shouldBlock = shouldBlock;
+        url = '/toggle-reporting';
+        objProperty = 'po_block_reporting';
+        objValue = shouldBlock ? "Y" : 'N';
+        break;
+      default:
+        return;
+    }
+
+
+    makePostCall(url, payload)
+      .then(res => {
+        message.success("Updated successfully");
+        const prevOrders = orders?.data || [];
+
+        prevOrders[currentIndx][objProperty] = objValue;
+        setOrders({ data: prevOrders, loading: false })
+      })
+      .catch(e => {
+        console.log("Error while blockig report", e);
+        message.error(e.message)
+      })
+  }
+
+  const toggleConfirmation = (rec, idx) => {
+    console.log("toggleConfirmation", idx, rec);
+    const { po_ord_no, po_acc_no, po_his_status } = rec;
+    const shouldConfirm = po_his_status !== 'CONFIRMED';
+    const currentIndx = (current - 1) * pageSize + idx;
+    // toggle-reporting
+    const payload = {
+      user_id: getUserDetails()?.username,
+      ord_no: po_ord_no,
+      acc_no: po_acc_no,
+      shouldConfirm,
+    };
+    makePostCall('/toggle-confirmation', payload)
+      .then(res => {
+        message.success("Updated successfully");
+        const prevOrders = orders?.data || [];
+        prevOrders[currentIndx].po_his_status = shouldConfirm ? 'CONFIRMED' : 'UNCONFIRMED';
+        setOrders({ data: prevOrders, loading: false })
+      })
+      .catch(e => {
+        console.log("Error while blockig report", e);
+        message.error(e.message)
+      })
+  }
+
+  const assignToSelfTechnician = (rec, idx) => {
+    // assign-to-tech
+    const { po_ord_no, po_acc_no } = rec;
+    const payload = {
+      user_id: getUserDetails()?.username,
+      ord_no: po_ord_no,
+      acc_no: po_acc_no,
+    };
+    const currentIndx = (current - 1) * pageSize + idx;
+    makePostCall('/assign-to-tech', payload)
+      .then(res => {
+        message.success("Updated successfully");
+        const prevOrders = orders?.data || [];
+        prevOrders[currentIndx].po_assigned_technician = getUserDetails()?.username;
+        setOrders({ data: prevOrders, loading: false })
+      })
+      .catch(e => {
+        console.log("Error while blockig report", e);
+        message.error(e.message)
+      })
+  }
+
   const reportedByOptions = useMemo(() => {
     return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
   }, [userList])
@@ -439,7 +573,22 @@ const PacsList = ({ appDateRange }) => {
           tableLayout="fixed"
           rowSelection={rowSelection}
           loading={orders.loading}
-          columns={orderColumns({ openViewer: openViewer, openReportEditor: openReport, role: userDetails?.user_type, addFile, viewNotes, printReport })}
+          columns={orderColumns(
+            {
+              openViewer: openViewer, openReportEditor: openReport, role: userDetails?.user_type,
+              assignToSelfTechnician, toggleReporting, addFile, viewNotes, printReport, toggleConfirmation, toggleFeatures
+            }
+          )}
+          pagination={{
+            current: current,
+            pageSize: 10,
+            total: orders?.data?.length || 0,
+            showSizeChanger: false,
+            pageSizeOptions: ['10', '15', '20'],
+            onChange: (page, pageSize) => {
+              setCurrent(page);
+            },
+          }}
           rowKey={(rec) => rec.po_acc_no}
           dataSource={orders.data || []}
           onRow={(record, rowIndex) => {

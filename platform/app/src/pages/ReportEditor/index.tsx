@@ -3,10 +3,11 @@ import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
 import { ConvertStringToDate, getUserDetails, makeGetCall, makePostCall } from "../../utils/helper";
 import moment from "moment";
-import { Button, Card, Checkbox, message, Radio, Select, Table } from "antd";
+import { Button, Card, Checkbox, message, Modal, Radio, Select, Table } from "antd";
 import { TemplateHeader } from "./constants";
 import { RightSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
+import CriticalFinding from "./critical-finding";
 
 
 const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
@@ -22,6 +23,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const [correlated, setCorrelated] = useState(null);
   const [diagnosed, setDiagnosed] = useState(null);
   const [submitTriggered, setSubmitTrigged] = useState(false);
+  const [criticalFindingModal, setCriticalFindingModal] = useState({ visible: false, data: {} })
 
   const handleContentChange = (newContent) => {
     console.log("newContent", newContent);
@@ -216,6 +218,10 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   const statusOrder = ['DRAFTED', 'REVIEWED', 'SIGNEDOFF'];
 
+  const handleNotification = () => {
+    setCriticalFindingModal({ visible: true, data: patientDetails })
+  }
+
   return (
     <div className="editor-container">
       <div className="left-section">
@@ -261,7 +267,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
         <Card className="mb-3">
           <div className="!more-options">
             <div className="bold-font">More Options</div>
-            <div><Checkbox /> There is a critical finding. Notify to physician</div>
+            <div><Button onClick={handleNotification}> Notify Physician</Button></div>
             <div><Checkbox /> Need peer opinion from</div>
             <div><Checkbox /> Requires Sub-Speciality Opinion</div>
             <div><Checkbox /> Report Co-Signing</div>
@@ -325,6 +331,18 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
         <RichTextEditor patDetails={patientDetails} currentReport={currentReport} cancel={cancel} content={content || "<div></div>"}
           onSave={handleSave} onChange={handleContentChange} />
       </div>
+      {
+        criticalFindingModal && (
+          <Modal
+            width={800}
+            open={criticalFindingModal?.visible}
+            onCancel={() => { setCriticalFindingModal({ visible: false, data: null }) }}
+            okButtonProps={{ style: { display: 'none' } }}
+          >
+            <CriticalFinding closeNotificationModal={() => { setCriticalFindingModal({}) }} patDetails={criticalFindingModal?.data} />
+          </Modal>
+        )
+      }
     </div>
   );
 };
