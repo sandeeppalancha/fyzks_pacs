@@ -14,7 +14,10 @@ const CustomEditor = ({ placeholder, initialContent, handleChange }) => {
   const config = useMemo(
     () => ({
       readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-      placeholder: placeholder || 'Start typings...'
+      placeholder: placeholder || 'Start typings...',
+      uploader: {
+        insertImageAsBase64URI: true, // Enable image upload as Base64
+      }
     }),
     [placeholder]
   );

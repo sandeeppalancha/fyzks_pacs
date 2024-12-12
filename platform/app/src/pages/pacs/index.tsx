@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col } from 'antd';
+import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col, Spin } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
@@ -37,6 +37,7 @@ const PacsList = ({ appDateRange }) => {
   const [refreshDisabled, setRefreshDisabled] = useState(false)
   const [current, setCurrent] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
+  const [printLoading, setPrintLoading] = React.useState(false);
 
 
   const today = dayjs();
@@ -321,7 +322,7 @@ const PacsList = ({ appDateRange }) => {
   };
 
   const printReport = (rec) => {
-    console.log("print report", rec);
+    setPrintLoading(true);
     const { po_acc_no, po_ord_no, po_pin } = rec;
     makePostCall('/print-acc-report', {
       acc_no: po_acc_no,
@@ -340,10 +341,12 @@ const PacsList = ({ appDateRange }) => {
       .catch(err => {
         console.log("Error", err);
       })
+      .finally(() => {
+        setPrintLoading(false);
+      })
   }
 
   const viewNotes = (rec) => {
-    console.log("view notes", rec);
     const firstNote = rec.ris_notes[0] || {};
     setSelectedNote(firstNote)
     setViewNotesModal({ visible: true, details: rec })
@@ -354,7 +357,6 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const toggleReporting = (rec, idx) => {
-    console.log("toggleReporting", idx, rec);
     const { po_ord_no, po_acc_no, po_block_reporting } = rec;
     const shouldBlock = po_block_reporting !== 'Y';
     const currentIndx = (current - 1) * pageSize + idx;
@@ -489,209 +491,211 @@ const PacsList = ({ appDateRange }) => {
   }, [userList])
 
   return (
-    <div>
-      <SavedSearches savedFilters={savedFilters || []} handleFilterSelection={handleFilterSelection} />
-      <div className='filters-section'>
-        {/* <Space.Compact> */}
-        {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
-        <div className='d-flex flex-wrap'>
-          <FloatLabel label="Patient Name" value={filters['pat_name']} className="me-3">
-            <FyzksInput value={filters['pat_name']} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
-          </FloatLabel>
+    <Spin spinning={printLoading}>
+      <div>
+        <SavedSearches savedFilters={savedFilters || []} handleFilterSelection={handleFilterSelection} />
+        <div className='filters-section'>
+          {/* <Space.Compact> */}
+          {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
+          <div className='d-flex flex-wrap'>
+            <FloatLabel label="Patient Name" value={filters['pat_name']} className="me-3">
+              <FyzksInput value={filters['pat_name']} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
+            </FloatLabel>
 
-          <FloatLabel label="YH No" value={filters['po_pin']} className="me-3">
-            <FyzksInput value={filters['po_pin']} width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
-          </FloatLabel>
-          <FloatLabel label="Acc. No" value={filters['po_acc_no']} className="me-3">
-            <FyzksInput value={filters['po_acc_no']} width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
-          </FloatLabel>
-          <FloatLabel label="Ref Doc." value={filters['po_ref_doc']} className="me-3">
-            <Select value={filters['po_ref_doc']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
-          </FloatLabel>
-          <FloatLabel label="Body Part / Study Desc" value={filters['po_body_part']} className="me-3">
-            <FyzksInput value={filters['po_body_part']} width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
-          </FloatLabel>
-          <FloatLabel label="HIS Status" value={filters['po_his_status']} className="me-3">
-            <Select value={filters['po_his_status']} allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
-          </FloatLabel>
+            <FloatLabel label="YH No" value={filters['po_pin']} className="me-3">
+              <FyzksInput value={filters['po_pin']} width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
+            </FloatLabel>
+            <FloatLabel label="Acc. No" value={filters['po_acc_no']} className="me-3">
+              <FyzksInput value={filters['po_acc_no']} width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
+            </FloatLabel>
+            <FloatLabel label="Ref Doc." value={filters['po_ref_doc']} className="me-3">
+              <Select value={filters['po_ref_doc']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
+            </FloatLabel>
+            <FloatLabel label="Body Part / Study Desc" value={filters['po_body_part']} className="me-3">
+              <FyzksInput value={filters['po_body_part']} width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
+            </FloatLabel>
+            <FloatLabel label="HIS Status" value={filters['po_his_status']} className="me-3">
+              <Select value={filters['po_his_status']} allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
+            </FloatLabel>
 
-          <FloatLabel label="Order No" value={filters['po_ord_no']} className="me-3">
-            <FyzksInput value={filters['po_ord_no']} width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
-          </FloatLabel>
-          <FloatLabel label="Status" value={filters['po_status']} className="me-3">
-            <Select value={filters['po_status']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_status', val)} />
-          </FloatLabel>
-          <FloatLabel label="Site" value={filters['po_site']} className="me-3">
-            <Select value={filters['po_site']} allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('po_site', val)} />
-          </FloatLabel>
-          <FloatLabel label="Modality" value={filters['modality']} className="me-3">
-            <Select allowClear value={filters['modality']} style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
-          </FloatLabel>
-          <FloatLabel label="Reported By" value={filters['po_reported_by']} className="me-3">
-            <Select
-              showSearch
-              value={filters['po_reported_by']}
-              style={{ width: 200 }}
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-              options={reportedByOptions}
-              onChange={(val) => handleFilterChange('po_reported_by', val)}
-            />
-          </FloatLabel>
-          <FloatLabel label="Assigned to" value={filters['po_assigned_to']} className="me-3">
-            <Select
-              showSearch
-              value={filters['po_assigned_to']}
-              style={{ width: 200 }}
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-              options={reportedByOptions}
-              onChange={(val) => handleFilterChange('po_assigned_to', val)}
-            />
-          </FloatLabel>
-          <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
-            <RangePicker size="middle" value={dateRange} onChange={(val) => {
-              if (val) {
-                setDateRange([val[0], val[1]]);
-              } else {
-                setDateRange(null);
-              }
-            }} />
-          </FloatLabel>
-        </div>
-        <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
-        <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
-        {isHOD && (
-          <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
-        )}
-        {/* <Button disabled={refreshDisabled} className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button> */}
-      </div>
-      <div className='orders-list'>
-        <Table
-          tableLayout="fixed"
-          rowSelection={rowSelection}
-          loading={orders.loading}
-          columns={orderColumns(
-            {
-              openViewer: openViewer, openReportEditor: openReport, role: userDetails?.user_type,
-              assignToSelfTechnician, toggleReporting, addFile, viewNotes, printReport, toggleConfirmation, toggleFeatures
-            }
-          )}
-          pagination={{
-            current: current,
-            pageSize: 10,
-            total: orders?.data?.length || 0,
-            showSizeChanger: false,
-            pageSizeOptions: ['10', '15', '20'],
-            onChange: (page, pageSize) => {
-              setCurrent(page);
-            },
-          }}
-          rowKey={(rec) => rec.po_acc_no}
-          dataSource={orders.data || []}
-          onRow={(record, rowIndex) => {
-            return {
-            }
-          }}
-          style={{ width: '100%' }}
-          scroll={{
-            x: 1200
-          }}
-        />
-        {reportEditorModal.visible && (
-          <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
-            <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
-          </Modal>
-        )}
-
-        {saveFiltersModal.visible && (
-          <Modal className='save-filter-modal' onCancel={() => { setSaveFiltersModal({ visible: false }) }}
-            okButtonProps={{ disabled: !filterName || saveFiltersModal.saveLoading }} onOk={submitSaveFilters}
-            open={saveFiltersModal.visible}
-          >
-            <Input width={300} onChange={(e) => setFilterName(e.target.value)} />
-          </Modal>
-        )}
-
-        {assignModal.visible && (
-          <Modal className='save-filter-modal' onCancel={() => { setAssignModal({ visible: false }) }}
-            okButtonProps={{ disabled: !selectedUsersToAssign }} onOk={assignToUser}
-            open={assignModal.visible}
-          >
-            Select User
-            <div>
+            <FloatLabel label="Order No" value={filters['po_ord_no']} className="me-3">
+              <FyzksInput value={filters['po_ord_no']} width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
+            </FloatLabel>
+            <FloatLabel label="Status" value={filters['po_status']} className="me-3">
+              <Select value={filters['po_status']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_status', val)} />
+            </FloatLabel>
+            <FloatLabel label="Site" value={filters['po_site']} className="me-3">
+              <Select value={filters['po_site']} allowClear style={{ width: 200 }} options={siteOptions} onChange={(val) => handleFilterChange('po_site', val)} />
+            </FloatLabel>
+            <FloatLabel label="Modality" value={filters['modality']} className="me-3">
+              <Select allowClear value={filters['modality']} style={{ width: 200 }} options={modalityOptions} onChange={(val) => handleFilterChange('modality', val)} />
+            </FloatLabel>
+            <FloatLabel label="Reported By" value={filters['po_reported_by']} className="me-3">
               <Select
                 showSearch
+                value={filters['po_reported_by']}
                 style={{ width: 200 }}
                 filterOption={(input, option) =>
                   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                 }
-                options={userList?.map((user) => ({ label: user.user_fullname, value: user.username }))}
-                onChange={(val) => { setSelectedUsersToAssign(val) }}
+                options={reportedByOptions}
+                onChange={(val) => handleFilterChange('po_reported_by', val)}
               />
-            </div>
-          </Modal>
-        )}
-
-        {
-          addFileModal && addFileModal?.visible && (
-            <Modal
-              open={addFileModal?.visible}
-              onOk={() => { uploadRisNotes() }}
-              onCancel={() => { setAddFileModal({}) }}
-              okButtonProps={{
-                disabled: (addFileModal?.modalType === 'upload' && !addFileModal?.file) || (addFileModal?.modalType === 'notes' && !addFileModal?.notes),
-              }}
-            >
-              <Tabs
-                activeKey={addFileModal.modalType}
-                onTabClick={(activeKey) => {
-                  if (addFileModal.modalType !== activeKey) {
-                    setAddFileModal({ ...addFileModal, modalType: activeKey, isNotes: activeKey === 'notes' });
-                  }
-                }}
-              >
-                <TabPane key='notes' tab="Notes">
-                  <span>Enter Notes / Remarks</span>
-                  <TextArea onChange={(e) => {
-                    setAddFileModal({ ...addFileModal, notes: e.target.value })
-                  }} />
-                </TabPane>
-                <TabPane key='upload' tab="Upload">
-                  <Select
-                    placeholder="File Type"
-                    options={[
-                      { label: 'Prescription', value: 'prescription' },
-                      { label: 'Consent', value: 'consent' },
-                    ]}
-                    style={{ width: 200 }}
-                    onSelect={(val) => { setAddFileModal({ ...addFileModal, fileType: val }) }}
-                  />
-                  <Upload customRequest={({ file }) => { setAddFileModal({ ...addFileModal, file }) }} accept="application/pdf" multiple={false} disabled={!addFileModal.fileType} >
-                    <Button disabled={!addFileModal?.fileType}>Select File</Button>
-                  </Upload>
-                </TabPane>
-              </Tabs>
+            </FloatLabel>
+            <FloatLabel label="Assigned to" value={filters['po_assigned_to']} className="me-3">
+              <Select
+                showSearch
+                value={filters['po_assigned_to']}
+                style={{ width: 200 }}
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={reportedByOptions}
+                onChange={(val) => handleFilterChange('po_assigned_to', val)}
+              />
+            </FloatLabel>
+            <FloatLabel label="Study Date" value={filters['study_date']} className="me-3">
+              <RangePicker size="middle" value={dateRange} onChange={(val) => {
+                if (val) {
+                  setDateRange([val[0], val[1]]);
+                } else {
+                  setDateRange(null);
+                }
+              }} />
+            </FloatLabel>
+          </div>
+          <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
+          <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
+          {isHOD && (
+            <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
+          )}
+          {/* <Button disabled={refreshDisabled} className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button> */}
+        </div>
+        <div className='orders-list'>
+          <Table
+            tableLayout="fixed"
+            rowSelection={rowSelection}
+            loading={orders.loading}
+            columns={orderColumns(
+              {
+                openViewer: openViewer, openReportEditor: openReport, role: userDetails?.user_type,
+                assignToSelfTechnician, toggleReporting, addFile, viewNotes, printReport, toggleConfirmation, toggleFeatures
+              }
+            )}
+            pagination={{
+              current: current,
+              pageSize: 10,
+              total: orders?.data?.length || 0,
+              showSizeChanger: false,
+              pageSizeOptions: ['10', '15', '20'],
+              onChange: (page, pageSize) => {
+                setCurrent(page);
+              },
+            }}
+            rowKey={(rec) => rec.po_acc_no}
+            dataSource={orders.data || []}
+            onRow={(record, rowIndex) => {
+              return {
+              }
+            }}
+            style={{ width: '100%' }}
+            scroll={{
+              x: 1200
+            }}
+          />
+          {reportEditorModal.visible && (
+            <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
+              <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
             </Modal>
           )}
 
-        {
-          viewNotesModal && viewNotesModal.visible && (
-            <Modal
-              open={viewNotesModal.visible}
-              onCancel={() => { setViewNotesModal(null) }}
-              onOk={() => { setViewNotesModal(null) }}
-              style={{ width: '100%', height: '100%' }}
-              width={'90%'}
+          {saveFiltersModal.visible && (
+            <Modal className='save-filter-modal' onCancel={() => { setSaveFiltersModal({ visible: false }) }}
+              okButtonProps={{ disabled: !filterName || saveFiltersModal.saveLoading }} onOk={submitSaveFilters}
+              open={saveFiltersModal.visible}
             >
-              <ViewNotes handleNoteSelection={handleNoteSelection} selectedNote={selectedNote} viewNotesModal={viewNotesModal} />
+              <Input width={300} onChange={(e) => setFilterName(e.target.value)} />
             </Modal>
-          )
-        }
-      </div>
-    </div >
+          )}
+
+          {assignModal.visible && (
+            <Modal className='save-filter-modal' onCancel={() => { setAssignModal({ visible: false }) }}
+              okButtonProps={{ disabled: !selectedUsersToAssign }} onOk={assignToUser}
+              open={assignModal.visible}
+            >
+              Select User
+              <div>
+                <Select
+                  showSearch
+                  style={{ width: 200 }}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  options={userList?.map((user) => ({ label: user.user_fullname, value: user.username }))}
+                  onChange={(val) => { setSelectedUsersToAssign(val) }}
+                />
+              </div>
+            </Modal>
+          )}
+
+          {
+            addFileModal && addFileModal?.visible && (
+              <Modal
+                open={addFileModal?.visible}
+                onOk={() => { uploadRisNotes() }}
+                onCancel={() => { setAddFileModal({}) }}
+                okButtonProps={{
+                  disabled: (addFileModal?.modalType === 'upload' && !addFileModal?.file) || (addFileModal?.modalType === 'notes' && !addFileModal?.notes),
+                }}
+              >
+                <Tabs
+                  activeKey={addFileModal.modalType}
+                  onTabClick={(activeKey) => {
+                    if (addFileModal.modalType !== activeKey) {
+                      setAddFileModal({ ...addFileModal, modalType: activeKey, isNotes: activeKey === 'notes' });
+                    }
+                  }}
+                >
+                  <TabPane key='notes' tab="Notes">
+                    <span>Enter Notes / Remarks</span>
+                    <TextArea onChange={(e) => {
+                      setAddFileModal({ ...addFileModal, notes: e.target.value })
+                    }} />
+                  </TabPane>
+                  <TabPane key='upload' tab="Upload">
+                    <Select
+                      placeholder="File Type"
+                      options={[
+                        { label: 'Prescription', value: 'prescription' },
+                        { label: 'Consent', value: 'consent' },
+                      ]}
+                      style={{ width: 200 }}
+                      onSelect={(val) => { setAddFileModal({ ...addFileModal, fileType: val }) }}
+                    />
+                    <Upload customRequest={({ file }) => { setAddFileModal({ ...addFileModal, file }) }} accept="application/pdf" multiple={false} disabled={!addFileModal.fileType} >
+                      <Button disabled={!addFileModal?.fileType}>Select File</Button>
+                    </Upload>
+                  </TabPane>
+                </Tabs>
+              </Modal>
+            )}
+
+          {
+            viewNotesModal && viewNotesModal.visible && (
+              <Modal
+                open={viewNotesModal.visible}
+                onCancel={() => { setViewNotesModal(null) }}
+                onOk={() => { setViewNotesModal(null) }}
+                style={{ width: '100%', height: '100%' }}
+                width={'90%'}
+              >
+                <ViewNotes handleNoteSelection={handleNoteSelection} selectedNote={selectedNote} viewNotesModal={viewNotesModal} />
+              </Modal>
+            )
+          }
+        </div>
+      </div >
+    </Spin>
   )
 }
 

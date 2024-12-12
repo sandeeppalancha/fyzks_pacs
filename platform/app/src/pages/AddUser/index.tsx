@@ -5,6 +5,7 @@ import { BASE_API } from "../../axios";
 import { getUserDetails, makePostCall, setAccessToken, setUserDetails } from "../../utils/helper";
 import "./add-user.scss";
 import { useForm } from "antd/es/form/Form";
+import CustomEditor from "../custom-editor";
 
 const AddUser = () => {
 
@@ -13,6 +14,7 @@ const AddUser = () => {
   const [permissionsList, setPermissionsList] = useState([]);
   const [rolesList, setRolesList] = useState([]);
   const [image, setImage] = useState(null);
+  const [signatureHtml, setSignatureHtml] = useState(null);
 
   useEffect(() => {
     getUnitsList();
@@ -70,7 +72,7 @@ const AddUser = () => {
     }
     const payload = {
       user_firstname, user_lastname, username, password: password.toUpperCase(), user_designation, user_mobile, user_email, user_type, user_unit_name,
-      user_degree, permissions, user_id: getUserDetails().username, user_signature: image
+      user_degree, permissions, user_id: getUserDetails().username, user_signature: signatureHtml
     };
     makePostCall('/add-user', payload)
       .then(res => {
@@ -89,7 +91,7 @@ const AddUser = () => {
   return (
     <div className="add-user-container">
       <div>
-        <Card title="ADD NEW USER" style={{ width: '600px', margin: '2rem auto' }}>
+        <Card title="ADD NEW USER" style={{ width: '1000px', margin: '2rem auto' }}>
           <Form form={userForm} onFinish={onSubmit}>
             <Form.Item
               name="username"
@@ -241,7 +243,11 @@ const AddUser = () => {
                 },
               ]}
             >
-              <Input type="file" accept="image/*" onChange={handleImageChange} />
+              {/* <Input type="file" accept="image/*" onChange={handleImageChange} /> */}
+              <CustomEditor initialContent={''} handleChange={(html) => {
+                console.log("Html oncang", html);
+                setSignatureHtml(html);
+              }} />
             </Form.Item>
             <Form.Item
               label="Permissions"
