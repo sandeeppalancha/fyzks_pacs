@@ -1,7 +1,7 @@
-import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col, Spin } from 'antd';
+import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col, Spin, Form } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
-import "./dispatch.css";
+import "./dispatch.scss";
 import FloatLabel from '../../components/FloatingLabel';
 import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
 
@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
 import { debounce } from 'lodash';
 import ReportViewer from '../ReportViewer';
-
+import { useForm } from 'antd/es/form/Form';
 
 const { RangePicker } = DatePicker;
 
@@ -21,6 +21,9 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [refreshDisabled, setRefreshDisabled] = useState(false);
   const [viewreportModal, setViewReportModal] = useState({ visible: false, pdfData: null });
+  const [receiverModal, setReceiverModal] = useState({ visible: false, details: null });
+
+  const [receiverForm] = useForm();
 
   const today = dayjs();
   const yesterday = dayjs().subtract(1, 'days');
@@ -58,7 +61,8 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
     if (isConsultant) {
       window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank');
     }
-    printReport(record)
+    // printReport(record)
+    captureReceiver(record);
   }
 
   const filterResults = () => {
@@ -151,15 +155,27 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
     onChange: onSelectChange,
   };
 
-  const printReport = async (rec) => {
+  const captureReceiver = (rec) => {
+    setReceiverModal({ visible: true, details: rec });
+  }
+
+  const captureAndPrint = () => {
+    const receiverInfo = receiverForm.getFieldsValue();
+    printReport(receiverModal?.details, receiverInfo);
+  }
+
+  const printReport = async (rec, receiverInfo) => {
     const { po_acc_no, po_ord_no, po_pin } = rec;
+    const { receiver_mobile, receiver_name } = receiverInfo || {};
+    setReceiverModal({ visible: false })
     setPrintLoading(true);
     makePostCall('/print-acc-report', {
       acc_no: po_acc_no,
       pin: po_pin,
       ord_no: po_ord_no, //.replaceAll(' ', '&nbsp'),
       user_id: userDetails?.username,
-      fromDispatch: !isConsultant || userDetails?.user_type === 'dispatch'
+      fromDispatch: !isConsultant || userDetails?.user_type === 'dispatch',
+      received_by: receiverInfo ? `${receiver_name} | ${receiver_mobile}` : null
     }, {
       responseType: "arraybuffer",
     })
@@ -187,7 +203,7 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
 
   return (
     <Spin spinning={printLoading}>
-      <div>
+      <div className='dispatch-container'>
         <div className='filters-section'>
           {/* <Space.Compact> */}
           {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
@@ -243,7 +259,7 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
             tableLayout="fixed"
             // rowSelection={rowSelection}
             loading={orders.loading}
-            columns={orderColumns({ openReportEditor: openReport, role: userDetails?.user_type, printReport })}
+            columns={orderColumns({ openReportEditor: openReport, role: userDetails?.user_type, printReport, captureReceiver })}
             rowKey={(rec) => rec.po_acc_no}
             dataSource={orders.data || []}
             onRow={(record, rowIndex) => {
@@ -266,6 +282,44 @@ const DispatchList = ({ appDateRange, isConsultant }) => {
             className='viewer-modal'
           >
             <ReportViewer pdfData={viewreportModal?.pdfData} pdfBlob={viewreportModal?.pdfBlob} pdf_url={viewreportModal?.pdf_url} />
+          </Modal>
+        )
+      }
+      {
+        receiverModal && receiverModal.visible && (
+          <Modal
+            open={receiverModal.visible}
+            onCancel={() => { setReceiverModal(null) }}
+            onOk={() => { setReceiverModal(null) }}
+            width={'600px'}
+            okButtonProps={{ style: { display: 'none' } }}
+            className='receiver-modal'
+          >
+            <div style={{ padding: '1rem 0.5rem' }}>
+              <Form form={receiverForm} onFinish={() => { captureAndPrint() }}>
+                <Form.Item name="receiver_name" label="Receiver Name" rules={[{
+                  required: true
+                }]}>
+                  <Input />
+                </Form.Item>
+                <Form.Item name="receiver_mobile" label="Receiver Mobile" rules={[
+                  {
+                    pattern: /^[6-9]\d{9}$/,
+                    message: "Please enter a valid 10-digit mobile number!",
+                  },
+                ]}>
+                  <Input />
+                </Form.Item>
+                <Form.Item className='text-center'>
+                  <div>
+                    <Button type='primary' htmlType='submit' style={{ width: '300px' }}>Proceed</Button>
+                  </div>
+                  <div>
+                    <Button type='link' onClick={() => printReport(receiverModal?.details)}>Continue without Info</Button>
+                  </div>
+                </Form.Item>
+              </Form>
+            </div>
           </Modal>
         )
       }

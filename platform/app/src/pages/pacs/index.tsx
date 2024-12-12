@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col, Spin } from 'antd';
+import { Button, Input, Modal, Select, Table, Space, DatePicker, message, Tabs, Upload, Row, Col, Spin, Form } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
@@ -14,6 +14,7 @@ import { debounce } from 'lodash';
 import TabPane from 'antd/es/tabs/TabPane';
 import TextArea from 'antd/es/input/TextArea';
 import ViewNotes from '../ManageNodes/ViewNotes';
+import { useForm } from 'antd/es/form/Form';
 
 
 const { RangePicker } = DatePicker;
@@ -27,6 +28,7 @@ const PacsList = ({ appDateRange }) => {
   const [userList, setUserList] = useState([]);
   const [addFileModal, setAddFileModal] = useState({ visible: false, notes: null, modalType: 'upload', file: null, fileType: null });
   const [viewNotesModal, setViewNotesModal] = useState({ visible: false, details: null });
+  const [receiverModal, setReceiverModal] = useState({ visible: false, details: null });
   const [selectedNote, setSelectedNote] = useState({});
 
   const [filterName, setFilterName] = useState(null);
@@ -39,6 +41,7 @@ const PacsList = ({ appDateRange }) => {
   const [pageSize, setPageSize] = React.useState(10);
   const [printLoading, setPrintLoading] = React.useState(false);
 
+  const [receiverForm] = useForm();
 
   const today = dayjs();
   const yesterday = dayjs().subtract(1, 'days');
@@ -118,7 +121,6 @@ const PacsList = ({ appDateRange }) => {
   }
 
   const openReport = async (record) => {
-
     if (hasReportingPermission(userDetails)) {
       if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
         setReportEditorModal({ visible: true, data: record });
@@ -320,6 +322,15 @@ const PacsList = ({ appDateRange }) => {
       message.error('Failed to upload file');
     }
   };
+
+  const captureReceiver = (rec) => {
+    setReceiverModal({ visible: true, details: rec });
+  }
+
+  const captureAndPrint = () => {
+    const receiverInfo = receiverForm.getFieldsValue();
+    printReport(receiverModal?.details, receiverInfo);
+  }
 
   const printReport = (rec) => {
     setPrintLoading(true);
@@ -690,6 +701,36 @@ const PacsList = ({ appDateRange }) => {
                 width={'90%'}
               >
                 <ViewNotes handleNoteSelection={handleNoteSelection} selectedNote={selectedNote} viewNotesModal={viewNotesModal} />
+              </Modal>
+            )
+          }
+          {
+            receiverModal && receiverModal.visible && (
+              <Modal
+                open={receiverModal.visible}
+                onCancel={() => { setReceiverModal(null) }}
+                onOk={() => { setReceiverModal(null) }}
+                style={{ width: '100%', height: '100%' }}
+                width={'90%'}
+                okButtonProps={{ style: { display: 'none' } }}
+              >
+                <Form form={receiverForm} onFinish={() => { captureAndPrint() }}>
+                  <Form.Item name="receiver_name" label="Receiver Name">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="receiver_mobile" label="Receiver Mobile" rules={[
+                    {
+                      pattern: /^[6-9]\d{9}$/,
+                      message: "Please enter a valid 10-digit mobile number!",
+                    },
+                  ]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType='submit'>Submit</Button>
+                    <Button type='link'>Continue without Info</Button>
+                  </Form.Item>
+                </Form>
               </Modal>
             )
           }

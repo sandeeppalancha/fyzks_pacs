@@ -12,7 +12,7 @@ const statusColors = {
   'REVIEWED': 'blue',
 };
 
-export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, printReport }) => {
+export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, printReport, captureReceiver }) => {
   const userDetails = getUserDetails();
 
   return ([
@@ -145,7 +145,7 @@ export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, print
         return (
           <>
             {record.po_status === 'SIGNEDOFF' && (
-              <span className="pointer md-icon" onClick={() => printReport(record)}>
+              <span className="pointer md-icon" onClick={() => captureReceiver(record)}>
                 <PrinterOutlined />
               </span>
             )}
