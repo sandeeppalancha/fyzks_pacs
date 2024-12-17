@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import RichTextEditor from "./rich-text-editor";
 import "./editor.css";
-import { ConvertStringToDate, getUserDetails, makeGetCall, makePostCall } from "../../utils/helper";
+import { ConvertStringToDate, getUserDetails, makeGetCall, makePostCall, RADIOLOGY_URL } from "../../utils/helper";
 import moment from "moment";
 import { Button, Card, Checkbox, message, Modal, Radio, Select, Table } from "antd";
 import { TemplateHeader } from "./constants";
@@ -222,6 +222,11 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
     setCriticalFindingModal({ visible: true, data: patientDetails })
   }
 
+  const goToRadiologyDesk = (patDetails) => {
+    const { po_pin, po_acc_no, po_site } = patDetails;
+    window.open(`${RADIOLOGY_URL(po_pin, po_site)}`, '_blank')
+  }
+
   return (
     <div className="editor-container">
       <div className="left-section">
@@ -233,6 +238,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
               </div>
               {/* <Link to={}>Go to Viewer</Link> */}
               <Button danger className="ms-auto" type="default" onClick={() => { window.open(`/viewer?StudyInstanceUIDs=${patientDetails?.po_study_uid}`, '_blank') }}> Launch Viewer</Button>
+              <Button danger className="ms-auto" type="default" onClick={() => { goToRadiologyDesk(patientDetails) }}> Radiology Desk</Button>
             </div>
             <div>
               {`${patientDetails?.po_pat_sex} / ${patientDetails?.po_pat_dob ? moment(patientDetails?.po_pat_dob).fromNow(true) : 'NA'}`}

@@ -1,5 +1,7 @@
 import axiosInstance, { BASE_API } from "../axios";
 
+
+export const RADIOLOGY_URL = (pin, location) => `https://smj-pacs-int.yashodahospital.com/RadiologyDesk/PatientDetails_Tab.aspx?Pin=${pin}&LOC=${location}`
 export const ConvertStringToDate = (dateString, timeString) => {
   if (!dateString || !timeString) return "";
   const year = dateString.substring(0, 4);
