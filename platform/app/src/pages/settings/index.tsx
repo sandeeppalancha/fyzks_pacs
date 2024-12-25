@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 import AddUser from "../AddUser";
 import UserList from "../UserList";
+import AddTemplate from "../AddTemplate";
 
 const Settings = () => {
 
@@ -34,7 +35,8 @@ const Settings = () => {
     // nodes_list: <NodeList />,
     add_node: <AddNewNode />,
     users_list: <UserList />,
-    add_user: <AddUser />
+    add_user: <AddUser />,
+    add_template: <AddTemplate />
   };
 
 

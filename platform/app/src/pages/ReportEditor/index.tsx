@@ -15,6 +15,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   const [reportsData, setReportsData] = React.useState([]);
   const [currentReport, setCurrentReport] = React.useState(null);
   const [templates, setTemplates] = React.useState([]);
+  const [nodes, setNodes] = React.useState([]);
   const [selectedNode, setSelectedNode] = React.useState(null);
   const [proxyUser, setProxyUser] = React.useState(null);
   const [moreAction, setMoreAction] = React.useState(null);
@@ -32,7 +33,8 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   useEffect(() => {
     fetchPrevReports();
-    getTemplates();
+    // getTemplates();
+    getNodes();
     fetchRadUsers();
   }, []);
 
@@ -104,7 +106,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   }
 
   const getTemplates = () => {
-    makeGetCall(`/get-templates?modality=${patientDetails?.modality}`)
+    makeGetCall(`/get-templates?modality=${patientDetails?.modality}&node=${selectedNode}`)
       .then(res => {
         setTemplates(res?.data?.data || []);
       })
@@ -112,6 +114,22 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
         console.log(e);
       })
   }
+
+  const getNodes = () => {
+    makeGetCall(`/get-nodes?modality=${patientDetails?.modality}`)
+      .then(res => {
+        setNodes(res?.data?.data || []);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  }
+
+  useEffect(() => {
+    if (selectedNode) {
+      getTemplates()
+    }
+  }, [selectedNode]);
 
   useEffect(() => {
     if (currentReport) {
@@ -169,14 +187,15 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   }
 
   const handleTemplateChange = (val) => {
-    fetch(`/templates/${val}.html`)
-      .then(response => response.text())
-      .then(html => {
-        // Do something with the HTML content
-        // setContent(html)
-        setCurrentReport({ pr_html: html });
-      })
-      .catch(error => console.error('Error:', error));
+    setCurrentReport({ pr_html: val })
+    // fetch(`/templates/${val}.html`)
+    //   .then(response => response.text())
+    //   .then(html => {
+    //     // Do something with the HTML content
+    //     // setContent(html)
+    //     setCurrentReport({ pr_html: html });
+    //   })
+    //   .catch(error => console.error('Error:', error));
   }
 
   const radUserOptions = useMemo(() => {
@@ -262,11 +281,11 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
             <div className="bold-font">Load Template</div>
             <div>
               <span>Node</span>
-              <Select style={{ width: 180 }} onChange={(val) => { setSelectedNode(val) }} options={Object.keys(templates)?.map((itm) => ({ label: itm, value: itm }))} />
+              <Select style={{ width: 180 }} onChange={(val) => { setSelectedNode(val) }} options={nodes?.map((itm) => ({ label: itm?.label, value: itm?.code }))} />
               <span className="ms-3">Template</span>
               <Select onChange={(val) => {
                 handleTemplateChange(val);
-              }} style={{ width: 200 }} options={(templates && templates[selectedNode]) ? templates[selectedNode]?.map(itm => ({ label: itm.label, value: itm.template })) : []} />
+              }} style={{ width: 200 }} options={templates?.map(itm => ({ label: itm.rt_display_name, value: itm.template_html }))} />
             </div>
           </div>
         </Card>

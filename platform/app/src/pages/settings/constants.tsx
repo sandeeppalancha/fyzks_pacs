@@ -29,5 +29,14 @@ export const NavigationItems = (onNavChange) => {
         { key: 'add_node', label: 'Add New Node' },
       ],
     },
+    {
+      key: 'templates',
+      label: 'Templates',
+      icon: <AppstoreOutlined />,
+      children: [
+        // { key: 'templates', label: 'Nodes List' },
+        { key: 'add_template', label: 'Add New Template' },
+      ],
+    },
   ];
 }

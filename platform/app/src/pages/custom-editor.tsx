@@ -17,7 +17,8 @@ const CustomEditor = ({ placeholder, initialContent, handleChange }) => {
       placeholder: placeholder || 'Start typings...',
       uploader: {
         insertImageAsBase64URI: true, // Enable image upload as Base64
-      }
+      },
+      minHeight: 500
     }),
     [placeholder]
   );
