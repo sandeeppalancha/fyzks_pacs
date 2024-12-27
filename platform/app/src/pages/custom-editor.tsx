@@ -3,13 +3,18 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import JoditEditor from 'jodit-react';
 import { debounce } from 'lodash';
 
-const CustomEditor = ({ placeholder, initialContent, handleChange }) => {
+const CustomEditor = ({ placeholder, initialContent, handleChange, fromReporting }) => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
 
   useEffect(() => {
     setContent(initialContent);
   }, [initialContent]);
+
+  const custprops = fromReporting ? {
+    height: 1122, // A4 height in pixels (96 DPI)
+    width: 794, // A4 width in pixels (96 DPI)
+  } : {}
 
   const config = useMemo(
     () => ({
@@ -18,7 +23,7 @@ const CustomEditor = ({ placeholder, initialContent, handleChange }) => {
       uploader: {
         insertImageAsBase64URI: true, // Enable image upload as Base64
       },
-      minHeight: 500
+      ...custprops,
     }),
     [placeholder]
   );

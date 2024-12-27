@@ -85,7 +85,7 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
     {
       dataIndex: "po_pin",
       title: "Pat. ID",
-      width: 100
+      width: 130
     },
     {
       dataIndex: "po_his_status",

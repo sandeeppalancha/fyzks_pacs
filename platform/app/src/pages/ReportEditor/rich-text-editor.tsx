@@ -7,7 +7,7 @@ import { Button } from 'antd';
 import { getUserDetails, makePostCall } from '../../utils/helper';
 import CustomEditor from '../custom-editor';
 
-const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails }) => {
+const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patDetails, fromReporting }) => {
 
   const userDetails = getUserDetails();
   const userType = userDetails?.user_type;
@@ -40,7 +40,7 @@ const RichTextEditor = ({ content, onChange, onSave, cancel, currentReport, patD
 
   return (<div id='editor-container'>
     {/* <div ref={editorRef}></div> */}
-    <CustomEditor initialContent={content} placeholder={"placeholder..."} handleChange={onChange} />
+    <CustomEditor fromReporting={fromReporting} initialContent={content} placeholder={"placeholder..."} handleChange={onChange} />
     {/* <div className='d-flex' >
       <Button className='mt-3' type='default' onClick={cancel}>Cancel</Button>
       <Button className='mt-3' type='default' onClick={handlePrint}>PRINT REPORT</Button>

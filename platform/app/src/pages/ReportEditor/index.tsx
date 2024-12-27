@@ -353,7 +353,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
         </Card>
       </div>
       <div className="right-section">
-        <RichTextEditor patDetails={patientDetails} currentReport={currentReport} cancel={cancel} content={content || "<div></div>"}
+        <RichTextEditor fromReporting={true} patDetails={patientDetails} currentReport={currentReport} cancel={cancel} content={content || "<div></div>"}
           onSave={handleSave} onChange={handleContentChange} />
       </div>
       {

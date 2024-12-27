@@ -48,7 +48,7 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
   {
     dataIndex: "po_pin",
     title: "Pat. ID",
-    width: 120
+    width: 130
   },
   {
     dataIndex: "po_his_status",

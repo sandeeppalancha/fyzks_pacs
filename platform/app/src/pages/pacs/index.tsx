@@ -88,6 +88,7 @@ const PacsList = ({ appDateRange }) => {
     })
       .then(res => {
         callback && callback();
+        setReportEditorModal({ visible: false, data: null })
       })
       .catch(e => {
         console.log(e);
@@ -501,6 +502,11 @@ const PacsList = ({ appDateRange }) => {
     return userList?.map((user) => ({ label: user.user_fullname, value: user.username }))
   }, [userList])
 
+  const handleEnter = () => {
+    console.log("handle ter");
+    filterResults();
+  }
+
   return (
     <Spin spinning={printLoading}>
       <div>
@@ -510,27 +516,27 @@ const PacsList = ({ appDateRange }) => {
           {/* <span style={{ width: 140 }} className='!ms-3'>Patient Name</span> */}
           <div className='d-flex flex-wrap'>
             <FloatLabel label="Patient Name" value={filters['pat_name']} className="me-3">
-              <FyzksInput value={filters['pat_name']} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
+              <FyzksInput onEnter={handleEnter} value={filters['pat_name']} onChange={(e) => handleFilterChange('pat_name', e.target.value)} />
             </FloatLabel>
 
             <FloatLabel label="YH No" value={filters['po_pin']} className="me-3">
-              <FyzksInput value={filters['po_pin']} width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
+              <FyzksInput onEnter={handleEnter} value={filters['po_pin']} width={200} onChange={(e) => handleFilterChange('po_pin', e.target.value)} />
             </FloatLabel>
             <FloatLabel label="Acc. No" value={filters['po_acc_no']} className="me-3">
-              <FyzksInput value={filters['po_acc_no']} width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
+              <FyzksInput onEnter={handleEnter} value={filters['po_acc_no']} width={200} onChange={(e) => handleFilterChange('po_acc_no', e.target.value)} />
             </FloatLabel>
             <FloatLabel label="Ref Doc." value={filters['po_ref_doc']} className="me-3">
               <Select value={filters['po_ref_doc']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_ref_doc', val)} />
             </FloatLabel>
             <FloatLabel label="Body Part / Study Desc" value={filters['po_body_part']} className="me-3">
-              <FyzksInput value={filters['po_body_part']} width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
+              <FyzksInput onEnter={handleEnter} value={filters['po_body_part']} width={200} onChange={(e) => handleFilterChange('po_body_part', e.target.value)} />
             </FloatLabel>
             <FloatLabel label="HIS Status" value={filters['po_his_status']} className="me-3">
               <Select value={filters['po_his_status']} allowClear style={{ width: 200 }} options={hisStatusOptions} onChange={(val) => handleFilterChange('po_his_status', val)} />
             </FloatLabel>
 
             <FloatLabel label="Order No" value={filters['po_ord_no']} className="me-3">
-              <FyzksInput value={filters['po_ord_no']} width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
+              <FyzksInput onEnter={handleEnter} value={filters['po_ord_no']} width={200} onChange={(e) => handleFilterChange('po_ord_no', e.target.value)} />
             </FloatLabel>
             <FloatLabel label="Status" value={filters['po_status']} className="me-3">
               <Select value={filters['po_status']} allowClear style={{ width: 200 }} options={statusOptions} onChange={(val) => handleFilterChange('po_status', val)} />
@@ -615,7 +621,13 @@ const PacsList = ({ appDateRange }) => {
             }}
           />
           {reportEditorModal.visible && (
-            <Modal className='report-modal' width={'100%'} onCancel={() => { setReportEditorModal({ visible: false }) }} footer={null} open={reportEditorModal.visible}>
+            <Modal
+              className='report-modal' width={'100%'}
+              onCancel={() => { setReportEditorModal({ visible: false }) }}
+              footer={null} open={reportEditorModal.visible}
+              style={{ top: 20 }} // Adjust position
+              styles={{ body: { height: "90vh", overflowY: "auto" } }}
+            >
               <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
             </Modal>
           )}
