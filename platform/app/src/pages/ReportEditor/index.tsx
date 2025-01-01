@@ -208,10 +208,10 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   const handleSaveForm = (status) => {
     setSubmitTrigged(true);
-    if (!correlated || !diagnosed) {
-      message.error("Please select the Correlated & Diagnosed options");
-      return;
-    }
+    // if (!correlated || !diagnosed) {
+    //   message.error("Please select the Correlated & Diagnosed options");
+    //   return;
+    // }
     handleSave(content, status, currentReport,);
   }
 
@@ -285,7 +285,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
               <span className="ms-3">Template</span>
               <Select onChange={(val) => {
                 handleTemplateChange(val);
-              }} style={{ width: 200 }} options={templates?.map(itm => ({ label: itm.rt_display_name, value: itm.template_html }))} />
+              }} style={{ width: 200 }} options={templates?.map(itm => ({ label: itm.rt_display_name, value: itm.template_html, key: itm.rt_template_name }))} />
             </div>
           </div>
         </Card>
