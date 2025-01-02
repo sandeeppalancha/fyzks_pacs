@@ -18,13 +18,15 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
     title: "Patient Name",
     render: (text, record) => {
       return (
-        <Button
-          color="blue"
-          className="ms-auto"
-          type="link" onClick={() => { openReportEditor(record); window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
-        >
-          {text}
-        </Button>
+        <Tooltip title={text}>
+          <Button
+            color="blue"
+            className="ms-auto"
+            type="link" onClick={() => { openReportEditor(record); window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
+          >
+            {text}
+          </Button>
+        </Tooltip>
       )
     },
     width: 200
@@ -49,6 +51,16 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
     dataIndex: "po_pin",
     title: "Pat. ID",
     width: 130
+  },
+  {
+    dataIndex: "po_ord_no",
+    title: "Order No",
+    width: 100
+  },
+  {
+    dataIndex: "po_acc_no",
+    title: "Acc. No",
+    width: 120
   },
   {
     dataIndex: "po_his_status",
@@ -84,16 +96,7 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
     title: "Modality",
     width: 120
   },
-  {
-    dataIndex: "po_ord_no",
-    title: "Order No",
-    width: 100
-  },
-  {
-    dataIndex: "po_acc_no",
-    title: "Acc. No",
-    width: 120
-  },
+
   {
     dataIndex: "po_ref_doc",
     title: "Ref Doc",

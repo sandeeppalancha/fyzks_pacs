@@ -49,16 +49,18 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       title: "Patient Name",
       render: (text, record) => {
         return (
-          <Button
-            color="blue"
-            className="ms-auto d-flex align-items-center"
-            type="link" onClick={() => { openReportEditor(record); openViewer(record) }}
-          >
-            <Tooltip title="Open Only Viewer">
-              <EyeOutlined color="orange" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openViewer(record); }} />
-            </Tooltip>
-            {text}
-          </Button>
+          <Tooltip title={text}>
+            <Button
+              color="blue"
+              className="ms-auto d-flex align-items-center"
+              type="link" onClick={() => { openReportEditor(record); openViewer(record) }}
+            >
+              <Tooltip title="Open Only Viewer">
+                <EyeOutlined color="orange" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openViewer(record); }} />
+              </Tooltip>
+              {text}
+            </Button>
+          </Tooltip>
         )
       },
       width: 200
@@ -86,6 +88,16 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       dataIndex: "po_pin",
       title: "Pat. ID",
       width: 130
+    },
+    {
+      dataIndex: "po_ord_no",
+      title: "Order No",
+      width: 100
+    },
+    {
+      dataIndex: "po_acc_no",
+      title: "Acc. No",
+      width: 100
     },
     {
       dataIndex: "po_his_status",
@@ -154,16 +166,7 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       title: "Modality",
       width: 90
     },
-    {
-      dataIndex: "po_ord_no",
-      title: "Order No",
-      width: 100
-    },
-    {
-      dataIndex: "po_acc_no",
-      title: "Acc. No",
-      width: 100
-    },
+
     {
       dataIndex: "po_ref_doc",
       title: "Ref Doc",
