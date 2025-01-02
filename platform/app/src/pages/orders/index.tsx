@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Select, Table, Space, DatePicker } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SavedSearches, orderColumns } from './constants';
 import ReportEditor from '../ReportEditor';
 import "./orders.css";
@@ -8,6 +8,7 @@ import axiosInstance, { BASE_API } from '../../axios';
 import { getUserDetails, hisStatusOptions, makePostCall } from '../../utils/helper';
 import dayjs from 'dayjs';
 import FyzksInput from '../../components/FyzksInput';
+import { debounce } from 'lodash';
 
 const { RangePicker } = DatePicker;
 
@@ -30,9 +31,33 @@ const OrdersList = () => {
   const isHOD = userDetails?.user_type === 'hod';
 
   useEffect(() => {
-    getOrdersList();
+    // getOrdersList();
     getSavedFilters();
   }, []);
+
+  useEffect(() => {
+    console.log("Filters changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [filters]);
+
+  useEffect(() => {
+    console.log("date changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [dateRange]);
+
+  // const debouncedFilter = debounce(() => { filterResults() }, 300);
+
+  const debouncedFilter = useCallback(
+    debounce((tempFilters) => {
+      console.log('Debounced value:');
+      filterResults(tempFilters);
+    }, 500),
+    [dateRange]
+  );
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
     makePostCall('/submit-report', {
@@ -111,12 +136,12 @@ const OrdersList = () => {
   const clearFilters = () => {
     setFilters({});
     setDateRange(null);
-    getOrdersList();
+    // getOrdersList();
   }
 
-  const filterResults = () => {
+  const filterResults = (tempFilters) => {
     setOrders({ loading: true, data: [] });
-    const payload = { ...filters };
+    const payload = { ...tempFilters };
 
     if (dateRange) {
       payload['from_date'] = dayjs(dateRange[0]).format('YYYYMMDD');
@@ -146,7 +171,7 @@ const OrdersList = () => {
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
         // console.log("res", res);
-        filterResults();
+        filterResults(filters);
       })
       .catch(e => {
         console.log(e);

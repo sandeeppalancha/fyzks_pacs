@@ -27,9 +27,33 @@ const MyWorklist = () => {
   const [selectedNote, setSelectedNote] = useState({});
 
   useEffect(() => {
-    getOrdersList();
+    // getOrdersList();
     getUsersList();
   }, []);
+
+  useEffect(() => {
+    console.log("Filters changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [filters]);
+
+  useEffect(() => {
+    console.log("date changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [dateRange]);
+
+  // const debouncedFilter = debounce(() => { filterResults() }, 300);
+
+  const debouncedFilter = useCallback(
+    debounce((tempFilters) => {
+      console.log('Debounced value:');
+      filterResults(tempFilters);
+    }, 500),
+    [dateRange]
+  );
 
   const getUsersList = () => {
     makePostCall('/user-list', {}).then(res => {
@@ -83,9 +107,9 @@ const MyWorklist = () => {
     setReportEditorModal({ visible: true, data: record })
   }
 
-  const filterResults = () => {
+  const filterResults = (tempFilters) => {
     setOrders({ loading: true, data: [] });
-    const payload = { ...filters };
+    const payload = { ...tempFilters };
     payload['role'] = userDetails?.user_type;
     payload['user_id'] = getUserDetails()?.username;
 
@@ -119,7 +143,7 @@ const MyWorklist = () => {
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
         // console.log("res", res);
-        filterResults();
+        filterResults(filters);
       })
       .catch(e => {
         console.log(e);
@@ -181,6 +205,12 @@ const MyWorklist = () => {
     setSelectedNote(note);
   }
 
+  const clearFilters = () => {
+    setFilters({});
+    setDateRange(null);
+    // getOrdersList();
+  }
+
   return (
     <div>
       <div className='filters-section'>
@@ -239,8 +269,9 @@ const MyWorklist = () => {
             }} />
           </FloatLabel>
         </div>
-        <Button className='ms-4' type='primary' onClick={filterResults}>Search Worklist</Button>
-        <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button>
+        <Button className='ms-4' type='primary' onClick={() => filterResults(filters)}>Search Worklist</Button>
+        <Button className='ms-3' type='default' onClick={() => { clearFilters() }}>Clear Filters</Button>
+        {/* <Button className='!ms-auto ms-3' type='dashed' danger onClick={() => { debouncedRefresh() }} >Refresh</Button> */}
       </div>
       <div className='orders-list'>
         <Table
