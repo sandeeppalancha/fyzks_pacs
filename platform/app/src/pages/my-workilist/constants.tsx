@@ -2,7 +2,7 @@ import { Button, Tag } from "antd";
 import React from "react";
 import moment from "moment";
 import { FileOutlined, FileTextOutlined } from '@ant-design/icons';
-import { ConvertStringToDate } from "../../utils/helper";
+import { calculateExactAge, ConvertStringToDate } from "../../utils/helper";
 
 const statusColors = {
   'PENDING': 'red',
@@ -72,7 +72,7 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
     title: "Pat. Age",
     width: 100,
     render: (val, record) => {
-      return record.po_pat_dob ? moment(record.po_pat_dob, 'YYYYMMDD').fromNow(true) : '';
+      return calculateExactAge(record.po_pat_dob); //record.po_pat_dob ? moment(record.po_pat_dob, 'YYYYMMDD').fromNow(true) : '';
     }
   },
   {

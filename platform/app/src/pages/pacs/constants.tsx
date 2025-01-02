@@ -1,7 +1,7 @@
 import { Tag, Button, Upload, Tooltip, Popconfirm } from "antd";
 import React from "react";
 import { CheckSquareOutlined, CloseSquareOutlined, EyeOutlined, FileOutlined, FileTextOutlined, PrinterOutlined, UploadOutlined } from '@ant-design/icons';
-import { ConvertStringToDate, getUserDetails } from "../../utils/helper";
+import { calculateExactAge, ConvertStringToDate, getUserDetails } from "../../utils/helper";
 import moment from 'moment';
 import classNames from "classnames";
 
@@ -142,7 +142,7 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       title: "Pat. Age",
       width: 80,
       render: (val, record) => {
-        return record.po_pat_dob ? moment(record.po_pat_dob, 'YYYYMMDD').fromNow(true) : '';
+        return calculateExactAge(record.po_pat_dob) //record.po_pat_dob ? moment(record.po_pat_dob, 'YYYYMMDD').fromNow(true) : '';
       }
     },
     {

@@ -1,5 +1,5 @@
 import axiosInstance, { BASE_API } from "../axios";
-
+const moment = require("moment");
 
 export const RADIOLOGY_URL = (pin, location) => `https://smj-pacs-int.yashodahospital.com/RadiologyDesk/PatientDetails_Tab.aspx?Pin=${pin}&LOC=${location}`
 export const ConvertStringToDate = (dateString, timeString) => {
@@ -51,6 +51,38 @@ export const hisStatusOptions = [
   { label: 'DUPLICATE_ACCESSION_NO', value: 'DUPLICATE_ACCESSION_NO' },
   { label: 'CONFIRMATION_NOT_REQUIRED', value: 'CONFIRMATION_NOT_REQUIRED' },
 ]
+
+export function calculateExactAge(dobString) {
+  // Parse the DOB in YYYYMMDD format
+  const dob = moment(dobString, "YYYYMMDD");
+
+  // If the DOB is invalid, return an error message
+  if (!dob.isValid()) {
+    return "Invalid DOB format";
+  }
+
+  // Check if the date is in the future
+  if (dob.isAfter(moment())) {
+    return "Invalid DOB: Future date provided.";
+  }
+
+  // Calculate difference in years, months, and days
+  const now = moment();
+  const years = Math.floor(moment.duration(now.diff(dob)).asYears());
+  const months = Math.floor(moment.duration(now.diff(dob)).asMonths() % 12);
+  const days = Math.floor(moment.duration(now.diff(dob)).asDays() % 30.44);
+
+  // Determine the most appropriate unit to display
+  if (years > 0) {
+    return `${years} ${years === 1 ? "year" : "years"}`;
+  } else if (months > 0) {
+    return `${months} ${months === 1 ? "month" : "months"}`;
+  } else {
+    return `${days} ${days === 1 ? "day" : "days"}`;
+  }
+}
+
+
 
 
 export const hasReportingPermission = (userDetails) => {
