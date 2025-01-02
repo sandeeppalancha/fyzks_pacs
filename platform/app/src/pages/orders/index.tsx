@@ -11,7 +11,7 @@ import FyzksInput from '../../components/FyzksInput';
 
 const { RangePicker } = DatePicker;
 
-const OrdersList = ({ appDateRange }) => {
+const OrdersList = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [saveFiltersModal, setSaveFiltersModal] = useState({ visible: false, data: {} });
@@ -106,6 +106,12 @@ const OrdersList = ({ appDateRange }) => {
       .catch(e => {
         console.log(e);
       });
+  }
+
+  const clearFilters = () => {
+    setFilters({});
+    setDateRange(null);
+    getOrdersList();
   }
 
   const filterResults = () => {
@@ -239,6 +245,7 @@ const OrdersList = ({ appDateRange }) => {
           </FloatLabel>
         </div>
         <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
+        <Button className='ms-3' type='default' onClick={() => { clearFilters() }}>Clear Filters</Button>
         <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
         {/* <Button className='ms-3' type='dashed' danger onClick={() => { refreshScanStatus() }} >Refresh</Button> */}
       </div>

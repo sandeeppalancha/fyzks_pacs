@@ -76,7 +76,7 @@ const AppHeader = ({ handleDateChange }) => {
       </div>
 
       {/* <RangePicker className="ms-auto me-2" presets={rangePresets} onChange={onRangeChange} /> */}
-      {
+      {/* {
         userDetails ? <FloatLabel label="Date Range" className="ms-auto mt-auto me-3">
           <Select
             style={{ width: 200 }}
@@ -84,7 +84,7 @@ const AppHeader = ({ handleDateChange }) => {
             onChange={onRangeChange}
           />
         </FloatLabel> : null
-      }
+      } */}
 
       <div className="hospital-name">
         <span className="user-name">{userDetails?.user_fullname}</span>

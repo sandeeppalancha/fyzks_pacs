@@ -13,7 +13,7 @@ import { useForm } from 'antd/es/form/Form';
 
 const { RangePicker } = DatePicker;
 
-const DispatchList = ({ appDateRange, isConsultant }) => {
+const DispatchList = ({ isConsultant }) => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [filters, setFilters] = useState({});
   // const [savedFilters, setSavedFilters] = useState([]);

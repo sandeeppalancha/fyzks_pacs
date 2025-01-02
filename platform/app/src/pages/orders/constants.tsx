@@ -68,7 +68,7 @@ export const SavedSearches = ({ savedFilters, handleFilterSelection }) => {
     <div className="mb-2">
       <span> Saved Filters:</span>
       {savedFilters.map((filter, index) => (
-        <span className="ml-2"><Tag color='orange' onClick={() => handleFilterSelection(filter)} style={{ color: 'orange' }}>{filter.uf_name}</Tag></span>
+        <span key={filter.uf_name} className="ml-2"><Tag color='orange' onClick={() => handleFilterSelection(filter)} style={{ color: 'orange' }}>{filter.uf_name}</Tag></span>
       ))
       }
     </div >

@@ -67,14 +67,14 @@ function CustomApp(appProps) {
   const ordersPage = {
     key: 'orders',
     label: 'Orders',
-    children: <OrdersList appDateRange={appDateRange} />,
+    children: <OrdersList />,
   };
 
   const workListTab = {
     key: 'worklist',
     label: 'My Worklist',
     children: <>
-      <MyWorklist appDateRange={appDateRange} />
+      <MyWorklist />
     </>,
   };
 
@@ -82,7 +82,7 @@ function CustomApp(appProps) {
     key: 'pacs',
     label: 'PACS',
     children: <>
-      <PacsList appDateRange={appDateRange} />
+      <PacsList />
     </>,
   };
 
@@ -90,7 +90,7 @@ function CustomApp(appProps) {
     key: 'dispatch',
     label: 'Dispatch',
     children: <>
-      <DispatchList appDateRange={appDateRange} />
+      <DispatchList isConsultant={false} />
     </>,
   };
 
@@ -98,7 +98,7 @@ function CustomApp(appProps) {
     key: 'consultant',
     label: 'Consultant',
     children: <>
-      <DispatchList isConsultant={true} appDateRange={appDateRange} />
+      <DispatchList isConsultant={true} />
     </>,
   };
 

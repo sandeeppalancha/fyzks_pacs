@@ -13,7 +13,7 @@ import ViewNotes from '../ManageNodes/ViewNotes';
 
 const { RangePicker } = DatePicker;
 
-const MyWorklist = ({ appDateRange }) => {
+const MyWorklist = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [filters, setFilters] = useState({});
@@ -40,17 +40,6 @@ const MyWorklist = ({ appDateRange }) => {
         setUserList([]);
       })
   }
-
-
-  useEffect(() => {
-    if (appDateRange && appDateRange[0] !== null && appDateRange[1] !== null) {
-      setDateRange(appDateRange)
-    } else {
-      const today = dayjs();
-      const yesterday = dayjs().subtract(1, 'days');
-      setDateRange([yesterday, today])
-    }
-  }, [appDateRange])
 
   const onSave = (newContent, status, currentReport, { proxy_user }, callback) => {
     makePostCall('/submit-report', {

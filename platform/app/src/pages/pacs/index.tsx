@@ -19,7 +19,7 @@ import { useForm } from 'antd/es/form/Form';
 
 const { RangePicker } = DatePicker;
 
-const PacsList = ({ appDateRange }) => {
+const PacsList = () => {
   const [orders, setOrders] = useState({ data: [], loading: true });
   const [reportEditorModal, setReportEditorModal] = useState({ visible: false, data: {} });
   const [saveFiltersModal, setSaveFiltersModal] = useState({ visible: false, data: {} });
@@ -54,14 +54,36 @@ const PacsList = ({ appDateRange }) => {
   const userType = userDetails?.user_type;
 
   useEffect(() => {
-    getPacsList();
+    console.log("INSIDE ON INIT");
+
+    // getPacsList();
     getSavedFilters();
     getUsersList();
   }, []);
 
   useEffect(() => {
+    console.log("Filters changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [filters]);
 
-  }, [dateRange])
+  useEffect(() => {
+    console.log("date changed", filters);
+    // if (Object.keys(filters).length) {
+    debouncedFilter(filters);
+    // }
+  }, [dateRange]);
+
+  // const debouncedFilter = debounce(() => { filterResults() }, 300);
+
+  const debouncedFilter = useCallback(
+    debounce((tempFilters) => {
+      console.log('Debounced value:');
+      filterResults(tempFilters);
+    }, 500),
+    [dateRange]
+  );
 
   const getUsersList = () => {
     makePostCall('/user-list', {}).then(res => {
@@ -168,15 +190,22 @@ const PacsList = ({ appDateRange }) => {
       });
   }
 
-  const filterResults = () => {
+  const clearFilters = () => {
+    setFilters({});
+    setDateRange(null);
+    getPacsList();
+  }
+
+  const filterResults = (tempFilters) => {
     setOrders({ loading: true, data: [] });
-    const payload = { ...filters };
+    const payload = { ...tempFilters };
 
     if (dateRange) {
       payload['from_date'] = dayjs(dateRange[0]).format('YYYYMMDD');
       payload['to_date'] = dayjs(dateRange[1]).format('YYYYMMDD');
       payload['po_study_date'] = dateRange;
     }
+    console.log("final payload", payload, tempFilters);
 
     makePostCall('/pacs-list', payload)
       .then(res => {
@@ -202,27 +231,27 @@ const PacsList = ({ appDateRange }) => {
 
     axiosInstance.get(BASE_API + '/update-status')
       .then(res => {
-        filterResults();
+        filterResults(filters);
       })
       .catch(e => {
         console.log(e);
       })
   }
 
-  const debouncedRefresh = useCallback(
-    debounce(() => {
-      console.log('Debounced value:');
-      refreshScanStatus();
-    }, 2),
-    []
-  );
+  // const debouncedRefresh = useCallback(
+  //   debounce(() => {
+  //     console.log('Debounced value:');
+  //     refreshScanStatus();
+  //   }, 2),
+  //   []
+  // );
 
   const statusOptions = userDetails?.user_type === 'doc' ? [
     { label: 'REVIEWED', value: 'REVIEWED' },
     { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
   ] :
     [
-      { label: 'PENDING', value: 'PENDING' },
+      // { label: 'PENDING', value: 'PENDING' },
       { label: 'SCANNED', value: 'SCANNED' },
       { label: 'DRAFTED', value: 'DRAFTED' },
       { label: 'SIGNEDOFF', value: 'SIGNEDOFF' },
@@ -275,7 +304,7 @@ const PacsList = ({ appDateRange }) => {
     makePostCall('/assign-to-user', { acc_nos: selectedRowKeys, assigned_to: selectedUsersToAssign })
       .then(res => {
         // refresh the report data
-        filterResults();
+        filterResults(filters);
       })
       .catch(e => {
         console.log(e);
@@ -504,7 +533,7 @@ const PacsList = ({ appDateRange }) => {
 
   const handleEnter = () => {
     console.log("handle ter");
-    filterResults();
+    // filterResults();
   }
 
   return (
@@ -581,7 +610,8 @@ const PacsList = ({ appDateRange }) => {
               }} />
             </FloatLabel>
           </div>
-          <Button className='ms-3' type='primary' onClick={filterResults}>Search</Button>
+          <Button className='ms-3' type='primary' onClick={() => { filterResults(filters) }}>Search</Button>
+          <Button className='ms-3' type='default' onClick={() => { clearFilters() }}>Clear Filters</Button>
           <Button className='ms-3' type='primary' onClick={() => { setSaveFiltersModal({ visible: true }) }}>Save Filters</Button>
           {isHOD && (
             <Button className='ms-3' type='secondary' onClick={() => { setAssignModal({ visible: true }) }}>Assign</Button>
