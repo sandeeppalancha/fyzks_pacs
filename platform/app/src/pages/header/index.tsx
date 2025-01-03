@@ -86,7 +86,7 @@ const AppHeader = ({ handleDateChange }) => {
         </FloatLabel> : null
       } */}
 
-      <div className="hospital-name">
+      <div className="hospital-name ms-auto">
         <span className="user-name">{userDetails?.user_fullname}</span>
       </div>
       <div className="profile">
