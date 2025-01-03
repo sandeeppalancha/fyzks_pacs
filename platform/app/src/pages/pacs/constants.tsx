@@ -219,6 +219,20 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       hidden: userDetails?.user_type === 'technician'
     },
     {
+      dataIndex: "po_signed_by",
+      title: "Signed by",
+      fixed: 'right',
+      render: (text, record) => {
+        return (
+          <>
+            {record?.ordersUser?.user_fullname}
+          </>
+        )
+      },
+      width: 150,
+      hidden: userDetails?.user_type === 'technician'
+    },
+    {
       dataIndex: "po_status",
       title: "Assigned to",
       fixed: 'right',

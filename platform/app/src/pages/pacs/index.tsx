@@ -638,6 +638,8 @@ const PacsList = () => {
               onChange: (page, pageSize) => {
                 setCurrent(page);
               },
+              showTotal: (total, range) => `Showing ${range[0]}-${range[1]} of ${total} items`,
+              position: ['topRight']
             }}
             rowKey={(rec) => rec.po_acc_no}
             dataSource={orders.data || []}
