@@ -144,21 +144,24 @@ const PacsList = () => {
   }
 
   const openReport = async (record) => {
+
     if (hasReportingPermission(userDetails)) {
-      if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
+      // if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
+      //   setReportEditorModal({ visible: true, data: record });
+      // } else {
+      //   message.error(`Study is taken by ${record.po_reported_by}`)
+      // }
+      const response = await makePostCall('/study-report-details', { user_id: getUserDetails()?.username, order_id: record.id });
+      console.log("OPen respnse", response);
+      if (response?.data?.success) {
         setReportEditorModal({ visible: true, data: record });
       } else {
-        message.error(`Study is taken by ${record.po_reported_by}`)
+        message.error(response?.data?.message);
+        return;
       }
     } else {
       message.info("You do not have the permission to do reporting")
     }
-    // if (!record?.po_reported_by || record?.po_reported_by === getUserDetails().username) {
-    //   setReportEditorModal({ visible: true, data: record });
-    //   window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank')
-    // } else {
-    //   message.error(`Study is taken by ${record.po_reported_by}`)
-    // }
   }
 
   const getSavedFilters = async () => {
