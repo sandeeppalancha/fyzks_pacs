@@ -398,14 +398,16 @@ function commandsModule({
           : toolGroup.setToolPassive(activeToolName);
       }
 
-      // Set the new toolName to be active
-      toolGroup.setToolActive(toolName, {
-        bindings: [
-          {
-            mouseButton: Enums.MouseBindings.Primary,
-          },
-        ],
-      });
+      if (toolName !== activeToolName) {
+        // Set the new toolName to be active
+        toolGroup.setToolActive(toolName, {
+          bindings: [
+            {
+              mouseButton: Enums.MouseBindings.Primary,
+            },
+          ],
+        });
+      }
     },
     showDownloadViewportModal: () => {
       const { activeViewportId } = viewportGridService.getState();
