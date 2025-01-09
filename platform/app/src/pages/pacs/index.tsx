@@ -539,6 +539,11 @@ const PacsList = () => {
     // filterResults();
   }
 
+  const closeReport = async (data) => {
+    setReportEditorModal({ visible: false });
+    const resp = await makePostCall("/close-report", { order_id: data?.id })
+  }
+
   return (
     <Spin spinning={printLoading}>
       <div>
@@ -658,7 +663,7 @@ const PacsList = () => {
           {reportEditorModal.visible && (
             <Modal
               className='report-modal' width={'100%'}
-              onCancel={() => { setReportEditorModal({ visible: false }) }}
+              onCancel={() => { closeReport(reportEditorModal?.data) }}
               footer={null} open={reportEditorModal.visible}
               style={{ top: 20 }} // Adjust position
               styles={{ body: { height: "90vh", overflowY: "auto" } }}

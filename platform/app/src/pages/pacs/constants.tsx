@@ -45,6 +45,11 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
       width: 50,
     },
     {
+      title: '',
+      dataIndex: 'po_reporting_status',
+      width: 50,
+    },
+    {
       dataIndex: "po_pat_name",
       title: "Patient Name",
       render: (text, record) => {
