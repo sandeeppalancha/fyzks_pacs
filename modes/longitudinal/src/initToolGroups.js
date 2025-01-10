@@ -75,6 +75,8 @@ function initDefaultToolGroup(
       { toolName: toolNames.PlanarFreehandROI },
       { toolName: toolNames.SplineROI },
       { toolName: toolNames.LivewireContour },
+      { toolName: toolNames.CobbAngle },
+      { toolName: toolNames.SpineLabeling },
     ],
     enabled: [{ toolName: toolNames.ImageOverlayViewer }, { toolName: toolNames.ReferenceLines }],
     disabled: [
