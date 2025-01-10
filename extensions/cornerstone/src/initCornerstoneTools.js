@@ -40,6 +40,7 @@ import {
 
 import CalibrationLineTool from './tools/CalibrationLineTool';
 import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
+import SpineLabelingTool from './tools/SpineLabelingTool'; // Import the new tool
 
 export default function initCornerstoneTools(configuration = {}) {
   CrosshairsTool.isAnnotation = false;
@@ -75,8 +76,9 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(PaintFillTool);
   addTool(ReferenceLinesTool);
   addTool(CalibrationLineTool);
-  addTool(TrackballRotateTool);
   addTool(ImageOverlayViewerTool);
+  addTool(SpineLabelingTool); // Add the SpineLabelingTool
+  addTool(TrackballRotateTool);
   addTool(AdvancedMagnifyTool);
   addTool(UltrasoundDirectionalTool);
   addTool(PlanarFreehandROITool);
@@ -137,6 +139,7 @@ const toolNames = {
   LivewireContour: LivewireContourTool.toolName,
   PlanarFreehandROI: PlanarFreehandROITool.toolName,
   OrientationMarker: OrientationMarkerTool.toolName,
+  SpineLabeling: SpineLabelingTool.toolName, // Add SpineLabelingTool name
 };
 
 export { toolNames };
