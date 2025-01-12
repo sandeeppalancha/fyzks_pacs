@@ -74,10 +74,12 @@ export default class SpineLabelingTool extends BaseTool {
     return annotationUID;
   };
 
-  renderAnnotation = (annotation) => {
-    // Drawing logic here
+  renderAnnotation = (annotation, element) => {
+    if (!annotation?.data?.handles?.points?.length) {
+      return;
+    }
+
     const { points } = annotation.data.handles;
-    const { element } = evt.detail;
     const context = element.getContext('2d');
     
     // Draw point
