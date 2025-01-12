@@ -55,8 +55,8 @@ class SpineLabelingTool extends BaseTool {
       },
     };
 
-    // Add to annotations
-    annotation.annotation.addAnnotation(annotation);
+    // Add the annotation
+    this.addAnnotation(annotation);
 
     // Draw the label
     const context = element.getContext('2d');
