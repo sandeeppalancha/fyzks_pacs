@@ -1,7 +1,7 @@
-
 import { BaseTool } from '@cornerstonejs/tools';
 import { annotation, drawing } from '@cornerstonejs/tools';
 import { getEnabledElement } from '@cornerstonejs/core';
+import { servicesManager } from '@cornerstonejs/core';
 
 const SPINE_LABELS = [
   'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7',
@@ -55,8 +55,22 @@ class SpineLabelingTool extends BaseTool {
       },
     };
 
-    // Add the annotation
-    this.addAnnotation(annotation);
+    const eventDetail = {
+      annotation: {
+        annotationUID: annotation.uid,
+        metadata: {
+          toolName: this.getToolName(),
+          FrameOfReferenceUID: annotation.metadata.FrameOfReferenceUID,
+        },
+        data: annotation.data
+      }
+    };
+
+    const measurementService = servicesManager.services.measurementService;
+    const sourceUID = measurementService.addMeasurement(this.getToolName(), eventDetail);
+
+    // Update annotation with measurement UID
+    annotation.uid = sourceUID;
 
     // Draw the label
     const context = element.getContext('2d');
