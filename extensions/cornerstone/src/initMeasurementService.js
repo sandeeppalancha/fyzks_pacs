@@ -29,6 +29,7 @@ const initMeasurementService = (
     ArrowAnnotate,
     Angle,
     CobbAngle,
+    SpineLabeling,
     RectangleROI,
     PlanarFreehandROI,
     SplineROI,
