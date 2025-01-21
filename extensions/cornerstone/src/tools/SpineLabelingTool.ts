@@ -67,12 +67,26 @@ class SpineLabelingTool extends BaseTool {
   }
 
   renderAnnotation(evt) {
-    if (!evt?.detail) {
-      console.warn('No event detail found');
+    if (!evt) {
+      console.warn('No event data found');
       return;
     }
 
-    const { element, viewport, annotation } = evt.detail;
+    const { viewport, viewportId, renderingEngine } = evt;
+    if (!viewport || !viewportId || !renderingEngine) {
+      console.warn('Missing required viewport properties');
+      return;
+    }
+
+    // Get the element from the viewport
+    const element = viewport.element;
+    
+    // For spine labeling we need the annotation data
+    const annotation = viewport.getAnnotation?.(viewportId);
+    if (!annotation) {
+      console.warn('No annotation data found');
+      return;
+    }
 
     // Check required properties from evt.detail
     if (!element || !viewport) {
