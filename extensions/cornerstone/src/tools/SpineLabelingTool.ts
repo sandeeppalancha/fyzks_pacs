@@ -1,4 +1,3 @@
-
 import { Types } from '@cornerstonejs/core';
 import { BaseTool, drawing } from '@cornerstonejs/tools';
 import { getSOPInstanceAttributes } from '../utils/measurementServiceMappings/utils';
@@ -65,8 +64,30 @@ class SpineLabelingTool extends BaseTool {
   }
 
   renderAnnotation(evt) {
-    const { element, viewport } = evt.detail;
-    const { annotation } = evt.detail;
+    if (!evt?.detail) {
+      console.warn('No event detail found');
+      return;
+    }
+
+    const { element, viewport, annotation } = evt.detail;
+
+    // Check required properties from evt.detail
+    if (!element || !viewport) {
+      console.warn('Missing required properties: element or viewport');
+      return;
+    }
+
+    if (!annotation?.data?.handles?.points || !Array.isArray(annotation.data.handles.points)) {
+      console.warn('Invalid annotation points data structure');
+      return;
+    }
+
+    // Validate viewport has required methods
+    if (typeof viewport.worldToCanvas !== 'function') {
+      console.warn('Viewport missing worldToCanvas method');
+      return;
+    }
+
     const { data } = annotation;
     const { handles } = data;
 
