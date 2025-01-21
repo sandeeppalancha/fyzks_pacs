@@ -24,21 +24,24 @@ class SpineLabelingTool extends BaseTool {
 
   addNewAnnotation(evt) {
     const eventData = evt.detail;
-    const { element, currentPoints } = eventData;
+    const { element, currentPoints, viewport } = eventData;
+
+    if (!viewport || !currentPoints?.world) {
+      return null;
+    }
 
     const worldPos = currentPoints.world;
+    const camera = viewport.getCamera();
 
     const annotation = {
       highlighted: true,
       invalidated: true,
       metadata: {
         toolName: this.getToolName(),
-        viewPlaneNormal: [...eventData.camera.viewPlaneNormal],
-        viewUp: [...eventData.camera.viewUp],
-        FrameOfReferenceUID: eventData.renderingEngine.getRenderingEngine(
-          eventData.viewportId
-        ).frameOfReferenceUID,
-        referencedImageId: eventData.image.imageId,
+        viewPlaneNormal: Array.from(camera.viewPlaneNormal),
+        viewUp: Array.from(camera.viewUp),
+        FrameOfReferenceUID: viewport.frameOfReference,
+        referencedImageId: viewport.getCurrentImageId(),
       },
       data: {
         handles: {
