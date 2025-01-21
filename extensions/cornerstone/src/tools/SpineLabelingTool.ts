@@ -1,9 +1,9 @@
 
 import { Types } from '@cornerstonejs/core';
-import { BaseTool } from '@cornerstonejs/tools';
+import { BaseTool, drawing } from '@cornerstonejs/tools';
 import { getSOPInstanceAttributes } from '../utils/measurementServiceMappings/utils';
 
-const { drawHandles, drawLine } = BaseTool.drawingSvg;
+const { drawHandles, drawLine } = drawing;
 
 class SpineLabelingTool extends BaseTool {
   static toolName = 'SpineLabeling';
