@@ -147,6 +147,25 @@ const measurementServiceMappingsFactory = (
     },
 
     PlanarFreehandROI: {
+
+    SpineLabeling: {
+      toAnnotation: SpineLabeling.toAnnotation,
+      toMeasurement: csToolsAnnotation =>
+        SpineLabeling.toMeasurement(
+          csToolsAnnotation,
+          displaySetService,
+          cornerstoneViewportService,
+          _getValueTypeFromToolType,
+          customizationService
+        ),
+      matchingCriteria: [
+        {
+          valueType: MeasurementService.VALUE_TYPES.POINT,
+          points: 2,
+        },
+      ],
+    },
+
       toAnnotation: PlanarFreehandROI.toAnnotation,
       toMeasurement: csToolsAnnotation =>
         PlanarFreehandROI.toMeasurement(
