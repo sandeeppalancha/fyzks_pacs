@@ -72,19 +72,23 @@ class SpineLabelingTool extends BaseTool {
       return;
     }
 
-    const { viewport, viewportId, renderingEngine, annotation } = evt;
+    const { viewport, viewportId, renderingEngine } = evt;
     if (!viewport || !viewportId || !renderingEngine) {
       console.warn('Missing required viewport properties');
       return;
     }
 
-    // Get the element from the viewport
-    const element = viewport.element;
+    // Get the annotation from the tool state
+    const toolState = this.getToolState(viewport);
+    const annotation = toolState?.annotations?.[0];
     
     if (!annotation) {
       console.warn('No annotation data found');
       return;
     }
+
+    // Get the element from the viewport
+    const element = viewport.element;
 
     // Check required properties from evt.detail
     if (!element || !viewport) {
