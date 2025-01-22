@@ -1,5 +1,5 @@
 import { Types } from '@cornerstonejs/core';
-import { BaseTool, drawing } from '@cornerstonejs/tools';
+import { BaseTool, drawing, annotation } from '@cornerstonejs/tools';
 import { getSOPInstanceAttributes } from '../utils/measurementServiceMappings/utils';
 
 const { drawHandles, drawLine } = drawing;
