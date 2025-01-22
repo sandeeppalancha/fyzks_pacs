@@ -82,8 +82,9 @@ class SpineLabelingTool extends BaseTool {
       return;
     }
 
-    // Get the annotations from the tool's state
-    const annotation = this.annotations?.[0];
+    // Get annotations from the annotation state manager
+    const annotations = annotation.state.getAnnotations(this.getToolName(), viewport.element);
+    const annotation = annotations?.[0];
     
     if (!annotation) {
       console.warn('No annotation data found');
