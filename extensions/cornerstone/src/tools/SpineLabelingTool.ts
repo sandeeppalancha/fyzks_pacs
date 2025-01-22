@@ -1,10 +1,10 @@
 import { Types } from '@cornerstonejs/core';
-import { BaseTool, drawing, annotation } from '@cornerstonejs/tools';
+import { AnnotationTool, drawing, annotation } from '@cornerstonejs/tools';
 import { getSOPInstanceAttributes } from '../utils/measurementServiceMappings/utils';
 
 const { drawHandles, drawLine } = drawing;
 
-class SpineLabelingTool extends BaseTool {
+class SpineLabelingTool extends AnnotationTool {
   static toolName = 'SpineLabeling';
 
   constructor(
