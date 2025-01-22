@@ -12,9 +12,6 @@ class SpineLabelingTool extends BaseTool {
       configuration: {
         shadow: true,
         preventHandleOutsideImage: true,
-        getToolState: (tool, viewport) => {
-          return tool.annotations || [];
-        },
       },
     }
   ) {
@@ -24,6 +21,19 @@ class SpineLabelingTool extends BaseTool {
     this.configuration.getTextCallback = configuration.getTextCallback || ((annotation) => {
       return `Spine Label: ${annotation.data.text || ''}`;
     });
+  }
+
+  onMouseDown(evt) {
+    const eventData = evt.detail;
+    const annotation = this.addNewAnnotation(eventData);
+
+    if (annotation) {
+      annotation.annotationUID = annotation.metadata.toolName;
+      annotation.state.getAnnotations = this.getToolName();
+      this.annotations.push(annotation);
+    }
+
+    return annotation;
   }
 
   addNewAnnotation(evt) {
@@ -85,7 +95,7 @@ class SpineLabelingTool extends BaseTool {
     // Get annotations from the annotation state manager
     const annotations = annotation.state.getAnnotations(this.getToolName(), viewport.element);
     const annotation = annotations?.[0];
-    
+
     if (!annotation) {
       console.warn('No annotation data found');
       return;
