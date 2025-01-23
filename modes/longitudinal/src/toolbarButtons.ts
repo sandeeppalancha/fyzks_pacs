@@ -113,14 +113,7 @@ const toolbarButtons: Button[] = [
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
         }),
-        createButton({
-          id: 'SpineLabeling',
-          icon: 'tool-spine-labeling',
-          label: 'Spine Labeling',
-          tooltip: 'Spine Labeling Tool',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
+        
       ],
     },
   },

@@ -139,7 +139,7 @@ const toolNames = {
   LivewireContour: LivewireContourTool.toolName,
   PlanarFreehandROI: PlanarFreehandROITool.toolName,
   OrientationMarker: OrientationMarkerTool.toolName,
-  SpineLabeling: SpineLabelingTool.toolName, // Add SpineLabelingTool name
+  
 };
 
 export { toolNames };
