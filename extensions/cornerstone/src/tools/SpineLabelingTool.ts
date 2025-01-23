@@ -25,12 +25,15 @@ class SpineLabelingTool extends AnnotationTool {
 
   onMouseDown(evt) {
     const eventData = evt.detail;
+    const { element } = eventData;
+    
     const annotation = this.addNewAnnotation(eventData);
-
+    
     if (annotation) {
       annotation.annotationUID = annotation.metadata.toolName;
-      annotation.state.getAnnotations = this.getToolName();
-      this.annotations.push(annotation);
+      
+      // Add to annotation state manager
+      annotation.state.addAnnotation(annotation, element);
     }
 
     return annotation;
@@ -93,7 +96,7 @@ class SpineLabelingTool extends AnnotationTool {
     }
 
     // Get annotations from the annotation state manager
-    const annotations = annotation.state.getAnnotations(this.getToolName(), viewport.element);
+    const annotations = annotation.state.getAnnotations(this.getToolName(), element);
     const currentAnnotation = annotations?.[0];
 
     if (!currentAnnotation) {
