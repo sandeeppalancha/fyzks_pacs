@@ -142,6 +142,8 @@ import chevronDownNew from './../../assets/icons/icon-disclosure-close.svg';
 import chevronLeftNew from './../../assets/icons/icon-disclosure-open.svg';
 import settingsBars from './../../assets/icons/icon-display-settings.svg';
 import iconAdd from './../../assets/icons/icon-add.svg';
+import iconSpineLabeling from './../../assets/icons/icon-spine-labeling.svg';
+import iconCobb from './../../assets/icons/icon-cobb-angle.svg';
 import iconRename from './../../assets/icons/icon-rename.svg';
 import iconDelete from './../../assets/icons/icon-delete.svg';
 import iconMoreMenu from './../../assets/icons/icon-more-menu.svg';
@@ -356,6 +358,8 @@ const ICONS = {
   'settings-bars': settingsBars,
   'icon-rename': iconRename,
   'icon-add': iconAdd,
+  'tool-angle-cobb': iconCobb,
+  'icon-spine-labeling': iconSpineLabeling,
   'icon-delete': iconDelete,
   'icon-more-menu': iconMoreMenu,
   'icon-tool-brush': iconToolBrush,

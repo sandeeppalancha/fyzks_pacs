@@ -1,0 +1,25 @@
+<svg width="20" height="20" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" fill-rule="evenodd">
+        <rect width="20" height="20" fill="none"/>
+        <g transform="translate(3, 2)" stroke="#348CFD" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Spine S-curve -->
+            <path d="M7,1 C 7,1 9,4 7,7 C 5,10 9,13 7,16" />
+
+            <!-- Upper endplate line -->
+            <line x1="3" y1="3" x2="11" y2="5" />
+            <!-- Lower endplate line -->
+            <line x1="3" y1="13" x2="11" y2="11" />
+
+            <!-- Perpendicular lines -->
+            <line x1="7" y1="4" x2="7" y2="12" stroke-dasharray="2,2"/>
+
+            <!-- Angle indicators -->
+            <path d="M5,3.5 A 1.5 1.5 0 0 1 7,4.2" />
+            <path d="M5,12.5 A 1.5 1.5 0 0 0 7,11.8" />
+
+            <!-- Angle dots -->
+            <circle cx="7" cy="4" r="0.5" fill="#348CFD"/>
+            <circle cx="7" cy="12" r="0.5" fill="#348CFD"/>
+        </g>
+    </g>
+</svg>

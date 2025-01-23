@@ -75,7 +75,7 @@ const toolbarButtons: Button[] = [
         }),
         createButton({
           id: 'SpineLabeling',
-          icon: 'tool-spine-labeling',
+          icon: 'icon-spine-labeling',
           label: 'Spine Labeling',
           tooltip: 'Spine Labeling Tool',
           commands: setToolActiveToolbar,
