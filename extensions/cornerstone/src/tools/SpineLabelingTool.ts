@@ -17,10 +17,12 @@ class SpineLabelingTool extends AnnotationTool {
   ) {
     super(configuration);
 
-    this.annotations = [];
     this.configuration.getTextCallback = configuration.getTextCallback || ((annotation) => {
       return `Spine Label: ${annotation.data.text || ''}`;
     });
+
+    // Initialize annotation state
+    annotation.state.getAnnotations = this.getToolName();
   }
 
   onMouseDown(evt) {
@@ -33,7 +35,9 @@ class SpineLabelingTool extends AnnotationTool {
       annotation.annotationUID = annotation.metadata.toolName;
       
       // Add to annotation state manager
-      annotation.state.addAnnotation(annotation, element);
+      annotation.state.getAnnotations = this.getToolName();
+      annotation.state.annotationManager.addAnnotation(annotation);
+      annotation.state.annotationManager.setElementForAnnotation(annotation, element);
     }
 
     return annotation;
