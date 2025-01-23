@@ -10,7 +10,15 @@ import {
 /**
  * Tool for labeling vertebrae in spine images
  */
-class SpineLabelingTool extends BaseTool {
+import { Types } from '@cornerstonejs/core';
+import {
+  BaseTool,
+  PublicToolProps,
+  ToolProps,
+  EventTypes,
+} from '@cornerstonejs/tools';
+
+export default class SpineLabelingTool extends BaseTool {
   static toolName = 'SpineLabeling';
 
   constructor(
