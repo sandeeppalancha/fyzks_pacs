@@ -95,6 +95,9 @@ class SpineLabelingTool extends AnnotationTool {
       return;
     }
 
+    // Get the element from the viewport
+    const element = viewport.element;
+
     // Get annotations from the annotation state manager
     const annotations = annotation.state.getAnnotations(this.getToolName(), element);
     const currentAnnotation = annotations?.[0];
@@ -103,9 +106,6 @@ class SpineLabelingTool extends AnnotationTool {
       console.warn('No annotation data found');
       return;
     }
-
-    // Get the element from the viewport
-    const element = viewport.element;
 
     // Check required properties from evt.detail
     if (!element || !viewport) {
