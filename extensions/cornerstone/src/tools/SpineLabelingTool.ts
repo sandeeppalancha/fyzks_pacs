@@ -1,4 +1,3 @@
-
 import { Types } from '@cornerstonejs/core';
 import {
   BaseTool,
@@ -7,18 +6,7 @@ import {
   EventTypes,
 } from '@cornerstonejs/tools';
 
-/**
- * Tool for labeling vertebrae in spine images
- */
-import { Types } from '@cornerstonejs/core';
-import {
-  BaseTool,
-  PublicToolProps,
-  ToolProps,
-  EventTypes,
-} from '@cornerstonejs/tools';
-
-export default class SpineLabelingTool extends BaseTool {
+class SpineLabelingTool extends BaseTool {
   static toolName = 'SpineLabeling';
 
   constructor(
@@ -61,19 +49,15 @@ export default class SpineLabelingTool extends BaseTool {
     enabledElement: Types.IEnabledElement,
     svgDrawingHelper: any
   ): boolean => {
-    // Get all annotations for this tool
     const annotations = this.getAnnotations();
 
-    // Loop through and render each annotation
     annotations.forEach(annotation => {
       const { data } = annotation;
       const { label, handles } = data;
       const point = handles.points[0];
 
-      // Transform world coordinates to canvas coordinates
       const canvasCoords = this.worldToCanvas(enabledElement, point);
 
-      // Draw point
       const circle = svgDrawingHelper.createCircle({
         cx: canvasCoords[0],
         cy: canvasCoords[1],
@@ -82,7 +66,6 @@ export default class SpineLabelingTool extends BaseTool {
         fill: 'yellow',
       });
 
-      // Draw label
       const text = svgDrawingHelper.createText({
         x: canvasCoords[0] + 5,
         y: canvasCoords[1],
