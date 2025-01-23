@@ -40,7 +40,7 @@ import {
 
 import CalibrationLineTool from './tools/CalibrationLineTool';
 import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
-//import SpineLabelingTool from './tools/SpineLabelingTool'; // Import the new tool
+// // Import the new tool
 
 export default function initCornerstoneTools(configuration = {}) {
   CrosshairsTool.isAnnotation = false;
@@ -77,7 +77,7 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(ReferenceLinesTool);
   addTool(CalibrationLineTool);
   addTool(ImageOverlayViewerTool);
-  //addTool(SpineLabelingTool); // Add the SpineLabelingTool
+  // // Add the SpineLabelingTool
   addTool(TrackballRotateTool);
   addTool(AdvancedMagnifyTool);
   addTool(UltrasoundDirectionalTool);
