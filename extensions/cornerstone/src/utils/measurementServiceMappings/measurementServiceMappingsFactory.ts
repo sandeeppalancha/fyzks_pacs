@@ -5,6 +5,7 @@ import EllipticalROI from './EllipticalROI';
 import CircleROI from './CircleROI';
 import ArrowAnnotate from './ArrowAnnotate';
 import CobbAngle from './CobbAngle';
+import SpineLabeling from './SpineLabeling';
 import Angle from './Angle';
 import PlanarFreehandROI from './PlanarFreehandROI';
 import RectangleROI from './RectangleROI';
@@ -54,6 +55,23 @@ const measurementServiceMappingsFactory = (
   };
 
   const factories = {
+    SpineLabeling: {
+      toAnnotation: SpineLabeling.toAnnotation,
+      toMeasurement: csToolsAnnotation =>
+        SpineLabeling.toMeasurement(
+          csToolsAnnotation,
+          displaySetService,
+          cornerstoneViewportService,
+          _getValueTypeFromToolType,
+          customizationService
+        ),
+      matchingCriteria: [
+        {
+          valueType: MeasurementService.VALUE_TYPES.POINT,
+          points: 1,
+        },
+      ],
+    },
     Length: {
       toAnnotation: Length.toAnnotation,
       toMeasurement: csToolsAnnotation =>
