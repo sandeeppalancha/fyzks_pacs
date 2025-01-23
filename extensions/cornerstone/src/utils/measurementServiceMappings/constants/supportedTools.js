@@ -6,6 +6,7 @@ export default [
   'ArrowAnnotate',
   'Angle',
   'CobbAngle',
+  'SpineLabeling',
   'Probe',
   'RectangleROI',
   'PlanarFreehandROI',
