@@ -1,6 +1,19 @@
 
+import { getSOPInstanceAttributes } from './utils/getSOPInstanceAttributes';
+
 const SpineLabeling = {
-  toAnnotation: measurement => {},
+  toAnnotation: measurement => {
+    const { label, coordinates, uid } = measurement;
+    return {
+      data: {
+        label,
+        handles: {
+          points: [coordinates],
+        },
+      },
+      annotationUID: uid,
+    };
+  },
 
   toMeasurement: (
     csToolsEventDetail,
@@ -18,7 +31,6 @@ const SpineLabeling = {
     }
 
     const { toolName, referencedImageId, FrameOfReferenceUID } = metadata;
-
     const { SOPInstanceUID, SeriesInstanceUID, StudyInstanceUID } =
       getSOPInstanceAttributes(
         referencedImageId,

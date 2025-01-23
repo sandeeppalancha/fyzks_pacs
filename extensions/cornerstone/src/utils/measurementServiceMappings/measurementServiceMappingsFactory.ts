@@ -44,6 +44,7 @@ const measurementServiceMappingsFactory = (
       Bidirectional: BIDIRECTIONAL,
       ArrowAnnotate: POINT,
       CobbAngle: ANGLE,
+      SpineLabeling: POINT,
       Angle: ANGLE,
       SplineROI: POLYLINE,
       LivewireContour: POLYLINE,

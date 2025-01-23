@@ -142,6 +142,14 @@ const initMeasurementService = (
     SplineROI.toMeasurement
   );
 
+  measurementService.addMapping(
+    csTools3DVer1MeasurementSource,
+    'SpineLabeling',
+    SpineLabeling.matchingCriteria,
+    SpineLabeling.toAnnotation,
+    SpineLabeling.toMeasurement
+  );
+
   // On the UI side, the Calibration Line tool will work almost the same as the
   // Length tool
   measurementService.addMapping(
