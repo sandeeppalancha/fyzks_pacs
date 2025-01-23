@@ -2,7 +2,6 @@ import {
   PanTool,
   WindowLevelTool, 
   StackScrollTool,
-  SpineLabelingTool,
   StackScrollMouseWheelTool,
   ZoomTool,
   VolumeRotateMouseWheelTool,
@@ -41,6 +40,7 @@ import {
 
 import CalibrationLineTool from './tools/CalibrationLineTool';
 import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
+import SpineLabelingTool from './tools/SpineLabelingTool';
 // // Import the new tool
 
 export default function initCornerstoneTools(configuration = {}) {
