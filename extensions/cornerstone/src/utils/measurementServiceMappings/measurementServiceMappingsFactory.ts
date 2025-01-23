@@ -147,9 +147,6 @@ const measurementServiceMappingsFactory = (
     },
 
     PlanarFreehandROI: {
-
-    
-
       toAnnotation: PlanarFreehandROI.toAnnotation,
       toMeasurement: csToolsAnnotation =>
         PlanarFreehandROI.toMeasurement(
