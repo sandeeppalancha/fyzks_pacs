@@ -89,7 +89,8 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(SpineLabelingTool);
   addTool(CTRTool, {
     configuration: {
-      allowedModalities: ['CR', 'DX', 'DR', 'X', 'XA', 'RF'],
+      allowedModalities: ['CR', 'DX', 'DR', 'XA', 'RF', 'MG', 'RG'],
+      enabled: true,
     },
   });
 
