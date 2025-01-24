@@ -76,6 +76,7 @@ function initDefaultToolGroup(
       { toolName: toolNames.SplineROI },
       { toolName: toolNames.LivewireContour },
       { toolName: toolNames.SpineLabeling },
+      { toolName: toolNames.CTR },
     ],
     enabled: [{ toolName: toolNames.ImageOverlayViewer }, { toolName: toolNames.ReferenceLines }],
     disabled: [
