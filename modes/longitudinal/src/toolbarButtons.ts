@@ -69,6 +69,7 @@ const toolbarButtons: Button[] = [
             CR: 'active',
             DX: 'active',
             DR: 'active',
+            X: 'active',
           },
         }),
         createButton({

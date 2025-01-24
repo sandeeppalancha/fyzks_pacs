@@ -87,11 +87,11 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(LivewireContourTool);
   addTool(OrientationMarkerTool);
   addTool(SpineLabelingTool);
-  addTool(CTRTool, { // Added configuration for CTRTool
+  addTool(CTRTool, {
     configuration: {
-      allowedModalities: ['CR', 'DX', 'DR', 'X'], // Added 'X' for X-ray
+      allowedModalities: ['CR', 'DX', 'DR', 'X', 'XA', 'RF'],
     },
-  }); // Added CTRTool
+  });
 
   // Modify annotation tools to use dashed lines on SR
   const annotationStyle = {
