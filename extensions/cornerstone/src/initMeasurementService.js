@@ -170,6 +170,14 @@ const initMeasurementService = (
 
   measurementService.addMapping(
     csTools3DVer1MeasurementSource,
+    'CTR',
+    CTR.matchingCriteria,
+    CTR.toAnnotation,
+    CTR.toMeasurement
+  );
+
+  measurementService.addMapping(
+    csTools3DVer1MeasurementSource,
     'Probe',
     Probe.matchingCriteria,
     Probe.toAnnotation,
