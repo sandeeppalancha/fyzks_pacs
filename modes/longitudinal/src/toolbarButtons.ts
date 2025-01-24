@@ -58,6 +58,14 @@ const toolbarButtons: Button[] = [
           evaluate: 'evaluate.cornerstoneTool',
         }),
         createButton({
+          id: 'CTR',
+          icon: 'tool-length',
+          label: 'CTR',
+          tooltip: 'CTR Tool',
+          commands: setToolActiveToolbar,
+          evaluate: 'evaluate.cornerstoneTool',
+        }),
+        createButton({
           id: 'EllipticalROI',
           icon: 'tool-ellipse',
           label: 'Ellipse',
