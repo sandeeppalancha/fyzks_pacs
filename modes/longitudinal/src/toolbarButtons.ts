@@ -59,21 +59,11 @@ const toolbarButtons: Button[] = [
         }),
         createButton({
           id: 'CTR',
-          icon: 'tool-length',
+          icon: 'icon-ctr',
           label: 'CTR',
           tooltip: 'CTR Tool',
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
-          type: 'tool',
-          modalityBehavior: {
-            CR: 'active',
-            DX: 'active',
-            DR: 'active',
-            XA: 'active',
-            RF: 'active',
-            MG: 'active',
-            RG: 'active',
-          },
         }),
         createButton({
           id: 'EllipticalROI',
