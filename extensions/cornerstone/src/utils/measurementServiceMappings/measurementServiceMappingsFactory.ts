@@ -13,6 +13,7 @@ import SplineROI from './SplineROI';
 import LivewireContour from './LivewireContour';
 import Probe from './Probe';
 import UltrasoundDirectional from './UltrasoundDirectional';
+import CTR from './CTR';
 
 const measurementServiceMappingsFactory = (
   measurementService: MeasurementService,
@@ -50,6 +51,7 @@ const measurementServiceMappingsFactory = (
       LivewireContour: POLYLINE,
       Probe: POINT,
       UltrasoundDirectional: POLYLINE,
+      CTR: POINT,
     };
 
     return TOOL_TYPE_TO_VALUE_TYPE[toolType];
@@ -254,17 +256,37 @@ const measurementServiceMappingsFactory = (
 
     CobbAngle: {
       toAnnotation: CobbAngle.toAnnotation,
-      toMeasurement: csToolsAnnotation =>
-        CobbAngle.toMeasurement(
+      toMeasurement: csToolsAnnotation => {
+        return CobbAngle.toMeasurement(
           csToolsAnnotation,
           displaySetService,
           cornerstoneViewportService,
           _getValueTypeFromToolType,
           customizationService
-        ),
+        )
+      },
       matchingCriteria: [
         {
           valueType: MeasurementService.VALUE_TYPES.ANGLE,
+        },
+      ],
+    },
+    CTR: {
+      toAnnotation: CTR.toAnnotation,
+      toMeasurement: csToolsAnnotation => {
+
+        return CTR.toMeasurement(
+          csToolsAnnotation,
+          displaySetService,
+          cornerstoneViewportService,
+          _getValueTypeFromToolType,
+          customizationService
+        );
+      },
+      matchingCriteria: [
+        {
+          valueType: MeasurementService.VALUE_TYPES.POINT,
+          points: 4,
         },
       ],
     },

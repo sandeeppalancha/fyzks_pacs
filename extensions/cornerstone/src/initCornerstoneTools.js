@@ -1,6 +1,6 @@
 import {
   PanTool,
-  WindowLevelTool, 
+  WindowLevelTool,
   StackScrollTool,
   StackScrollMouseWheelTool,
   ZoomTool,
@@ -87,12 +87,7 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(LivewireContourTool);
   addTool(OrientationMarkerTool);
   addTool(SpineLabelingTool);
-  addTool(CTRTool, {
-    configuration: {
-      allowedModalities: ['CR', 'DX', 'DR', 'XA', 'RF', 'MG', 'RG'],
-      enabled: true,
-    },
-  });
+  addTool(CTRTool);
 
   // Modify annotation tools to use dashed lines on SR
   const annotationStyle = {

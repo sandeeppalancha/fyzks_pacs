@@ -38,6 +38,7 @@ const initMeasurementService = (
     SplineROI,
     LivewireContour,
     Probe,
+    CTR,
     UltrasoundDirectional,
   } = measurementServiceMappingsFactory(
     measurementService,
@@ -111,6 +112,15 @@ const initMeasurementService = (
     CobbAngle.matchingCriteria,
     CobbAngle.toAnnotation,
     CobbAngle.toMeasurement
+  );
+
+
+  measurementService.addMapping(
+    csTools3DVer1MeasurementSource,
+    'CTR',
+    CTR.matchingCriteria,
+    CTR.toAnnotation,
+    CTR.toMeasurement
   );
 
   measurementService.addMapping(
