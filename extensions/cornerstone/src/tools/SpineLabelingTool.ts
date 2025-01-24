@@ -166,6 +166,8 @@ class SpineLabelingTool extends BaseTool {
   preMouseDownCallback = async (evt: EventTypes.MouseDownActivateEventType): Promise<boolean> => {
     const eventData = evt.detail;
     const { element, currentPoints } = eventData;
+    const enabledElement = getEnabledElement(element);
+    const { viewport } = enabledElement;
 
     if (!this.isInitialized) {
       await this.initialize(element);
@@ -184,6 +186,7 @@ class SpineLabelingTool extends BaseTool {
         toolName: this.getToolName(),
         viewportId: this.getViewportId(element),
         FrameOfReferenceUID: this.getFrameOfReferenceUID(element),
+        referencedImageId: viewport.getCurrentImageId(),
       },
       data: {
         label: this.getCurrentLabel(),
@@ -197,7 +200,6 @@ class SpineLabelingTool extends BaseTool {
     evt.preventDefault();
     evt.stopPropagation();
 
-    const enabledElement = getEnabledElement(element);
     if (enabledElement?.viewport) {
       enabledElement.viewport.render();
     }
@@ -221,7 +223,14 @@ class SpineLabelingTool extends BaseTool {
     enabledElement: Types.IEnabledElement,
     svgDrawingHelper: SVGDrawingHelper
   ): boolean => {
-    const annotations = this.getAnnotations();
+    const { viewport } = enabledElement;
+    const currentImageId = viewport.getCurrentImageId();
+
+    // Filter annotations for current image
+    const annotations = this.getAnnotations().filter(
+      annotation => annotation.metadata.referencedImageId === currentImageId
+    );
+
     if (!annotations.length) return false;
 
     annotations.forEach(annotation => {
