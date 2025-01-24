@@ -220,8 +220,8 @@ function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, m
       { toolName: toolNames.Angle },
       { toolName: toolNames.CobbAngle },
       { toolName: toolNames.PlanarFreehandROI },
-      { toolName: toolNames.CTR },
       { toolName: toolNames.SegmentationDisplay },
+      { toolName: toolNames.CTR },
     ],
     disabled: [
       {
