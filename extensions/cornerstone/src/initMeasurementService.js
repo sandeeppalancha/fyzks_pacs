@@ -6,6 +6,9 @@ import { onCompletedCalibrationLine } from './tools/CalibrationLineTool';
 
 import measurementServiceMappingsFactory from './utils/measurementServiceMappings/measurementServiceMappingsFactory';
 import getSOPInstanceAttributes from './utils/measurementServiceMappings/utils/getSOPInstanceAttributes';
+import LivewireContour from './utils/measurementServiceMappings/LivewireContour';
+import Probe from './utils/measurementServiceMappings/Probe';
+import CTR from './utils/measurementServiceMappings/CTR';
 
 const { removeAnnotation } = annotation.state;
 
