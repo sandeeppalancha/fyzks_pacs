@@ -32,10 +32,8 @@ import Select from './Select';
 import SegmentationTable from './SegmentationTable';
 import { SegmentationGroupTable, SegmentationGroupTableExpanded } from './SegmentationGroupTable';
 import SidePanel from './SidePanel';
-import BottomPanel from './BottomPanel';
 import SplitButton from './SplitButton';
 import StudyBrowser from './StudyBrowser';
-import StudyBrowserBottom from './StudyBrowserBottom';
 import StudyItem from './StudyItem';
 import StudyListExpandedRow from './StudyListExpandedRow';
 import StudyListFilter from './StudyListFilter';
@@ -154,10 +152,8 @@ export {
   SegmentationGroupTable,
   SegmentationGroupTableExpanded,
   SidePanel,
-  BottomPanel,
   SplitButton,
   StudyBrowser,
-  StudyBrowserBottom,
   StudyItem,
   StudyListExpandedRow,
   StudyListFilter,

@@ -23,7 +23,6 @@ const StudyItem = ({
   return (
     <div
       className={classnames(
-        position === 'bottom' ? 'bottom-study-item' : '',
         isActive ? 'bg-secondary-dark' : 'hover:bg-secondary-main bg-black',
         baseClasses
       )}
@@ -33,56 +32,20 @@ const StudyItem = ({
       tabIndex="0"
     >
       <div className="flex flex-1 flex-col px-4 p!b-2">
-        <div className={classnames("flex", "flex-row", "items-center", "justify-between", position === 'bottom' ? 'pt-1 pb-1' : 'pt-2 pb-2')}>
-          <div className={classnames(position === 'bottom' ? 'line-height1' : '', "text-base", "text-white")}>{date}</div>
-          {
-            position === 'bottom' && (
-              <a onClick={(e) => { e.stopPropagation() }} className='text-white' href="/" target="_blank">[DR]</a>
-            )
-          }
-          {
-            position === 'bottom' ? null : (
-              <div className="flex flex-row items-center text-base text-blue-300">
-                <Icon
-                  name="group-layers"
-                  className="mx-2 w-4 text-blue-300"
-                />
-                {numInstances}
-              </div>
-            )
-          }
-          {
-            position === 'bottom' && (
-              isActive ? (
-                <Tooltip
-                  content={"Collapse"}
-                  position="bottom-left"
-                >
-                  <Icon
-                    title="Collapse"
-                    name="chevron-left"
-                    className="text-primary-light mr-2 w-6"
-                  />
-                </Tooltip>
-              ) : (
-                <Tooltip
-                  content={"Expand"}
-                  position="bottom-left"
-                >
-                  <Icon
-                    title="Expand"
-                    name="chevron-right"
-                    className="text-primary-light mr-2 w-6"
-                  />
-                </Tooltip>
-              )
+        <div className={classnames("flex", "flex-row", "items-center", "justify-between", 'pt-2 pb-2')}>
+          <div className={classnames("text-base", "text-white")}>{date}</div>
 
-            )
-          }
+          <div className="flex flex-row items-center text-base text-blue-300">
+            <Icon
+              name="group-layers"
+              className="mx-2 w-4 text-blue-300"
+            />
+            {numInstances}
+          </div>
         </div>
         <div className="flex flex-row py-1">
-          <div className={classnames(position === 'bottom' ? 'line-height1' : '', "text-l", "pr-5", "text-blue-300")}>{modalities}</div>
-          <div className={classnames(position === 'bottom' ? 'study-item-desc' : '', "truncate-2-lines", "break-words", "text-base", "text-blue-300")}>{description}</div>
+          <div className={classnames("text-l", "pr-5", "text-blue-300")}>{modalities}</div>
+          <div className={classnames("truncate-2-lines", "break-words", "text-base", "text-blue-300")}>{description}</div>
         </div>
       </div>
       {!!trackedSeries && (
