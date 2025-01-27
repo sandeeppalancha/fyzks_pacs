@@ -47,7 +47,7 @@ class ImageScrollbar extends PureComponent {
 
   onChange = event => {
     const intValue = parseInt(event.target.value, 10);
-    const { value, max, onSeriesChange } = this.props;
+    const { max, onSeriesChange } = this.props;
     
     // Regular scroll within series
     if (intValue <= max) {
@@ -58,6 +58,9 @@ class ImageScrollbar extends PureComponent {
     // At the end of series, trigger series change if handler provided
     if (intValue >= max && onSeriesChange) {
       onSeriesChange('next');
+      // Reset scroll value
+      event.target.value = max;
+      this.props.onChange(max);
     }
   };
 

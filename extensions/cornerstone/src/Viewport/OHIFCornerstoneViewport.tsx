@@ -517,11 +517,24 @@ const OHIFCornerstoneViewport = React.memo(props => {
     }
   };
 
+  const [scrollTop, setScrollTop] = useState(0);
+  const [scrollbarHeight, setScrollbarHeight] = useState(100);
+
   const handleScroll = evt => {
-    elementRef.current.scrollTop = evt.target.value;
+    const newValue = parseInt(evt.target.value, 10);
+    setScrollTop(newValue);
+    const element = elementRef.current;
+    if (element && element.image) {
+      element.setImage(newValue);
+    }
   };
 
-  const [scrollTop, setScrollTop] = useState(0);
+  useEffect(() => {
+    const element = elementRef.current;
+    if (element && element.image) {
+      setScrollbarHeight(element.image.numFrames - 1);
+    }
+  }, [elementRef.current]);
 
   return (
     <React.Fragment>
