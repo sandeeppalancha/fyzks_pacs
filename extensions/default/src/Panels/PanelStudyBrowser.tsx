@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StudyBrowser, useImageViewer, useViewportGrid } from '@ohif/ui';
-import { utils } from '@ohif/core';
+import { utils, DicomMetadataStore } from '@ohif/core';
 import { useNavigate } from 'react-router-dom';
 
 const { sortStudyInstances, formatDate } = utils;
