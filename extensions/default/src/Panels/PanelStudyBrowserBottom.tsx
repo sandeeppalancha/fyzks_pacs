@@ -70,7 +70,7 @@ function PanelStudyBrowserBottom({
         return;
       }
       fetchedStudiesRef.current.add(StudyInstanceUID);
-      
+
       // current study qido
       const qidoForStudyUID = await dataSource.query.studies.search({
         studyInstanceUid: StudyInstanceUID,
@@ -124,7 +124,12 @@ function PanelStudyBrowserBottom({
   // // ~~ Initial Thumbnails
   useEffect(() => {
     const currentDisplaySets = displaySetService.activeDisplaySets;
+    const currentStudyId = StudyInstanceUIDs[0];
+
     currentDisplaySets.forEach(async dSet => {
+      if (dSet.StudyInstanceUID === currentStudyId) {
+        return;
+      }
       const newImageSrcEntry = {};
       const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
       const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
@@ -160,7 +165,11 @@ function PanelStudyBrowserBottom({
       displaySetService.EVENTS.DISPLAY_SETS_ADDED,
       data => {
         const { displaySetsAdded, options } = data;
+        const currentStudyId = StudyInstanceUIDs[0];
         displaySetsAdded.forEach(async dSet => {
+          if (dSet.StudyInstanceUID === currentStudyId) {
+            return;
+          }
           const newImageSrcEntry = {};
           const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
           if (displaySet?.unsupported) {
