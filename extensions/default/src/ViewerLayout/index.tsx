@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { DicomMetadataStore } from '@ohif/core';
 import PropTypes from 'prop-types';
 
 import { ErrorBoundary, LoadingIndicatorProgress, InvestigationalUseDialog, ThumbnailList } from '@ohif/ui';
