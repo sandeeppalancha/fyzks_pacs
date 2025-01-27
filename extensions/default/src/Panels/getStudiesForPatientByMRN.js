@@ -1,6 +1,6 @@
 import { makePostCall } from "../../../../platform/app/src/utils/helper";
 
-async function getStudiesForPatientByMRN(dataSource, qidoForStudyUID, from) {
+async function getStudiesForPatientByMRN(dataSource, qidoForStudyUID) {
   if (qidoForStudyUID && qidoForStudyUID.length && qidoForStudyUID[0].mrn) {
 
     // const accession = qidoForStudyUID[0].accession;
@@ -18,7 +18,6 @@ async function getStudiesForPatientByMRN(dataSource, qidoForStudyUID, from) {
     // // Combine and return the results
     // return studyResults.flat();
 
-    console.log("inside by mrn caled from", from);
 
     const studiesByMrn = dataSource.query.studies.search({
       patientId: qidoForStudyUID[0].mrn,
