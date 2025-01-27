@@ -1,55 +1,41 @@
-
 import React, { useState } from 'react';
 import Icon from '../Icon';
 import ThumbnailList from '../ThumbnailList';
-import StudyItem from '../StudyItem';
 
-const PriorStudiesPanel = ({
-  studies,
-  expandedStudyInstanceUIDs,
-  onClickStudy,
-  onClickThumbnail,
-  onDoubleClickThumbnail,
-  activeDisplaySetInstanceUIDs,
-}) => {
+
+const PriorStudiesPanel = ({ studies, expandedStudyInstanceUIDs, onClickStudy, onClickThumbnail, onDoubleClickThumbnail, activeDisplaySetInstanceUIDs }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const priorStudies = studies.filter(study => !study.active);
-
-  if (!priorStudies.length) {
-    return null;
-  }
-
   return (
-    <div className="w-full bg-primary-dark">
-      <div
-        className="flex items-center justify-between p-2 cursor-pointer hover:bg-primary-light"
+    <div className="w-full bg-black border-t border-secondary-light">
+      <div 
+        className="flex items-center p-2 cursor-pointer bg-primary-dark hover:bg-primary-main transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <span className="text-primary-active text-lg font-bold">Prior Studies</span>
-        <Icon
-          name={isExpanded ? 'chevron-down' : 'chevron-right'}
-          className="w-4 h-4"
-        />
+        <Icon name={isExpanded ? 'chevron-down' : 'chevron-right'} className="w-4 h-4 text-white" />
+        <span className="ml-2 text-white text-base">Prior Studies</span>
       </div>
+
       {isExpanded && (
-        <div className="flex flex-row overflow-x-auto p-2">
-          {priorStudies.map(study => (
-            <div key={study.studyInstanceUid} className="mr-4 min-w-[300px]">
-              <StudyItem
-                study={study}
-                isExpanded={expandedStudyInstanceUIDs.includes(study.studyInstanceUid)}
-                onClickStudy={onClickStudy}
-              >
-                {study.displaySets.length && expandedStudyInstanceUIDs.includes(study.studyInstanceUid) ? (
-                  <ThumbnailList
-                    thumbnails={study.displaySets}
-                    activeDisplaySetInstanceUIDs={activeDisplaySetInstanceUIDs}
-                    onThumbnailClick={onClickThumbnail}
-                    onDoubleClick={onDoubleClickThumbnail}
-                  />
-                ) : null}
-              </StudyItem>
+        <div className="p-2 h-64 overflow-y-auto">
+          {studies.map(study => (
+            <div 
+              key={study.studyInstanceUID}
+              className="mb-2 p-2 bg-primary-dark rounded cursor-pointer hover:bg-primary-main"
+              onClick={() => onClickStudy?.(study.studyInstanceUID)}
+            >
+              <div className="text-white">{study.studyDescription}</div>
+              <div className="text-aqua-pale text-sm">
+                {study.studyDate} • {study.modalities}
+              </div>
+              {expandedStudyInstanceUIDs.includes(study.studyInstanceUID) && study.displaySets && (
+                <ThumbnailList
+                  thumbnails={study.displaySets}
+                  activeDisplaySetInstanceUIDs={activeDisplaySetInstanceUIDs}
+                  onThumbnailClick={onClickThumbnail}
+                  onThumbnailDoubleClick={onDoubleClickThumbnail}
+                />
+              )}
             </div>
           ))}
         </div>
