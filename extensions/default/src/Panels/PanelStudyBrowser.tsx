@@ -74,7 +74,7 @@ function PanelStudyBrowser({
       // try to fetch the prior studies based on the patientID if the
       // server can respond.
       try {
-        qidoStudiesForPatient = await getStudiesForPatientByMRN(dataSource, qidoForStudyUID, 'PanelStudyBrowser');
+        qidoStudiesForPatient = await getStudiesForPatientByMRN(qidoForStudyUID);
       } catch (error) {
         console.warn(error);
       }
