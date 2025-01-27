@@ -9,6 +9,7 @@ class ImageScrollbar extends PureComponent {
     height: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
+    onSeriesChange: PropTypes.func,
   };
 
   render() {
@@ -46,7 +47,18 @@ class ImageScrollbar extends PureComponent {
 
   onChange = event => {
     const intValue = parseInt(event.target.value, 10);
-    this.props.onChange(intValue);
+    const { value, max, onSeriesChange } = this.props;
+    
+    // Regular scroll within series
+    if (intValue <= max) {
+      this.props.onChange(intValue);
+      return;
+    }
+
+    // At the end of series, trigger series change if handler provided
+    if (intValue >= max && onSeriesChange) {
+      onSeriesChange('next');
+    }
   };
 
   onKeyDown = event => {
