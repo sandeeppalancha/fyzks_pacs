@@ -550,7 +550,7 @@ const OHIFCornerstoneViewport = React.memo(props => {
           servicesManager={servicesManager}
         />
         <ImageScrollbar
-          onChange={handleScroll}
+          onScroll={handleScroll}
           onSeriesChange={handleSeriesChange}
           max={scrollbarHeight}
           height="100%"
