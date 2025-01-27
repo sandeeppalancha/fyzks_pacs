@@ -125,9 +125,11 @@ function PanelStudyBrowserTracking({
     });
 
     // Store in DicomMetadataStore
-    actuallyMappedStudies.forEach(study => {
-      DicomMetadataStore.getInstance().set('studies', study.studyInstanceUid, study);
-    });
+    const dicomMetadataStore = {
+      studies: actuallyMappedStudies
+    };
+
+    DicomMetadataStore.set('studies', StudyInstanceUID, dicomMetadataStore);
 
     setStudyDisplayList(prevArray => {
       const ret = [...prevArray];
