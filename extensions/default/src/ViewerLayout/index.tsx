@@ -133,18 +133,21 @@ function ViewerLayout({
 
   const viewportComponents = viewports.map(getViewportComponentData);
 
-  const studies = DicomMetadataStore.getStudies() || [];
-  const tabs = [{
-    name: 'primary',
-    studies: studies.filter(study => study.active),
-  }, {
-    name: 'recent',
-    studies: studies.filter(study => !study.active).sort((a, b) => {
-      const dateA = new Date(a.StudyDate);
-      const dateB = new Date(b.StudyDate);
-      return dateB - dateA;
-    }),
-  }];
+  const { panelService, displaySetService } = servicesManager.services;
+  const displaySets = displaySetService.getActiveDisplaySets();
+  const studies = DicomMetadataStore.getInstance().get('studies') || [];
+
+  // Sort studies by date
+  const sortedStudies = studies.sort((a, b) => {
+    const dateA = new Date(a.StudyDate);
+    const dateB = new Date(b.StudyDate);
+    return dateB - dateA;
+  });
+
+  // Split into current and prior studies
+  const currentStudies = sortedStudies.filter(study => study.active);
+  const priorStudies = sortedStudies.filter(study => !study.active);
+
   const expandedStudyInstanceUIDs = [];
   const onClickStudy = () => {};
   const onClickThumbnail = () => {};
@@ -187,14 +190,14 @@ function ViewerLayout({
                 />
               </ErrorBoundary>
             </div>
-          <PriorStudiesPanel
-            studies={tabs[0].studies.concat(tabs[1].studies)}
-            expandedStudyInstanceUIDs={expandedStudyInstanceUIDs}
-            onClickStudy={onClickStudy}
-            onClickThumbnail={onClickThumbnail}
-            onDoubleClickThumbnail={onDoubleClickThumbnailHandler}
-            activeDisplaySetInstanceUIDs={activeDisplaySetInstanceUIDs}
-          />
+            <PriorStudiesPanel
+              studies={priorStudies}
+              expandedStudyInstanceUIDs={expandedStudyInstanceUIDs}
+              onClickStudy={onClickStudy}
+              onClickThumbnail={onClickThumbnail}
+              onDoubleClickThumbnail={onDoubleClickThumbnailHandler}
+              activeDisplaySetInstanceUIDs={activeDisplaySetInstanceUIDs}
+            />
           </div>
           {hasRightPanels ? (
             <ErrorBoundary context="Right Panel">
