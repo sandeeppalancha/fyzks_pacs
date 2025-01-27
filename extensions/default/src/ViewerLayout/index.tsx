@@ -135,7 +135,8 @@ function ViewerLayout({
 
   const { displaySetService } = servicesManager.services;
   const displaySets = displaySetService.getActiveDisplaySets();
-  const studies = DicomMetadataStore.getInstance().get('studies') || [];
+  const store = DicomMetadataStore.getInstance();
+  const studies = store?.get('studies') || [];
 
   // Sort studies by date
   const sortedStudies = studies.sort((a, b) => {
