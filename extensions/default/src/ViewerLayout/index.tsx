@@ -132,8 +132,18 @@ function ViewerLayout({
 
   const viewportComponents = viewports.map(getViewportComponentData);
 
-  // Fabricated data - replace with actual data fetching and state management
-  const tabs = [{ studies: [{ studyInstanceUID: '1', studyDescription: 'Study 1', studyDate: '2024-10-26' }] }, { studies: [{ studyInstanceUID: '2', studyDescription: 'Study 2', studyDate: '2024-10-25' }] }];
+  const studies = DicomMetadataStore.getStudies() || [];
+  const tabs = [{
+    name: 'primary',
+    studies: studies.filter(study => study.active),
+  }, {
+    name: 'recent',
+    studies: studies.filter(study => !study.active).sort((a, b) => {
+      const dateA = new Date(a.StudyDate);
+      const dateB = new Date(b.StudyDate);
+      return dateB - dateA;
+    }),
+  }];
   const expandedStudyInstanceUIDs = [];
   const onClickStudy = () => {};
   const onClickThumbnail = () => {};
