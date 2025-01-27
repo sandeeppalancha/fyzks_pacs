@@ -133,7 +133,7 @@ function ViewerLayout({
 
   const viewportComponents = viewports.map(getViewportComponentData);
 
-  const { panelService, displaySetService } = servicesManager.services;
+  const { displaySetService } = servicesManager.services;
   const displaySets = displaySetService.getActiveDisplaySets();
   const studies = DicomMetadataStore.getInstance().get('studies') || [];
 
