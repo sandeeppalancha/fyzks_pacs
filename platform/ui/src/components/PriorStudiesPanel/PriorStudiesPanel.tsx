@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Icon from '../Icon';
 import ThumbnailList from '../ThumbnailList';
@@ -7,31 +6,31 @@ import classNames from 'classnames';
 import { DicomMetadataStore } from '@ohif/core';
 
 const PriorStudiesPanel = ({
+  currentStudyInstanceUID,
   onClickStudy,
   onClickThumbnail,
   onDoubleClickThumbnail,
   activeDisplaySetInstanceUIDs,
-  currentStudyInstanceUID,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Get all studies from DicomMetadataStore
-  const allStudies = DicomMetadataStore.getStudies();
-  
-  // Filter out the current study to get prior studies
-  const priorStudies = allStudies
+  const studies = DicomMetadataStore.getStudies() || [];
+
+  // Filter and transform prior studies
+  const priorStudies = studies
     .filter(study => study.StudyInstanceUID !== currentStudyInstanceUID)
     .sort((a, b) => {
       const dateA = new Date(a.StudyDate);
       const dateB = new Date(b.StudyDate);
-      return dateB - dateA;  // Sort by date, most recent first
+      return dateB - dateA; // Most recent first
     })
     .map(study => ({
       studyInstanceUid: study.StudyInstanceUID,
       date: study.StudyDate,
       description: study.StudyDescription || '',
       numInstances: study.NumInstances || 0,
-      modalities: study.ModalitiesInStudy?.join(', ') || '',
+      modalities: study.Modalities?.join(', ') || '',
       displaySets: study.displaySets || [],
     }));
 
