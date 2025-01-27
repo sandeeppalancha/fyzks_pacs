@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useEffect, useReducer } from 'react';
+import React, { useState, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StudyBrowserBottom, useImageViewer, useViewportGrid } from '@ohif/ui';
 import { utils } from '@ohif/core';
