@@ -87,8 +87,12 @@ function PanelStudyBrowser({
           description: qidoStudy.StudyDescription,
           modalities: qidoStudy.ModalitiesInStudy,
           numInstances: qidoStudy.NumInstances,
+          active: qidoStudy.StudyInstanceUID === StudyInstanceUID,
         };
       });
+
+      // Store in DicomMetadataStore
+      DicomMetadataStore.getInstance().set('studies', actuallyMappedStudies);
 
       setStudyDisplayList(prevArray => {
         const ret = [...prevArray];
