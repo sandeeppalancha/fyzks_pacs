@@ -61,9 +61,16 @@ function PanelStudyBrowserBottom({
   }
 
   // ~~ studyDisplayList
+  const fetchedStudiesRef = useRef(new Set());
+
   useEffect(() => {
     // Fetch all studies for the patient in each primary study
     async function fetchStudiesForPatient(StudyInstanceUID) {
+      if (fetchedStudiesRef.current.has(StudyInstanceUID)) {
+        return;
+      }
+      fetchedStudiesRef.current.add(StudyInstanceUID);
+      
       // current study qido
       const qidoForStudyUID = await dataSource.query.studies.search({
         studyInstanceUid: StudyInstanceUID,
@@ -108,7 +115,11 @@ function PanelStudyBrowserBottom({
     }
 
     StudyInstanceUIDs.forEach(sid => fetchStudiesForPatient(sid));
-  }, [StudyInstanceUIDs, dataSource, getStudiesForPatientByMRN, navigate]);
+
+    return () => {
+      fetchedStudiesRef.current.clear();
+    };
+  }, [StudyInstanceUIDs]); // Remove unnecessary dependencies
 
   // // ~~ Initial Thumbnails
   useEffect(() => {
