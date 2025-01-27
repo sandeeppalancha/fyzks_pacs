@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useEffect, useReducer } from 'react';
+import React, { useState, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StudyBrowserBottom, useImageViewer, useViewportGrid } from '@ohif/ui';
 import { utils } from '@ohif/core';
@@ -61,9 +61,16 @@ function PanelStudyBrowserBottom({
   }
 
   // ~~ studyDisplayList
+  const fetchedStudiesRef = useRef(new Set());
+
   useEffect(() => {
     // Fetch all studies for the patient in each primary study
     async function fetchStudiesForPatient(StudyInstanceUID) {
+      if (fetchedStudiesRef.current.has(StudyInstanceUID)) {
+        return;
+      }
+      fetchedStudiesRef.current.add(StudyInstanceUID);
+
       // current study qido
       const qidoForStudyUID = await dataSource.query.studies.search({
         studyInstanceUid: StudyInstanceUID,
@@ -108,12 +115,21 @@ function PanelStudyBrowserBottom({
     }
 
     StudyInstanceUIDs.forEach(sid => fetchStudiesForPatient(sid));
-  }, [StudyInstanceUIDs, dataSource, getStudiesForPatientByMRN, navigate]);
+
+    return () => {
+      fetchedStudiesRef.current.clear();
+    };
+  }, [StudyInstanceUIDs]); // Remove unnecessary dependencies
 
   // // ~~ Initial Thumbnails
   useEffect(() => {
     const currentDisplaySets = displaySetService.activeDisplaySets;
+    const currentStudyId = StudyInstanceUIDs[0];
+
     currentDisplaySets.forEach(async dSet => {
+      if (dSet.StudyInstanceUID === currentStudyId) {
+        return;
+      }
       const newImageSrcEntry = {};
       const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
       const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
@@ -149,7 +165,11 @@ function PanelStudyBrowserBottom({
       displaySetService.EVENTS.DISPLAY_SETS_ADDED,
       data => {
         const { displaySetsAdded, options } = data;
+        const currentStudyId = StudyInstanceUIDs[0];
         displaySetsAdded.forEach(async dSet => {
+          if (dSet.StudyInstanceUID === currentStudyId) {
+            return;
+          }
           const newImageSrcEntry = {};
           const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
           if (displaySet?.unsupported) {

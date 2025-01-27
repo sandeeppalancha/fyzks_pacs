@@ -18,6 +18,7 @@ const StudyItem = ({
   isActive,
   onClick,
   position,
+  onCompare,
 }) => {
   const { t } = useTranslation('StudyItem');
   return (
@@ -48,6 +49,19 @@ const StudyItem = ({
                   className="mx-2 w-4 text-blue-300"
                 />
                 {numInstances}
+              </div>
+            )
+          }
+          {
+            position === 'bottom' && (
+              <div className="flex flex-row items-center text-base text-blue-300">
+                <Tooltip content={"Compare"}>
+                  <Icon
+                    onClick={() => { onCompare() }}
+                    name="clipboard"
+                    className="mx-2 w-4 text-blue-300"
+                  />
+                </Tooltip>
               </div>
             )
           }

@@ -57,7 +57,14 @@ const StudyBrowserBottom = ({
       // setRecentStudyDisplaysets(allRecentStudies)
 
     }
-  }, [])
+  }, []);
+
+  const onCompare = (compStudyId) => {
+    const { currentStudy } = window;
+    console.log("ON COMPARE", currentStudy, compStudyId);
+
+    window.open(`/viewer?StudyInstanceUIDs=${currentStudy}&StudyInstanceUIDs=${compStudyId}&hangingprotocolId=ctComparision`)
+  }
 
   const getTabContent = () => {
     const tabData = tabs.find(tab => tab.name === activeTabName);
@@ -89,6 +96,7 @@ const StudyBrowserBottom = ({
                 }}
                 data-cy="thumbnail-list"
                 position="bottom"
+                onCompare={() => onCompare(studyInstanceUid)}
               />
               {isExpanded && displaySets && (
                 <ThumbnailList

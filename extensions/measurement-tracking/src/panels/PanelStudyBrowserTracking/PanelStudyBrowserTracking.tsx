@@ -142,12 +142,15 @@ function PanelStudyBrowserTracking({
   // ~~ Initial Thumbnails
   useEffect(() => {
     const currentDisplaySets = displaySetService.activeDisplaySets;
-
+    const currentStudyId = StudyInstanceUIDs[0];
     if (!currentDisplaySets.length) {
       return;
     }
 
     currentDisplaySets.forEach(async dSet => {
+      if (dSet.StudyInstanceUID !== currentStudyId) {
+        return;
+      }
       const newImageSrcEntry = {};
       const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
       const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
@@ -204,7 +207,11 @@ function PanelStudyBrowserTracking({
       displaySetService.EVENTS.DISPLAY_SETS_ADDED,
       data => {
         const { displaySetsAdded, options } = data;
+        const currentStudyId = StudyInstanceUIDs[0];
         displaySetsAdded.forEach(async dSet => {
+          if (dSet.StudyInstanceUID !== currentStudyId) {
+            return;
+          }
           const displaySetInstanceUID = dSet.displaySetInstanceUID;
 
           const newImageSrcEntry = {};
