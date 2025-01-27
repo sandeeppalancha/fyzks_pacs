@@ -29,6 +29,8 @@ import { useAppConfig } from '@state';
 import { LutPresentation, PositionPresentation } from '../types/Presentation';
 import { debounce } from 'lodash';
 import { getUserDetails, makePostCall } from '../../../../platform/app/src/utils/helper';
+import { ImageScrollbar } from '@ohif/ui';
+import { DisplaySetService } from '@ohif/core';
 
 const STACK = 'stack';
 
@@ -498,6 +500,29 @@ const OHIFCornerstoneViewport = React.memo(props => {
     });
   }, [displaySets, viewportId, viewportActionCornersService, servicesManager, commandsManager]);
 
+  const handleSeriesChange = async direction => {
+    const displaySetService = servicesManager.services.displaySetService;
+    const studyMetadata = displaySets[0].StudyInstanceUID; // Assuming first displaySet represents the study
+    const allDisplaySets = displaySetService.getDisplaySetsForStudy(studyMetadata);
+
+    const currentIndex = allDisplaySets.findIndex(ds => ds.displaySetInstanceUID === displaySets[0].displaySetInstanceUID); // Assuming first displaySet is the current one.
+    const nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+
+    if (nextIndex >= 0 && nextIndex < allDisplaySets.length) {
+      const nextDisplaySet = allDisplaySets[nextIndex];
+      viewportGridService.setDisplaySetsForViewport({
+        viewportId: viewportId,
+        displaySetInstanceUIDs: [nextDisplaySet.displaySetInstanceUID],
+      });
+    }
+  };
+
+  const handleScroll = evt => {
+    elementRef.current.scrollTop = evt.target.value;
+  };
+
+  const [scrollTop, setScrollTop] = useState(0);
+
   return (
     <React.Fragment>
       <div className="viewport-wrapper">
@@ -523,6 +548,14 @@ const OHIFCornerstoneViewport = React.memo(props => {
           enabledVPElement={enabledVPElement}
           viewportId={viewportId}
           servicesManager={servicesManager}
+        />
+        <ImageScrollbar
+          onChange={handleScroll}
+          onSeriesChange={handleSeriesChange}
+          max={scrollbarHeight}
+          height="100%"
+          value={scrollTop}
+          onChange={(e) => setScrollTop(e.target.value)}
         />
       </div>
       {/* top offset of 24px to account for ViewportActionCorners. */}
