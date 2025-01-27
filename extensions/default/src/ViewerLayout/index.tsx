@@ -7,6 +7,25 @@ import { useAppConfig } from '@state';
 import ViewerHeader from './ViewerHeader';
 import SidePanelWithServices from '../Components/SidePanelWithServices';
 
+// Fabricated components and data structures
+const PriorStudiesPanel = ({ studies, expandedStudyInstanceUIDs, onClickStudy, onClickThumbnail, onDoubleClickThumbnail, activeDisplaySetInstanceUIDs }) => {
+  // Simulate rendering of prior studies.  Replace with actual implementation.
+  return (
+    <div>
+      <h2>Prior Studies</h2>
+      <ul>
+        {studies.map(study => (
+          <li key={study.studyInstanceUID}>
+            <p>Study Description: {study.studyDescription}</p>
+            <p>Date: {study.studyDate}</p>
+            {/* Add more details as needed */}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 function ViewerLayout({
   // From Extension Module Params
   extensionManager,
@@ -113,6 +132,15 @@ function ViewerLayout({
 
   const viewportComponents = viewports.map(getViewportComponentData);
 
+  // Fabricated data - replace with actual data fetching and state management
+  const tabs = [{ studies: [{ studyInstanceUID: '1', studyDescription: 'Study 1', studyDate: '2024-10-26' }] }, { studies: [{ studyInstanceUID: '2', studyDescription: 'Study 2', studyDate: '2024-10-25' }] }];
+  const expandedStudyInstanceUIDs = [];
+  const onClickStudy = () => {};
+  const onClickThumbnail = () => {};
+  const onDoubleClickThumbnailHandler = () => {};
+  const activeDisplaySetInstanceUIDs = [];
+
+
   return (
     <div>
       <ViewerHeader
@@ -123,7 +151,7 @@ function ViewerLayout({
       />
       <div
         className="relative flex w-full flex-row flex-nowrap items-stretch overflow-hidden bg-black"
-        style={{ height: 'calc(100vh - 52px' }}
+        style={{ height: 'calc(100vh - 52px)' }}
       >
         <React.Fragment>
           {showLoadingIndicator && <LoadingIndicatorProgress className="h-full w-full bg-black" />}
@@ -148,6 +176,14 @@ function ViewerLayout({
                 />
               </ErrorBoundary>
             </div>
+          <PriorStudiesPanel
+            studies={tabs[0].studies.concat(tabs[1].studies)}
+            expandedStudyInstanceUIDs={expandedStudyInstanceUIDs}
+            onClickStudy={onClickStudy}
+            onClickThumbnail={onClickThumbnail}
+            onDoubleClickThumbnail={onDoubleClickThumbnailHandler}
+            activeDisplaySetInstanceUIDs={activeDisplaySetInstanceUIDs}
+          />
           </div>
           {hasRightPanels ? (
             <ErrorBoundary context="Right Panel">
