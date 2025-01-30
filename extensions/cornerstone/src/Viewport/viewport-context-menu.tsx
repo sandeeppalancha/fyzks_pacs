@@ -86,6 +86,10 @@ const createContextMenu = async (element, event, viewportId) => {
       ]
     },
     {
+      label: 'Switch Series',
+      submenu: await getAvailableSeries(element)
+    },
+    {
       label: `${overlayVisibilityState.get(viewportId) ? 'Hide' : 'Show'} Overlay`,
       onClick: () => toggleOverlay(element, viewportId)
     }
@@ -106,6 +110,8 @@ const createContextMenu = async (element, event, viewportId) => {
       const submenu = document.createElement('div');
       submenu.className = 'absolute left-full top-0 bg-primary-dark shadow-lg rounded py-1 hidden group-hover:block';
       submenu.style.marginLeft = '1px';
+      submenu.style.maxHeight = '400px';
+      submenu.style.overflowY = 'auto';
 
       item.submenu.forEach(subItem => {
         const submenuItem = document.createElement('div');
@@ -192,6 +198,49 @@ const toggleOverlay = (element, viewportId) => {
   });
 };
 
+// Function to get available series from the displaySetService
+const getAvailableSeries = async (element) => {
+  const services = window?.services;
+  const displaySetService = services?.displaySetService;
+  const hangingProtocolService = services?.hangingProtocolService;
+  const viewportGridService = services?.viewportGridService;
+  const uiNotificationService = services?.uiNotificationService;
+
+  if (!displaySetService || !hangingProtocolService || !viewportGridService) {
+    console.warn('Required services not found');
+    return [];
+  }
+
+  const displaySets = displaySetService.getActiveDisplaySets();
+  const viewportId = element.closest('[data-viewport-uid]').dataset.viewportUid;
+
+  return displaySets.map((displaySet, index) => ({
+    label: `${displaySet.SeriesNumber || index + 1}: ${displaySet.SeriesDescription || 'No description'}`,
+    onClick: () => {
+      let updatedViewports = [];
+
+      try {
+        updatedViewports = hangingProtocolService.getViewportsRequireUpdate(
+          viewportId,
+          displaySet.displaySetInstanceUID
+        );
+      } catch (error) {
+        console.warn(error);
+        uiNotificationService?.show({
+          title: 'Series Switch',
+          message:
+            'The selected display sets could not be added to the viewport due to a mismatch in the Hanging Protocol rules.',
+          type: 'info',
+          duration: 3000,
+        });
+        return;
+      }
+
+      viewportGridService.setDisplaySetsForViewports(updatedViewports);
+    }
+  }));
+};
+
 // Add styles to document
 const style = document.createElement('style');
 style.textContent = `
@@ -211,6 +260,8 @@ style.textContent = `
   #cornerstoneContextMenu .group > div {
     min-width: 140px;
     border: 1px solid #2c3c57;
+    max-height: 400px;
+    overflow-y: auto;
   }
 `;
 document.head.appendChild(style);
