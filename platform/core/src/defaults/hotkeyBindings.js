@@ -173,6 +173,11 @@ const bindings = [
     label: 'W/L Preset 5',
     keys: ['5'],
   },
+  {
+    commandName: 'autoZoomViewport',
+    keys: ['f'],
+    label: 'Auto Zoom',
+  },
   // These don't exist, so don't try applying them....
   // {
   //   commandName: 'setWindowLevel',

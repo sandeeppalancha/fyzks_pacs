@@ -267,6 +267,54 @@ function commandsModule({
       viewport.render();
     },
 
+    autoZoomViewport: ({ viewportId }) => {
+      let enabledElement;
+
+      if (viewportId) {
+        const viewport = cornerstoneViewportService.getCornerstoneViewport(viewportId);
+        enabledElement = {
+          viewport,
+          id: viewportId
+        };
+      } else {
+        enabledElement = _getActiveViewportEnabledElement();
+      }
+
+      if (!enabledElement?.viewport) {
+        console.log('No viewport found');
+        return;
+      }
+
+      const { viewport } = enabledElement;
+
+      if (viewport instanceof StackViewport) {
+        const element = viewport.element;
+        const imageData = viewport.getImageData();
+        const [width, height] = imageData.dimensions;
+        const spacing = imageData.spacing;
+
+        // Calculate scale similar to the zoom tool
+        const viewportHeight = element.clientHeight;
+        const t = viewportHeight * spacing[1] * 0.5;
+
+        // Calculate desired parallel scale to fit the image
+        const heightRatio = viewportHeight / height;
+        const widthRatio = element.clientWidth / width;
+        const fitScale = Math.min(heightRatio, widthRatio);
+
+        const parallelScale = t / fitScale;
+
+        viewport.setCamera({
+          ...viewport.getCamera(),
+          parallelScale: parallelScale
+        });
+        viewport.render();
+      } else if (viewport instanceof VolumeViewport) {
+        viewport.resetCamera();
+        viewport.render();
+      }
+    },
+
     toggleViewportColorbar: ({ viewportId, displaySetInstanceUIDs, options = {} }) => {
       const hasColorbar = colorbarService.hasColorbar(viewportId);
       if (hasColorbar) {
@@ -943,6 +991,9 @@ function commandsModule({
     },
     removeAnnotations: {
       commandFn: actions.removeAnnotations,
+    },
+    autoZoomViewport: {
+      commandFn: actions.autoZoomViewport,
     },
     scaleUpViewport: {
       commandFn: actions.scaleViewport,

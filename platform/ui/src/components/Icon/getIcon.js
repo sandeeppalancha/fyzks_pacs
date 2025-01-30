@@ -145,6 +145,7 @@ import iconAdd from './../../assets/icons/icon-add.svg';
 import iconSpineLabeling from './../../assets/icons/icon-spine-labeling.svg';
 import iconCTR from './../../assets/icons/icon-ctr.svg';
 import iconCobb from './../../assets/icons/icon-cobb-angle.svg';
+import iconAutoZoom from './../../assets/icons/auto-zoom.svg';
 import iconRename from './../../assets/icons/icon-rename.svg';
 import iconDelete from './../../assets/icons/icon-delete.svg';
 import iconMoreMenu from './../../assets/icons/icon-more-menu.svg';
@@ -360,6 +361,7 @@ const ICONS = {
   'icon-rename': iconRename,
   'icon-add': iconAdd,
   'tool-angle-cobb': iconCobb,
+  'auto-zoom': iconAutoZoom,
   'icon-spine-labeling': iconSpineLabeling,
   'icon-ctr': iconCTR,
   'icon-delete': iconDelete,

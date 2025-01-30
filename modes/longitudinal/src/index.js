@@ -103,6 +103,7 @@ function modeFactory({ modeConfiguration }) {
         'Tilt',
         // 'CustomDragTool',
         'RemoveAnnotations',
+        'AutoZoom',
         'TrackballRotate',
         'WindowLevel',
         'Capture',

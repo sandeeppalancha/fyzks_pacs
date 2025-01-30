@@ -144,6 +144,16 @@ const toolbarButtons: Button[] = [
     },
   },
   {
+    id: 'AutoZoom',
+    uiType: 'ohif.radioGroup',
+    props: {
+      icon: 'auto-zoom',
+      label: 'Auto Zoom',
+      commands: 'autoZoomViewport',
+      evaluate: 'evaluate.action',
+    },
+  },
+  {
     id: 'Reset',
     uiType: 'ohif.radioGroup',
     props: {
@@ -163,6 +173,7 @@ const toolbarButtons: Button[] = [
       evaluate: 'evaluate.action',
     },
   },
+
   {
     id: 'StackScroll',
     uiType: 'ohif.radioGroup',
