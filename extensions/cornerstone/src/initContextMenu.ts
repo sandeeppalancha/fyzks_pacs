@@ -18,8 +18,8 @@ const DEFAULT_CONTEXT_MENU_CLICKS = {
       {
         commandName: 'showCornerstoneContextMenu',
         commandOptions: {
+          requireNearbyToolData: true,
           menuId: 'measurementsContextMenu',
-          requireNearbyToolData: false,
         },
       },
     ],
