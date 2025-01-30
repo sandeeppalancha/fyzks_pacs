@@ -29,6 +29,7 @@ import { useAppConfig } from '@state';
 import { LutPresentation, PositionPresentation } from '../types/Presentation';
 import { debounce } from 'lodash';
 import { getUserDetails, makePostCall } from '../../../../platform/app/src/utils/helper';
+import { initializeContextMenu } from './viewport-context-menu';
 
 const STACK = 'stack';
 
@@ -171,6 +172,12 @@ const OHIFCornerstoneViewport = React.memo(props => {
       setImageScrollBarHeight();
     }
   }, [elementRef]);
+
+  useEffect(() => {
+    if (elementRef.current) {
+      initializeContextMenu(elementRef, viewportId);
+    }
+  }, [elementRef, viewportId]);
 
   const cleanUpServices = useCallback(
     viewportInfo => {
