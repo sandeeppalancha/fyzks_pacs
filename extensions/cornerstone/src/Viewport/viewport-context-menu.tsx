@@ -1,6 +1,9 @@
 import * as cs3DTools from '@cornerstonejs/tools';
 import { getEnabledElement, StackViewport } from '@cornerstonejs/core';
 
+// Add state management for overlay visibility with a global Map to track per-viewport state
+const overlayVisibilityState = new Map();
+
 const createContextMenu = async (element, event, viewportId) => {
   // Check if there's a tool near the click point
   const canvasPos = getCanvasPoint(event, element);
@@ -62,43 +65,71 @@ const createContextMenu = async (element, event, viewportId) => {
   menu.style.left = `${event.clientX}px`;
   menu.style.top = `${event.clientY}px`;
 
-  // Create the main menu item with submenu
-  const navigationItem = document.createElement('div');
-  navigationItem.className = 'group relative px-3 py-1 text-white text-sm cursor-pointer';
-  navigationItem.innerHTML = `
-    Navigate Images
-    <span class="float-right">▶</span>
-  `;
+  // Initialize visibility state for this viewport if not exists
+  if (!overlayVisibilityState.has(viewportId)) {
+    overlayVisibilityState.set(viewportId, true);
+  }
 
-  // Create submenu
-  const submenu = document.createElement('div');
-  submenu.className = 'absolute left-full top-0 bg-primary-dark shadow-lg rounded py-1 hidden group-hover:block';
-  submenu.style.marginLeft = '1px';
-
-  const submenuItems = [
+  // Create menu items array
+  const menuItems = [
     {
-      label: 'First Image',
-      onClick: () => handleGoToImage(element, 'first')
+      label: 'Navigate Images',
+      submenu: [
+        {
+          label: 'First Image',
+          onClick: () => handleGoToImage(element, 'first')
+        },
+        {
+          label: 'Last Image',
+          onClick: () => handleGoToImage(element, 'last')
+        }
+      ]
     },
     {
-      label: 'Last Image',
-      onClick: () => handleGoToImage(element, 'last')
+      label: `${overlayVisibilityState.get(viewportId) ? 'Hide' : 'Show'} Overlay`,
+      onClick: () => toggleOverlay(element, viewportId)
     }
   ];
 
-  submenuItems.forEach(item => {
-    const submenuItem = document.createElement('div');
-    submenuItem.className = 'px-3 py-1 hover:bg-primary-light text-white text-sm cursor-pointer whitespace-nowrap transition-colors duration-200';
-    submenuItem.textContent = item.label;
-    submenuItem.onclick = () => {
-      item.onClick();
-      menu.remove();
-    };
-    submenu.appendChild(submenuItem);
-  });
+  // Create menu items
+  menuItems.forEach(item => {
+    const menuItem = document.createElement('div');
+    menuItem.className = 'group relative px-3 py-1 text-white text-sm cursor-pointer';
 
-  navigationItem.appendChild(submenu);
-  menu.appendChild(navigationItem);
+    if (item.submenu) {
+      // Create item with submenu
+      menuItem.innerHTML = `
+        ${item.label}
+        <span class="float-right">▶</span>
+      `;
+
+      const submenu = document.createElement('div');
+      submenu.className = 'absolute left-full top-0 bg-primary-dark shadow-lg rounded py-1 hidden group-hover:block';
+      submenu.style.marginLeft = '1px';
+
+      item.submenu.forEach(subItem => {
+        const submenuItem = document.createElement('div');
+        submenuItem.className = 'px-3 py-1 hover:bg-primary-light text-white text-sm cursor-pointer whitespace-nowrap transition-colors duration-200';
+        submenuItem.textContent = subItem.label;
+        submenuItem.onclick = () => {
+          subItem.onClick();
+          menu.remove();
+        };
+        submenu.appendChild(submenuItem);
+      });
+
+      menuItem.appendChild(submenu);
+    } else {
+      // Create simple menu item
+      menuItem.textContent = item.label;
+      menuItem.onclick = () => {
+        item.onClick();
+        menu.remove();
+      };
+    }
+
+    menu.appendChild(menuItem);
+  });
 
   const closeMenu = (e) => {
     if (!menu.contains(e.target)) {
@@ -133,6 +164,32 @@ const handleGoToImage = (element, position) => {
       imageIndex: targetIndex,
     });
   }
+};
+
+const toggleOverlay = (element, viewportId) => {
+  const currentState = overlayVisibilityState.get(viewportId);
+  const newState = !currentState;
+  overlayVisibilityState.set(viewportId, newState);
+
+  // Find the viewport container using cornerstone viewport element
+  const viewportContainer = document.querySelector(`.cornerstone-viewport-element[data-viewport-uid="${viewportId}"]`);
+  if (!viewportContainer) {
+    console.warn('Viewport container not found');
+    return;
+  }
+
+  // Find all overlay items in the viewport's parent container
+  const viewportParent = viewportContainer.parentElement;
+  if (!viewportParent) {
+    console.warn('Viewport parent not found');
+    return;
+  }
+
+  // Find the ViewportOverlay component that's a sibling to the viewport
+  const overlayElements = viewportParent.querySelectorAll('.ViewportOverlay, .overlay-item');
+  overlayElements.forEach(element => {
+    element.style.display = newState ? '' : 'none'; // Use empty string to restore default display value
+  });
 };
 
 // Add styles to document
