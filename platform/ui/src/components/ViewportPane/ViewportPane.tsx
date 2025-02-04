@@ -15,8 +15,6 @@ function ViewportPane({
   onDoubleClick,
   onInteraction,
   acceptDropsFor,
-  onClick,
-  index,
 }) {
   let dropElement = null;
   const [{ isHovered, isHighlighted }, drop] = useDrop({
@@ -62,7 +60,7 @@ function ViewportPane({
       // https://stackoverflow.com/questions/8378243/catch-scrolling-event-on-overflowhidden-element
       onMouseDown={onInteractionHandler}
       onDoubleClick={onDoubleClick}
-      onClick={onClick} // Added onClick handler
+      onClick={onInteractionHandler}
       onScroll={onInteractionHandler}
       onWheel={onInteractionHandler}
       className={classnames(
@@ -108,8 +106,6 @@ ViewportPane.propTypes = {
   onInteraction: PropTypes.func.isRequired,
   /** Executed when the pane is double clicked */
   onDoubleClick: PropTypes.func,
-  onClick: PropTypes.func, // Added onClick propType
-  index: PropTypes.number, // Added index propType
 };
 
 const noop = () => {};
