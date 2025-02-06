@@ -99,6 +99,7 @@ function modeFactory({ modeConfiguration }) {
         'Zoom',
         'Reset',
         'StackScroll',
+        'SeriesScroll',
         'Pan',
         'Tilt',
         // 'CustomDragTool',

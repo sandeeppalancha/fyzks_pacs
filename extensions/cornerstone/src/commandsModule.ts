@@ -44,9 +44,12 @@ function commandsModule({
     colorbarService,
     hangingProtocolService,
     syncGroupService,
+    displaySetService
   } = servicesManager.services as CornerstoneServices;
 
   const { measurementServiceSource } = this;
+
+  let isSeriesScrollEnabled = false;
 
   function _getActiveViewportEnabledElement() {
     return getActiveViewportEnabledElement(viewportGridService);
@@ -636,6 +639,11 @@ function commandsModule({
       const options = { imageIndex: jumpIndex };
       cstUtils.jumpToSlice(viewport.element, options);
     },
+    toggleSeriesScroll: () => {
+      isSeriesScrollEnabled = !isSeriesScrollEnabled;
+      // You can add visual feedback here if needed
+      console.log('Series scroll is now:', isSeriesScrollEnabled ? 'enabled' : 'disabled');
+    },
     scroll: ({ direction }) => {
       const enabledElement = _getActiveViewportEnabledElement();
 
@@ -646,7 +654,65 @@ function commandsModule({
       const { viewport } = enabledElement;
       const options = { delta: direction };
 
-      cstUtils.scroll(viewport, options);
+      // Get current image index and total images in current series
+      const currentImageId = viewport?.csImage?.imageId;
+      const imageIds = viewport?.imageIds;
+      const totalImages = imageIds?.length;
+      const currentIndex = imageIds?.indexOf(currentImageId);
+
+      // Check if we're at the end of the series
+      const isLastImage = currentIndex === totalImages - 1 && direction > 0;
+      const isFirstImage = currentIndex === 0 && direction < 0;
+
+      if ((isLastImage || isFirstImage) && isSeriesScrollEnabled) {
+        // Get all displaySets from the displaySetService
+        const displaySets = displaySetService.getActiveDisplaySets()?.sort((a, b) => a.SeriesNumber - b.SeriesNumber);
+
+        // Find the current displaySet
+        const currentDisplaySetUID = viewportGridService?.getDisplaySetsUIDsForViewport(viewport.id); // viewport.displaySetInstanceUIDs?.[0];
+
+        const currentDisplaySetIndex = displaySets.findIndex(
+          ds => ds.displaySetInstanceUID === currentDisplaySetUID?.[0]
+        );
+
+        if (currentDisplaySetIndex === -1) {
+          console.warn('Current display set not found');
+          return;
+        }
+
+        // Calculate the next displaySet index
+        const nextIndex = (currentDisplaySetIndex + direction + displaySets.length) % displaySets.length;
+        const nextDisplaySet = displaySets[nextIndex];
+
+        if (!nextDisplaySet) {
+          console.warn('No next display set found');
+          return;
+        }
+
+        // Update the viewport with the new displaySet
+        const viewportId = viewport.id;
+
+        // Set the displaySet for the current viewport
+        viewportGridService.setDisplaySetsForViewport({
+          viewportId,
+          displaySetInstanceUIDs: [nextDisplaySet.displaySetInstanceUID],
+        });
+
+        // Jump to first/last image based on scroll direction
+        const targetIndex = direction > 0 ? 0 : nextDisplaySet.images.length - 1;
+
+        // Wait for the viewport to be ready with new displaySet
+        setTimeout(() => {
+          const updatedViewport = cornerstoneViewportService.getCornerstoneViewport(viewportId);
+          if (updatedViewport) {
+            cstUtils.jumpToSlice(updatedViewport.element, { imageIndex: targetIndex });
+          }
+        }, 100);
+
+      } else {
+        // Normal scrolling within current series
+        cstUtils.scroll(viewport, options);
+      }
     },
     setViewportColormap: ({
       viewportId,
@@ -1014,6 +1080,9 @@ function commandsModule({
     previousImage: {
       commandFn: actions.scroll,
       options: { direction: -1 },
+    },
+    toggleSeriesScroll: {
+      commandFn: actions.toggleSeriesScroll,
     },
     firstImage: {
       commandFn: actions.jumpToImage,

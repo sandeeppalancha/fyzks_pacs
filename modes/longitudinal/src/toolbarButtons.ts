@@ -184,6 +184,16 @@ const toolbarButtons: Button[] = [
       evaluate: 'evaluate.action',
     },
   },
+  {
+    id: 'SeriesScroll',
+    uiType: 'ohif.radioGroup', // Use custom type
+    props: {
+      icon: 'tool-stack-scroll',
+      commands: 'toggleSeriesScroll',
+      label: 'Global Stack Scroll',
+      evaluate: 'evaluate.action',
+    },
+  },
   // Window Level
   {
     id: 'WindowLevel',
