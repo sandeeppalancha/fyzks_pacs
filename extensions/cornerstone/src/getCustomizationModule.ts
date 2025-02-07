@@ -8,7 +8,8 @@ import { CONSTANTS } from '@cornerstonejs/core';
 const DefaultColormap = 'Grayscale';
 const { VIEWPORT_PRESETS } = CONSTANTS;
 
-const tools = {
+const tools = (servicesManager) => ({
+
   active: [
     {
       toolName: toolNames.WindowLevel,
@@ -22,12 +23,16 @@ const tools = {
       toolName: toolNames.Zoom,
       bindings: [{ mouseButton: Enums.MouseBindings.Secondary }],
     },
-    { toolName: toolNames.StackScrollMouseWheel, bindings: [] },
+    {
+      toolName: toolNames.StackScrollMouseWheel, bindings: [], toolProps: {
+        servicesManager  // Pass services to the tool
+      }
+    },
   ],
   enabled: [{ toolName: toolNames.SegmentationDisplay }],
-};
+});
 
-function getCustomizationModule() {
+function getCustomizationModule(servicesManager) {
   return [
     {
       name: 'cornerstoneDicomUploadComponent',
@@ -41,7 +46,7 @@ function getCustomizationModule() {
       value: [
         {
           id: 'cornerstone.overlayViewportTools',
-          tools,
+          tools: tools(servicesManager),
         },
         {
           id: 'cornerstone.windowLevelPresets',

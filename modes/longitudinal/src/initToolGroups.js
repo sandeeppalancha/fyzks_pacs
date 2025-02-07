@@ -1,9 +1,11 @@
+
 function initDefaultToolGroup(
   extensionManager,
   toolGroupService,
   commandsManager,
   toolGroupId,
-  modeLabelConfig
+  modeLabelConfig,
+  servicesManager
 ) {
   const utilityModule = extensionManager.getModuleEntry(
     '@ohif/extension-cornerstone.utilityModule.tools'
@@ -29,7 +31,12 @@ function initDefaultToolGroup(
         toolName: toolNames.Zoom,
         bindings: [{ mouseButton: Enums.MouseBindings.Secondary }],
       },
-      { toolName: toolNames.StackScrollMouseWheel, bindings: [] },
+      {
+        toolName: toolNames.StackScrollMouseWheel, bindings: [],
+        toolProps: {
+          servicesManager  // Pass services to the tool
+        }
+      },
     ],
     passive: [
       { toolName: toolNames.Length },
@@ -89,7 +96,8 @@ function initDefaultToolGroup(
   toolGroupService.createToolGroupAndAddTools(toolGroupId, tools);
 }
 
-function initSRToolGroup(extensionManager, toolGroupService) {
+function initSRToolGroup(extensionManager, toolGroupService, commandsManager, servicesManager) {
+
   const SRUtilityModule = extensionManager.getModuleEntry(
     '@ohif/extension-cornerstone-dicom-sr.utilityModule.tools'
   );
@@ -133,6 +141,9 @@ function initSRToolGroup(extensionManager, toolGroupService) {
       {
         toolName: toolNames.StackScrollMouseWheel,
         bindings: [],
+        toolProps: {
+          servicesManager  // Pass services to the tool
+        }
       },
     ],
     passive: [
@@ -157,7 +168,7 @@ function initSRToolGroup(extensionManager, toolGroupService) {
   toolGroupService.createToolGroupAndAddTools(toolGroupId, tools);
 }
 
-function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, modeLabelConfig) {
+function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, modeLabelConfig, servicesManager) {
   const utilityModule = extensionManager.getModuleEntry(
     '@ohif/extension-cornerstone.utilityModule.tools'
   );
@@ -182,7 +193,11 @@ function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, m
         toolName: toolNames.Zoom,
         bindings: [{ mouseButton: Enums.MouseBindings.Secondary }],
       },
-      { toolName: toolNames.StackScrollMouseWheel, bindings: [] },
+      {
+        toolName: toolNames.StackScrollMouseWheel, bindings: [], toolProps: {
+          servicesManager  // Pass services to the tool
+        }
+      },
     ],
     passive: [
       { toolName: toolNames.Length },
@@ -245,7 +260,7 @@ function initMPRToolGroup(extensionManager, toolGroupService, commandsManager, m
 
   toolGroupService.createToolGroupAndAddTools('mpr', tools);
 }
-function initVolume3DToolGroup(extensionManager, toolGroupService) {
+function initVolume3DToolGroup(extensionManager, toolGroupService, servicesManager) {
   const utilityModule = extensionManager.getModuleEntry(
     '@ohif/extension-cornerstone.utilityModule.tools'
   );
@@ -272,17 +287,19 @@ function initVolume3DToolGroup(extensionManager, toolGroupService) {
   toolGroupService.createToolGroupAndAddTools('volume3d', tools);
 }
 
-function initToolGroups(extensionManager, toolGroupService, commandsManager, modeLabelConfig) {
+function initToolGroups(extensionManager, toolGroupService, commandsManager, modeLabelConfig, servicesManager) {
+
   initDefaultToolGroup(
     extensionManager,
     toolGroupService,
     commandsManager,
     'default',
-    modeLabelConfig
+    modeLabelConfig,
+    servicesManager
   );
-  initSRToolGroup(extensionManager, toolGroupService, commandsManager);
-  initMPRToolGroup(extensionManager, toolGroupService, commandsManager, modeLabelConfig);
-  initVolume3DToolGroup(extensionManager, toolGroupService);
+  initSRToolGroup(extensionManager, toolGroupService, commandsManager, servicesManager);
+  initMPRToolGroup(extensionManager, toolGroupService, commandsManager, modeLabelConfig, servicesManager);
+  initVolume3DToolGroup(extensionManager, toolGroupService, servicesManager);
 }
 
 export default initToolGroups;

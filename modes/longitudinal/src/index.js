@@ -91,7 +91,7 @@ function modeFactory({ modeConfiguration }) {
       // ]);
 
       // Init Default and SR ToolGroups
-      initToolGroups(extensionManager, toolGroupService, commandsManager, this.labelConfig);
+      initToolGroups(extensionManager, toolGroupService, commandsManager, this.labelConfig, servicesManager);
 
       toolbarService.addButtons([...toolbarButtons, ...moreTools]);
       toolbarService.createButtonSection('primary', [

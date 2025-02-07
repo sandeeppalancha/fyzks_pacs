@@ -134,7 +134,9 @@ const cornerstoneExtension: Types.Extensions.Extension = {
     ];
   },
   getCommandsModule,
-  getCustomizationModule,
+  getCustomizationModule({ servicesManager }) {
+    return getCustomizationModule(servicesManager);
+  },
   getUtilityModule({ servicesManager }) {
     return [
       {

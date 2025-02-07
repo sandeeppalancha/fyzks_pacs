@@ -269,13 +269,14 @@ export default class ToolGroupService {
 
   private _addTools(toolGroup, tools) {
     const addTools = tools => {
-      tools.forEach(({ toolName, parentTool, configuration }) => {
+      tools.forEach(({ toolName, parentTool, configuration, toolProps }) => {
         if (parentTool) {
           toolGroup.addToolInstance(toolName, parentTool, {
             ...configuration,
+            toolProps: toolProps
           });
         } else {
-          toolGroup.addTool(toolName, { ...configuration });
+          toolGroup.addTool(toolName, { ...configuration, toolProps: toolProps });
         }
       });
     };

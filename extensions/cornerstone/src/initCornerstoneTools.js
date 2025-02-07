@@ -2,7 +2,7 @@ import {
   PanTool,
   WindowLevelTool,
   StackScrollTool,
-  StackScrollMouseWheelTool,
+  // StackScrollMouseWheelTool,
   ZoomTool,
   VolumeRotateMouseWheelTool,
   MIPJumpToClickTool,
@@ -42,6 +42,7 @@ import CalibrationLineTool from './tools/CalibrationLineTool';
 import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
 import SpineLabelingTool from './tools/SpineLabelingTool';
 import CTRTool from './tools/CTRTool';
+import StackScrollMouseWheelTool from './tools/StackScrollToolMouseWheelTool';
 
 export default function initCornerstoneTools(configuration = {}) {
   CrosshairsTool.isAnnotation = false;
