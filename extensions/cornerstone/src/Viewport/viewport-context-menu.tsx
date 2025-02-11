@@ -92,6 +92,19 @@ const createContextMenu = async (element, event, viewportId) => {
     {
       label: `${overlayVisibilityState.get(viewportId) ? 'Hide' : 'Show'} Overlay`,
       onClick: () => toggleOverlay(element, viewportId)
+    },
+    {
+      label: 'Export Image',
+      submenu: [
+        {
+          label: 'Export as PNG',
+          onClick: () => exportViewportImage(element, 'png')
+        },
+        {
+          label: 'Export as JPEG',
+          onClick: () => exportViewportImage(element, 'jpeg')
+        }
+      ]
     }
   ];
 
@@ -169,6 +182,44 @@ const handleGoToImage = (element, position) => {
     cs3DTools.utilities.jumpToSlice(element, {
       imageIndex: targetIndex,
     });
+  }
+};
+
+const exportViewportImage = async (element, format = 'png') => {
+  try {
+    const enabledElement = getEnabledElement(element);
+    if (!enabledElement?.viewport) {
+      console.warn('No enabled element found');
+      return;
+    }
+
+    // Get the canvas element from the viewport
+    const canvas = element.querySelector('canvas');
+    if (!canvas) {
+      console.warn('No canvas element found');
+      return;
+    }
+
+    // Create a temporary link element
+    const link = document.createElement('a');
+
+    // Set the file format and mime type
+    const mimeType = `image/${format}`;
+    const quality = format === 'jpeg' ? 0.92 : 1.0;
+
+    // Convert canvas to data URL with specified format
+    const dataUrl = canvas.toDataURL(mimeType, quality);
+
+    // Set up the download
+    link.href = dataUrl;
+    link.download = `viewport-image.${format}`;
+
+    // Trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Error exporting image:', error);
   }
 };
 
