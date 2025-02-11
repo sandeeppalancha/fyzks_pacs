@@ -39,6 +39,42 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
   }, []);
 
   useEffect(() => {
+    // Handler for browser close/refresh
+    const handleBeforeUnload = async (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // Required for Chrome
+
+      try {
+        await updateStudyStatus('');
+      } catch (error) {
+        console.error('Failed to reset status on exit:', error);
+      }
+    };
+
+    const updateStudyStatus = async (status) => {
+      makePostCall("/close-report", { order_id: patientDetails.id, status: status })
+    }
+
+    // Set up keep-alive ping
+    const pingInterval = setInterval(async () => {
+      try {
+        await makePostCall("/study-ping", { order_id: patientDetails.id, status: 'R' });
+      } catch (error) {
+        console.error('Keep-alive ping failed:', error);
+      }
+    }, 15000); // Every 15 seconds
+
+    // Add event listener
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      clearInterval(pingInterval);
+    };
+  }, [patientDetails]);
+
+  useEffect(() => {
     if (patientDetails) {
       setCorrelated(patientDetails?.po_correlated);
       setDiagnosed(patientDetails?.po_diagnosed);

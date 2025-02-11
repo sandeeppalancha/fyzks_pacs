@@ -57,13 +57,15 @@ export const orderColumns = ({ openViewer, openReportEditor, role, addFile, view
           <Tooltip title={text}>
             <Button
               color="blue"
-              className="ms-auto d-flex align-items-center"
+              className="ms-1auto d-flex align-items-center"
               type="link" onClick={() => { openReportEditor(record); openViewer(record) }}
             >
               <Tooltip title="Open Only Viewer">
                 <EyeOutlined color="orange" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openViewer(record); }} />
               </Tooltip>
-              {text}
+              <span className="whitespace-normal">
+                {text}
+              </span>
             </Button>
           </Tooltip>
         )

@@ -21,10 +21,12 @@ export const orderColumns = ({ openReportEditor, viewNotes }) => ([
         <Tooltip title={text}>
           <Button
             color="blue"
-            className="ms-auto"
+            className="ms1-auto"
             type="link" onClick={() => { openReportEditor(record); window.open(`/viewer?StudyInstanceUIDs=${record?.po_study_uid}`, '_blank') }}
           >
-            {text}
+            <span className="whitespace-normal">
+              {text}
+            </span>
           </Button>
         </Tooltip>
       )

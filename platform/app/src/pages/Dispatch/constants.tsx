@@ -52,7 +52,9 @@ export const orderColumns = ({ openReportEditor, role, addFile, viewNotes, print
               className="ms-auto overflow-hidden"
               type="link" onClick={() => { openReportEditor(record) }}
             >
-              {text}
+              <span className="whitespace-normal">
+                {text}
+              </span>
             </Button>
           </Tooltip>
         )

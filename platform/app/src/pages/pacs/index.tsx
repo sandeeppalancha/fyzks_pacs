@@ -667,6 +667,7 @@ const PacsList = () => {
               footer={null} open={reportEditorModal.visible}
               style={{ top: 20 }} // Adjust position
               styles={{ body: { height: "90vh", overflowY: "auto" } }}
+              keyboard={false}
             >
               <ReportEditor cancel={cancelReport} onSave={onSave} patientDetails={reportEditorModal.data} />
             </Modal>
