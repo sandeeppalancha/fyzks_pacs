@@ -788,6 +788,10 @@ function commandsModule({
     toggleSynchronizer: ({ type, viewports, syncId }) => {
       const synchronizer = syncGroupService.getSynchronizer(syncId);
 
+      const state = viewportGridService.getState();
+      const { viewports: stateViewports } = state;
+      const viewportsList = Array.from(stateViewports.values());
+
       if (synchronizer) {
         synchronizer.isDisabled() ? synchronizer.setEnabled(true) : synchronizer.setEnabled(false);
         return;
@@ -798,7 +802,7 @@ function commandsModule({
       if (fn) {
         fn({
           servicesManager,
-          viewports,
+          viewports: viewportsList,
           syncId,
         });
       }
