@@ -174,16 +174,16 @@ const toolbarButtons: Button[] = [
     },
   },
 
-  {
-    id: 'StackScroll',
-    uiType: 'ohif.radioGroup',
-    props: {
-      icon: 'tool-stack-scroll',
-      label: 'StackScroll',
-      commands: 'resetViewport',
-      evaluate: 'evaluate.action',
-    },
-  },
+  // {
+  //   id: 'StackScroll',
+  //   uiType: 'ohif.radioGroup',
+  //   props: {
+  //     icon: 'tool-stack-scroll',
+  //     label: 'StackScroll',
+  //     commands: 'resetViewport',
+  //     evaluate: 'evaluate.action',
+  //   },
+  // },
   {
     id: 'SeriesScroll',
     uiType: 'ohif.radioGroup', // Use custom type
