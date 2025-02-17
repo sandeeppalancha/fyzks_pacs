@@ -36,6 +36,7 @@ import { showLabelAnnotationPopup } from './utils/callInputDialog';
 import ViewportActionCornersService from './services/ViewportActionCornersService/ViewportActionCornersService';
 import { ViewportActionCornersProvider } from './contextProviders/ViewportActionCornersProvider';
 import ActiveViewportWindowLevel from './components/ActiveViewportWindowLevel';
+import { SYNC_BUTTON } from './tools/SyncTools';
 
 const { helpers: volumeLoaderHelpers } = csStreamingImageVolumeLoader;
 const { getDynamicVolumeInfo } = volumeLoaderHelpers ?? {};
@@ -94,6 +95,10 @@ const cornerstoneExtension: Types.Extensions.Extension = {
       ViewportActionCornersService.REGISTRATION.name,
       ViewportActionCornersProvider
     );
+
+    const { toolbarService } = servicesManager.services;
+    toolbarService.addButtons([SYNC_BUTTON]);
+
     return init.call(this, props);
   },
 

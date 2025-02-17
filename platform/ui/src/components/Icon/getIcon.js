@@ -143,6 +143,9 @@ import chevronLeftNew from './../../assets/icons/icon-disclosure-open.svg';
 import settingsBars from './../../assets/icons/icon-display-settings.svg';
 import iconAdd from './../../assets/icons/icon-add.svg';
 import iconSpineLabeling from './../../assets/icons/icon-spine-labeling.svg';
+import iconNoSync from './../../assets/icons/tool-no-sync.svg';
+import iconSync from './../../assets/icons/tool-sync.svg';
+import manualSync from './../../assets/icons/manual-sync.svg';
 import iconCTR from './../../assets/icons/icon-ctr.svg';
 import iconCobb from './../../assets/icons/icon-cobb-angle.svg';
 import iconAutoZoom from './../../assets/icons/auto-zoom.svg';
@@ -363,6 +366,9 @@ const ICONS = {
   'tool-angle-cobb': iconCobb,
   'auto-zoom': iconAutoZoom,
   'icon-spine-labeling': iconSpineLabeling,
+  'tool-sync': iconSync,
+  'tool-no-sync': iconNoSync,
+  'manual-sync': manualSync,
   'icon-ctr': iconCTR,
   'icon-delete': iconDelete,
   'icon-more-menu': iconMoreMenu,

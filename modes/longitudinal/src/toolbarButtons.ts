@@ -243,6 +243,89 @@ const toolbarButtons: Button[] = [
     },
   },
   {
+    id: 'SyncGroup',
+    uiType: 'ohif.splitButton',
+    props: {
+      groupId: 'SyncGroup',
+      // Add evaluate for the group to switch primary button
+      evaluate: 'evaluate.group.promoteToPrimaryIfCornerstoneToolNotActiveInTheList',
+      primary: createButton({
+        id: 'NoSync',
+        icon: 'tool-sync',
+        label: 'No Sync',
+        tooltip: 'No Sync',
+        commands: [
+          {
+            commandName: 'toggleSynchronizer',
+            commandOptions: {
+              type: 'imageSlice',
+              enabled: false,
+              syncMode: 'none'
+            },
+          },
+        ],
+        evaluate: 'evaluate.cornerstone.synchronizer',
+      }),
+      secondary: {
+        icon: 'chevron-down',
+        tooltip: 'More Sync Options',
+      },
+      items: [
+        createButton({
+          id: 'NoSync',
+          icon: 'tool-no-sync', // normal sync icon but grayed out
+          label: 'No Sync',
+          tooltip: 'No Sync',
+          commands: [
+            {
+              commandName: 'toggleSynchronizer',
+              commandOptions: {
+                type: 'imageSlice',
+                enabled: false,
+                syncMode: 'none'
+              },
+            },
+          ],
+          evaluate: 'evaluate.cornerstone.synchronizer',
+        }),
+        createButton({
+          id: 'AutoSync',
+          icon: 'tool-sync', // normal sync icon
+          label: 'Auto Sync',
+          tooltip: 'Auto Sync',
+          commands: [
+            {
+              commandName: 'toggleSynchronizer',
+              commandOptions: {
+                type: 'imageSlice',
+                enabled: true,
+                syncMode: 'auto'
+              },
+            },
+          ],
+          evaluate: 'evaluate.cornerstone.synchronizer',
+        }),
+        createButton({
+          id: 'ManualSync',
+          icon: 'manual-sync', // normal sync icon with a hand/click indicator
+          label: 'Manual Sync',
+          tooltip: 'Manual Sync - Click corresponding points to sync',
+          commands: [
+            {
+              commandName: 'toggleSynchronizer',
+              commandOptions: {
+                type: 'imageSlice',
+                enabled: true,
+                syncMode: 'manual'
+              },
+            },
+          ],
+          evaluate: 'evaluate.cornerstone.synchronizer',
+        }),
+      ],
+    },
+  },
+  {
     id: 'Capture',
     uiType: 'ohif.radioGroup',
     props: {

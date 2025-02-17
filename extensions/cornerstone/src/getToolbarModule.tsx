@@ -264,6 +264,62 @@ export default function getToolbarModule({ commandsManager, servicesManager }) {
         };
       },
     },
+    {
+      name: 'evaluate.cornerstone.synchronizer',
+      evaluate: ({ viewportId, button }) => {
+        const synchronizers = syncGroupService.getSynchronizersForViewport(viewportId);
+
+        // Get base style for inactive state
+        const baseStyle = '!text-common-bright hover:!bg-primary-dark hover:text-primary-light';
+        // Get active style
+        const activeStyle = '!text-primary-active';
+
+        if (!synchronizers?.length) {
+          return {
+            disabled: false,
+            className: baseStyle,
+          };
+        }
+
+        const synchronizer = synchronizers[0];
+        const isEnabled = synchronizer.enabled;
+        const isManual = synchronizer.manualSyncEnabled;
+
+        // For submenu items, only return the appropriate className
+        if (button.id === 'NoSync' || button.id === 'AutoSync' || button.id === 'ManualSync') {
+          const isActive =
+            (button.id === 'NoSync' && !isEnabled) ||
+            (button.id === 'AutoSync' && isEnabled && !isManual) ||
+            (button.id === 'ManualSync' && isEnabled && isManual);
+
+          return {
+            disabled: false,
+            className: isActive ? activeStyle : baseStyle
+          };
+        }
+
+        // For the primary button, update both className and label
+        if (!isEnabled) {
+          return {
+            disabled: false,
+            className: baseStyle,
+            label: 'No Sync'
+          };
+        } else if (isManual) {
+          return {
+            disabled: false,
+            className: activeStyle,
+            label: 'Manual Sync'
+          };
+        } else {
+          return {
+            disabled: false,
+            className: activeStyle,
+            label: 'Auto Sync'
+          };
+        }
+      },
+    },
   ];
 }
 

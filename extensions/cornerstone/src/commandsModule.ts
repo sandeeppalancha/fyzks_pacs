@@ -12,6 +12,7 @@ import {
   utilities as cstUtils,
   ReferenceLinesTool,
 } from '@cornerstonejs/tools';
+import { Enums as CORE_ENUMS } from '@cornerstonejs/core';
 import { Types as OhifTypes } from '@ohif/core';
 import { vec3, mat4 } from 'gl-matrix';
 
@@ -785,20 +786,159 @@ function commandsModule({
      * @param options.syncId - The synchronization group ID
      * @param options.type - The type of synchronization to perform
      */
-    toggleSynchronizer: ({ type, viewports, syncId }) => {
-      const synchronizer = syncGroupService.getSynchronizer(syncId);
-
+    toggleSynchronizer: ({ type, viewports, syncId, syncMode }) => {
+      let synchronizer = syncGroupService.getSynchronizer(syncId);
       const state = viewportGridService.getState();
       const { viewports: stateViewports } = state;
       const viewportsList = Array.from(stateViewports.values());
+      const viewportIds = viewportsList.map(vp => vp.viewportId);
 
-      if (synchronizer) {
-        synchronizer.isDisabled() ? synchronizer.setEnabled(true) : synchronizer.setEnabled(false);
+      // Get all viewports
+      const allViewports = viewportIds.map(id =>
+        cornerstoneViewportService.getCornerstoneViewport(id)
+      ).filter(Boolean);
+
+      // Function to remove all event listeners
+      const removeAllEventListeners = () => {
+        // return
+        allViewports.forEach(viewport => {
+          if (viewport.element) {
+            viewport.element.removeEventListener(CORE_ENUMS.Events.STACK_NEW_IMAGE, viewport.scrollHandler);
+          }
+        });
+      };
+
+      if (!synchronizer && syncMode !== 'none') {
+        // create synchronizer
+      }
+
+      if (syncMode === 'none') {
+        // Disable existing synchronizer if any
+        if (synchronizer) {
+          synchronizer.setEnabled(false);
+          synchronizer.destroy();
+        }
+        // Remove all event listeners
+        removeAllEventListeners();
         return;
       }
 
-      const fn = toggleSyncFunctions[type];
+      if (syncMode === 'auto') {
+        // Use default synchronizer behavior
+        // Remove any existing manual sync listeners first
+        removeAllEventListeners();
 
+        if (synchronizer) {
+          synchronizer.setEnabled(true);
+        } else {
+          const fn = toggleSyncFunctions[type];
+          if (fn) {
+            fn({
+              servicesManager,
+              viewports: viewportsList,
+              syncId,
+            });
+          }
+        }
+        return;
+      }
+
+      if (syncMode === 'manual') {
+        // For manual sync, set up proportional scrolling
+        if (synchronizer) {
+          synchronizer.setEnabled(true);
+        }
+
+        // Get all viewports
+        const viewports = viewportIds.map(id =>
+          cornerstoneViewportService.getCornerstoneViewport(id)
+        ).filter(Boolean); // Filter out any undefined viewports
+
+        if (viewports.length < 2) return; // Need at least 2 viewports to sync
+
+        // Store initial ratios
+        const initialPositions = viewports.map(viewport => ({
+          viewportId: viewport.id,
+          currentIndex: viewport.getCurrentImageIdIndex(),
+          totalImages: viewport.getImageIds().length
+        }));
+
+        let isUpdating = false;
+
+        // Set up scroll handler
+        const handleScroll = (scrollingViewport) => {
+          if (isUpdating) return;
+          isUpdating = true;
+
+          try {
+
+
+            const sourcePosition = initialPositions.find(
+              pos => pos.viewportId === scrollingViewport.id
+            );
+
+            if (!sourcePosition) return;
+
+            const sourcePercentage = scrollingViewport.getCurrentImageIdIndex() /
+              sourcePosition.totalImages;
+
+            viewports.forEach(targetViewport => {
+              if (targetViewport.id !== scrollingViewport.id) {
+                const targetPosition = initialPositions.find(
+                  pos => pos.viewportId === targetViewport.id
+                );
+
+                if (targetPosition) {
+                  const newIndex = Math.round(sourcePercentage * targetPosition.totalImages);
+                  targetViewport.setImageIdIndex(newIndex);
+
+                  // Trigger UI update event
+                  const element = targetViewport.element;
+                  if (element) {
+                    // Update the viewport display
+                    const enabledEleme = getEnabledElement(element);
+                    const renderingEngine = enabledEleme.renderingEngine;
+                    if (renderingEngine) {
+                      renderingEngine.renderViewport(targetViewport.id);
+                    }
+
+                    const customEvent = new CustomEvent(CORE_ENUMS.Events.STACK_NEW_IMAGE, {
+                      detail: {
+                        imageIndex: newIndex,
+                        viewportId: targetViewport.id,
+                      }
+                    });
+                    element.dispatchEvent(customEvent);
+                  }
+                }
+              }
+
+            });
+          } finally {
+            isUpdating = false;
+          }
+        };
+
+        // Remove any existing listeners first
+        removeAllEventListeners();
+
+        // Add scroll handler to all viewports
+        viewports.forEach(viewport => {
+          // element.addEventListener(Enums.Events.STACK_VIEWPORT_SCROLL, setLoadingState);
+          //     element.addEventListener(Enums.Events.IMAGE_LOAD_ERROR, setErrorState);
+          //     element.addEventListener(Enums.Events.STACK_NEW_IMAGE, setFinishLoadingState);
+
+
+          viewport.element.addEventListener(CORE_ENUMS.Events.STACK_NEW_IMAGE, () => {
+            handleScroll(viewport);
+          });
+        });
+
+        return;
+      }
+
+      // Fallback to default sync functions if needed
+      const fn = toggleSyncFunctions[type];
       if (fn) {
         fn({
           servicesManager,
@@ -806,6 +946,7 @@ function commandsModule({
           syncId,
         });
       }
+
     },
     setSourceViewportForReferenceLinesTool: ({ viewportId }) => {
       if (!viewportId) {
@@ -1141,6 +1282,9 @@ function commandsModule({
     toggleSynchronizer: {
       commandFn: actions.toggleSynchronizer,
     },
+    toggleSync: {
+      commandFn: actions.toggleSynchronizer,
+    },
     updateVolumeData: {
       commandFn: actions.updateVolumeData,
     },
@@ -1158,5 +1302,44 @@ function commandsModule({
     defaultContext: 'CORNERSTONE',
   };
 }
+
+const handleManualSync = (event, { syncGroupService, viewportGridService, cornerstoneViewportService }) => {
+  const element = event.currentTarget;
+  const viewport = cornerstoneViewportService.getViewportByElement(element);
+
+  if (!viewport) return;
+
+  const synchronizer = syncGroupService.getSynchronizer(viewport.viewportId);
+  if (!synchronizer || !synchronizer.manualSyncEnabled) return;
+
+  // Store the reference point for sync
+  if (!synchronizer.referenceViewport) {
+    synchronizer.referenceViewport = {
+      viewportId: viewport.viewportId,
+      imageIndex: viewport.getCurrentImageIdIndex()
+    };
+    // Show visual feedback (optional)
+    viewport.element.style.outline = '2px solid #00ff00';
+  } else {
+    // Calculate offset and sync
+    const currentIndex = viewport.getCurrentImageIdIndex();
+    const offset = currentIndex - synchronizer.referenceViewport.imageIndex;
+
+    // Apply sync to all viewports
+    viewportsList.forEach(vp => {
+      if (vp.viewportId !== synchronizer.referenceViewport.viewportId) {
+        const newIndex = vp.getCurrentImageIdIndex() + offset;
+        vp.setImageIdIndex(newIndex);
+      }
+    });
+
+    // Reset reference point
+    synchronizer.referenceViewport = null;
+    // Remove visual feedback
+    viewportsList.forEach(vp => {
+      vp.element.style.outline = 'none';
+    });
+  }
+};
 
 export default commandsModule;
