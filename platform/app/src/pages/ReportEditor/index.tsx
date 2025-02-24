@@ -279,7 +279,7 @@ const ReportEditor = ({ cancel, onSave, patientDetails, selected_report }) => {
 
   const goToRadiologyDesk = (patDetails) => {
     const { po_pin, po_acc_no, po_site } = patDetails;
-    window.open(`${RADIOLOGY_URL(po_pin, po_site)}`, '_blank')
+    window.open(`${RADIOLOGY_URL(po_pin, po_site || '')}`, '_blank')
   }
 
   return (
